@@ -1,5 +1,7 @@
 import AWS from "aws-sdk";
 import { config as configDotenv } from "dotenv";
+import prisma from "@/lib/prisma";
+import { v4 } from "uuid";
 
 configDotenv();
 
@@ -10,7 +12,7 @@ export async function POST(req: any) {
     data: {},
   };
   const requested = await req.json();
-  const { data, fileName } = requested;
+  const { data, fileName, file } = requested;
 
   // AWS configuration
   const s3 = new AWS.S3({
@@ -33,8 +35,46 @@ export async function POST(req: any) {
   try {
     const result = await s3.upload(params).promise();
     response.status = 200;
-    response.message = "File uploaded to S3";
-    response.data = result;
+
+    // Save to database
+
+    const fileUrl = result.Location;
+
+    console.log(fileContent.toString());
+
+    const base64FileContent = fileContent.toString("base64");
+    const file = await prisma.sheets.create({
+      data: {
+        id: v4(),
+        name: fileName,
+        url: fileUrl,
+        content: base64FileContent,
+      },
+    });
+
+    response.message = `File '${fileName}' uploaded to successfully`;
+    response.data = {
+      ...result,
+      redirectTo: `/file/process/${file.id}/`,
+      file: fileContent,
+    };
+
+    // const order = await prisma.orders.create({
+    //   data: {
+    //     id: v4(),
+    //     customerId: "baidar gul",
+    //     amount: 100,
+    //     confirmedBy: "baidar gul",
+    //     courier: "M&P",
+    //     note: "order verified",
+    //     product: "Sohan halwa",
+    //     weight: "1KG",
+    //     status: "pending",
+    //     trackingNo: "123456789",
+    //     variant: "Sadah",
+    //   },
+    // });
+
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     response.status = 500;

@@ -8,10 +8,38 @@ datasource db {
 }
 
 model orders {
-  id            String    @id @unique
-  dateOfBooking DateTime  @db.Timestamptz(6)
+  id            String     @id @unique
+  dateOfBooking DateTime   @default(now()) @db.Timestamptz(6)
+  status        String
+  note          String?
+  confirmedBy   String?
+  product       String
+  variant       String
+  weight        String
+  amount        Int
+  courier       String
+  trackingNo    String
   customerId    String
-  courierId     String
-  lastUpdatedOn DateTime? @db.Timestamptz(6)
-  completed     Boolean?  @default(false)
+  customers     customers? @relation(fields: [customerId], references: [id])
+}
+
+model customers {
+  id        String   @id @unique @default(uuid())
+  name      String
+  email     String
+  phone     String
+  address   String
+  city      String
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @db.Timestamptz(6)
+  orders    orders[]
+}
+
+model sheets {
+  id        String   @id @unique @default(uuid())
+  name      String
+  url       String
+  content   String
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @db.Timestamptz(6)
 }
