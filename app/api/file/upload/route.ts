@@ -12,7 +12,7 @@ export async function POST(req: any) {
     data: {},
   };
   const requested = await req.json();
-  const { data, fileName, file } = requested;
+  const { data, fileName } = requested;
 
   // AWS configuration
   const s3 = new AWS.S3({
@@ -40,9 +40,22 @@ export async function POST(req: any) {
 
     const fileUrl = result.Location;
 
-    console.log(fileContent.toString());
-
     const base64FileContent = fileContent.toString("base64");
+
+    const check = await prisma.sheets.findFirst({
+      where: {
+        name: fileName,
+      },
+    })
+
+    if(check) {
+      await prisma.sheets.deleteMany({
+        where: {
+          name: fileName,
+        },
+      })
+    }
+
     const file = await prisma.sheets.create({
       data: {
         id: v4(),

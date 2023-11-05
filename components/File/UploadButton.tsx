@@ -41,7 +41,7 @@ const UploadButton = (props: Props) => {
                 // Send the Base64 encoded data to the API
                 setIsUploading(true)
                 console.log(`Path`, file)
-                await axios.post('/api/file/upload/', { data: base64Content, fileName: file.name, file: file })
+                await axios.post('/api/file/upload/', { data: base64Content, fileName: file.name })
                     .then(response => {
                         if (response.status === 200) {
                             const redirectTo = response.data.data.redirectTo
