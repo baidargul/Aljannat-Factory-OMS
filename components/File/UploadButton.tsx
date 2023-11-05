@@ -1,10 +1,19 @@
 'use client'
 import { useState } from 'react';
-import * as XLSX from 'xlsx';
 import React from 'react'
+import { S3 } from 'aws-sdk';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+
+const s3 = new S3({
+    // Add your AWS configuration here
+    // For example:
+    accessKeyId: 'AKIATIQPEIGEHWZIEOP3',
+    secretAccessKey: 'dk0yl2zEIstpeXAPx9QW55Ui1',
+    region: 'ap-south-1', // e.g., 'us-west-2'
+});
 
 type Props = {
-    children: React.ReactNode
 }
 
 export const tableHeaders = [
@@ -12,68 +21,55 @@ export const tableHeaders = [
 ]
 
 const UploadButton = (props: Props) => {
-    const [data, setData] = useState<any>(null);
-    const [availableSheets, setAvailableSheets] = useState<string[]>([]);
-    const [isReadingFile, setIsReadingFile] = useState<boolean>(false);
-    const [selectedSheet, setSelectedSheet] = useState<string>("");
-    // Remove the 'reader' state
-    const [workbook, setWorkbook] = useState<any>(null);
-
+    const [file, setFile] = useState<any>(null)
+    const [isUploading, setIsUploading] = useState<boolean>(false)
+    const router = useRouter()
 
     const handleFileUpload = (e: any) => {
-        setIsReadingFile(true);
-        const tempReader = new FileReader();
-        tempReader.onload = (event: any) => {
-            const data = event.target.result;
-            const workbook = XLSX.read(data, { type: 'binary' });
-            const sheets = workbook.SheetNames;
-            setAvailableSheets(sheets);
-            setWorkbook(workbook);
-            setIsReadingFile(false);
+        e.preventDefault()
+        setFile(e.target.files[0])
+    }
+
+    const handleUploadClick = async (e: any) => {
+        e.preventDefault();
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async () => {
+            if (typeof reader.result === 'string') {
+                const base64Content = reader.result.split(',')[1]; // Extract only the base64 content
+
+                // Send the Base64 encoded data to the API
+                setIsUploading(true)
+                await axios.post('/api/file/upload/', { data: base64Content, fileName: file.name })
+                    .then(response => {
+                        if (response.status === 200) {
+                            router.push('/File/Process/')
+                        }
+                        console.log('File uploaded successfully:', response.data);
+                    })
+                    .catch(error => {
+                        console.error('Error uploading the file:', error.response.data.message);
+                    });
+                setIsUploading(false)
+            } else {
+                console.error('Failed to read the file content.');
+            }
         };
 
-        tempReader.readAsBinaryString(e.target.files[0]);
-    }
-
-    const handleUploadClick = () => {
-        setIsReadingFile(true);
-        // Check if any sheets are available in the workbook
-        if (workbook && workbook.SheetNames.length > 0) {
-            if (!selectedSheet) {
-                setSelectedSheet(workbook.SheetNames[0]); // Access the first sheet
-            }
-            const sheet = workbook.Sheets[selectedSheet];
-            const parseData = XLSX.utils.sheet_to_json(sheet);
-            setData(parseData);
-            setIsReadingFile(false);
-        } else {
-            // Handle the case where there are no sheets in the workbook
-            setIsReadingFile(false);
-            console.error("No sheets found in the workbook.");
-        }
-    }
+        reader.readAsDataURL(file);
+    };
 
     return (
         <>
             <div className='p-2 flex gap-2 items-center border drop-shadow-sm w-fit rounded-sm'>
-                <input type="file" placeholder="Enter your name" accept='.xlsx, .xls' onChange={handleFileUpload}></input>
+                <input disabled={isUploading} type="file" placeholder="Enter your name" accept='.xlsx, .xls' onChange={handleFileUpload}></input>
                 <div className='flex gap-2 items-center'>
-                    <label className='text-xs'>
-                        Sheet:
-                    </label>
-                    <select className='text-xs p-2 select:border-cyan-300 border rounded-md'>
-                        {availableSheets && availableSheets.map((sheetName: string) => (
-                            <option key={sheetName} value={sheetName}>{sheetName}</option>
-                        ))}
-                    </select>
-                    <button onClick={handleUploadClick} className='p-2 border rounded-md w-fit text-xs'>
-                        Upload
+                    <button disabled={isUploading} onClick={handleUploadClick} className='p-2 border rounded-md w-fit text-xs'>
+                        {
+                            isUploading ? 'Uploading...' : 'Upload'}
                     </button>
                 </div>
             </div>
-            {
-                props.children
-            }
         </>
     )
 }

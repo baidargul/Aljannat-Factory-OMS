@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://baidargul:iamacracker@localhost:5432/exceltodb"
+}
+
+model orders {
+  id            String    @id @unique
+  dateOfBooking DateTime  @db.Timestamptz(6)
+  customerId    String
+  courierId     String
+  lastUpdatedOn DateTime? @db.Timestamptz(6)
+  completed     Boolean?  @default(false)
+}
