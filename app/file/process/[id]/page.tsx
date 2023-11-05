@@ -30,8 +30,9 @@ const page = async (props: Props) => {
             // console.log(data)
 
             data.map((row: any, index: number) => {
-                if(index===0) return
+                if (index === 0) return
                 row.map((cell: any, index: number) => {
+                    if (index === 0) console.log(`Celld:`, excelSerialToDate(cell))
                     console.log(`cell:`, cell)
                 })
             })
@@ -66,6 +67,13 @@ function excelSerialToDate(serial: any) {
     const date = new Date(Date.UTC(1899, 11, 30)); // Excel's starting date is one day ahead (December 30, 1899)
 
     date.setUTCDate(date.getUTCDate() + serial);
+    return toLocalDateAndTimeFormat(date);
+}
 
-    return date;
+function toLocalDateAndTimeFormat(date: any, time: boolean = false) {
+    const localDate = new Date(date);
+    if (time) {
+        return localDate.toLocaleDateString() + ' ' + localDate.toLocaleTimeString();
+    }
+    return localDate.toLocaleDateString();
 }
