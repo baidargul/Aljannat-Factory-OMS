@@ -10,25 +10,26 @@ datasource db {
 model orders {
   id            String     @id @unique
   dateOfBooking DateTime   @default(now()) @db.Timestamptz(6)
-  status        String
+  status        String?
   note          String?
   confirmedBy   String?
-  product       String
-  variant       String
-  weight        String
-  amount        Int
-  courier       String
-  trackingNo    String
-  customerId    String
+  product       String?
+  variant       String?
+  weight        String?
+  amount        Int?
+  courier       String?
+  trackingNo    String?
+  customerId    String?
   customers     customers? @relation(fields: [customerId], references: [id])
 }
 
 model customers {
   id        String   @id @unique @default(uuid())
-  name      String
-  phone     String   @unique
-  address   String
-  city      String
+  name      String?
+  phone     String
+  phone2     String?
+  address   String?
+  city      String?
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @db.Timestamptz(6)
   orders    orders[]

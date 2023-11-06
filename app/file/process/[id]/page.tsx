@@ -37,35 +37,39 @@ async function page(props: Props, context: any) {
                     id: v4(),
                 }
                 const fetchedCustomer = await getCustomer(row, tableHeaders)
-                row.map((cell: any, index: number) => {
-                    if (tableHeaders[index] === "Booking") {
+                if (fetchedCustomer) {
+                    row.map((cell: any, index: number) => {
+                        if (tableHeaders[index] === "Booking") {
+                            rowObject = {
+                                ...rowObject,
+                                [tableHeaders[index]]: excelSerialToDate(cell)
+                            }
+                            return
+                        }
                         rowObject = {
                             ...rowObject,
-                            [tableHeaders[index]]: excelSerialToDate(cell)
+                            [tableHeaders[index]]: cell
                         }
-                        return
-                    }
-                    rowObject = {
-                        ...rowObject,
-                        [tableHeaders[index]]: cell
-                    }
-                })
-                await prisma.orders.create({
-                    data: {
-                        id: rowObject.id,
-                        dateOfBooking: rowObject.Booking,
-                        status: rowObject.Status,
-                        note: rowObject.Note,
-                        confirmedBy: rowObject.Confirmed,
-                        product: rowObject.Product,
-                        variant: rowObject.Variant,
-                        weight: rowObject.Weight,
-                        amount: rowObject.Amount,
-                        courier: rowObject.Courier,
-                        trackingNo: String(rowObject.Tracking),
-                        customerId: fetchedCustomer.id
-                    }
-                })
+                    })
+                    await prisma.orders.create({
+                        data: {
+                            id: String(rowObject.id),
+                            dateOfBooking: rowObject.Booking ? rowObject.Booking : "",
+                            status: rowObject.Status ? String(rowObject.Status) : "",
+                            note: rowObject.Note ? String(rowObject.Note) : "",
+                            confirmedBy: rowObject.Confirmed ? String(rowObject.Confirmed) : "",
+                            product: rowObject.Product ? String(rowObject.Product) : "",
+                            variant: rowObject.Variant ? String(rowObject.Variant) : "",
+                            weight: rowObject.Weight ? String(rowObject.Weight) : "",
+                            amount: rowObject.Amount ? Number(rowObject.Amount) : 0,
+                            courier: rowObject.Courier ? String(rowObject.Courier) : "",
+                            trackingNo: rowObject.Tracking ? String(rowObject.Tracking) : "",
+                            customerId: String(fetchedCustomer.id),
+                        }
+                    })
+                } else {
+                    console.log(`Customer can't be fetched for:`, row)
+                }
             })
 
             await prisma.sheets.delete({
@@ -87,7 +91,7 @@ async function page(props: Props, context: any) {
     }
 
 
-    if(isComplete) {
+    if (isComplete) {
         redirectToCompletePage()
     }
 
@@ -138,42 +142,66 @@ function toLocalDateAndTimeFormat(date: any, time: boolean = false, systemFormat
 }
 
 async function getCustomer(row: any, tableHeaders: any) {
-    let customer: any = {}
-    row.map((cell: any, index: number) => {
-        if (tableHeaders[index] === "Customer") {
-            customer.name = cell
-        }
-        if (tableHeaders[index] === "Phone") {
-            customer.phone = cell
-        }
-        if (tableHeaders[index] === "City") {
-            customer.city = cell
-        }
-        if (tableHeaders[index] === "Address") {
-            customer.address = cell
-        }
-    })
+    try {
+        let customer: any = {}
+        row.map((cell: any, index: number) => {
+            if (tableHeaders[index] === "Customer") {
+                customer.name = cell
+            }
+            if (tableHeaders[index] === "Phone") {
+                if (cell) {
+                    customer.phone = cell
+                } else {
+                    customer.phone = "00000000001"
+                }
+            }
+            if (tableHeaders[index] === "Phone2") {
+                if (cell) {
+                    customer.phone2 = cell
+                } else {
+                    customer.phone2 = "00000000001"
+                }
+            }
+            if (tableHeaders[index] === "City") {
+                customer.city = cell
+            }
+            if (tableHeaders[index] === "Address") {
+                customer.address = cell
+            }
+        })
 
-    console.log(`target phone: `, customer.phone)
-    const fetchedCustomer = await prisma.customers.findFirst({
-        where: {
-            phone: customer.phone
-        }
-    })
+        console.log(`target phone: `, customer.phone, ` | `, customer.phone2)
+        const fetchedCustomer = await prisma.customers.findFirst({
+            where: {
+                OR: [
+                    {
+                        phone: String(customer.phone),
+                    },
+                    {
+                        phone2: String(customer.phone2),
+                    },
+                ]
+            }
+        })
 
-    if (fetchedCustomer) {
-        return fetchedCustomer
+        if (fetchedCustomer) {
+            return fetchedCustomer
+        }
+
+        const createdCustomer = await prisma.customers.create({
+            data: {
+                id: v4(),
+                name: customer.name ? String(customer.name) : "Unknown",
+                phone: customer.phone ? String(customer.phone) : "00000000001",
+                phone2: customer.phone2 ? String(customer.phone2) : "00000000001",
+                city: customer.city ? String(customer.city) : "Unknown",
+                address: customer.address ? String(customer.address) : "Unknown",
+            }
+        })
+
+        return createdCustomer
+    } catch (error) {
+        console.log(`ERROR:`, error)
     }
 
-    const createdCustomer = await prisma.customers.create({
-        data: {
-            id: v4(),
-            name: customer.name,
-            phone: customer.phone,
-            city: customer.city,
-            address: customer.address
-        }
-    })
-
-    return createdCustomer
 }

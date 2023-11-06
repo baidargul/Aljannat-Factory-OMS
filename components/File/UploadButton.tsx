@@ -19,6 +19,7 @@ type Props = {
 const UploadButton = (props: Props) => {
     const [file, setFile] = useState<any>(null)
     const [isUploading, setIsUploading] = useState<boolean>(false)
+    const [isUploaded, setIsUploaded] = useState<boolean>(false)
     const router = useRouter()
 
     const handleFileUpload = (e: any) => {
@@ -38,13 +39,14 @@ const UploadButton = (props: Props) => {
             await axios.post('/api/file/upload/', data).then(res => {
                 if (res.data.status === 200) {
                     console.log(`Uploaded successfully`)
+                    setIsUploaded(true)
                     const redirectTo = res.data.data.redirectTo
                     router.push(redirectTo)
                 }
             }).catch(error => {
                 console.error('Error uploading the file:', error.response.data.message);
             });
-            
+
         } catch (error) {
             console.log(error)
         }
@@ -52,7 +54,7 @@ const UploadButton = (props: Props) => {
     };
 
     return (
-        <>
+        <div className='select-none'>
             <div className='p-2 flex gap-2 items-center border drop-shadow-sm w-fit rounded-sm'>
                 <input disabled={isUploading} type="file" placeholder="Enter your name" accept='.xlsx, .xls' onChange={handleFileUpload}></input>
                 <div className='flex gap-2 items-center'>
@@ -62,7 +64,10 @@ const UploadButton = (props: Props) => {
                     </button>
                 </div>
             </div>
-        </>
+            {isUploaded && (<div className={`text-xs my-2 text-center border-b-2 rounded-lg p-2 transition-all translate`}>
+                Please wait now you're being redirected to the file processing page.
+            </div>)}
+        </div>
     )
 }
 
