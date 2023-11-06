@@ -16,10 +16,6 @@ const s3 = new S3({
 type Props = {
 }
 
-export const tableHeaders = [
-    "Status", "Description", "Tracking#", "Name", "Phone", "City", "Address", "Product"
-]
-
 const UploadButton = (props: Props) => {
     const [file, setFile] = useState<any>(null)
     const [isUploading, setIsUploading] = useState<boolean>(false)

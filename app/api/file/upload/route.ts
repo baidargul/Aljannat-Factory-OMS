@@ -72,22 +72,6 @@ export async function POST(req: any) {
       file: fileContent,
     };
 
-    // const order = await prisma.orders.create({
-    //   data: {
-    //     id: v4(),
-    //     customerId: "baidar gul",
-    //     amount: 100,
-    //     confirmedBy: "baidar gul",
-    //     courier: "M&P",
-    //     note: "order verified",
-    //     product: "Sohan halwa",
-    //     weight: "1KG",
-    //     status: "pending",
-    //     trackingNo: "123456789",
-    //     variant: "Sadah",
-    //   },
-    // });
-
     return new Response(JSON.stringify(response));
   } catch (error: any) {
     response.status = 500;
