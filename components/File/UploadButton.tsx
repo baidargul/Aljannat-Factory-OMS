@@ -29,32 +29,26 @@ const UploadButton = (props: Props) => {
     const handleUploadClick = async (e: any) => {
         e.preventDefault();
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = async () => {
-            if (typeof reader.result === 'string') {
-                const base64Content = reader.result.split(',')[1]; // Extract only the base64 content
 
-                // Send the Base64 encoded data to the API
-                setIsUploading(true)
-                console.log(`Path`, file)
-                await axios.post('/api/file/upload/', { data: base64Content, fileName: file.name })
-                    .then(response => {
-                        if (response.status === 200) {
-                            const redirectTo = response.data.data.redirectTo
-                            router.push(redirectTo)
-                        }
-                        console.log('File uploaded successfully:', response.data);
-                    })
-                    .catch(error => {
-                        console.error('Error uploading the file:', error.response.data.message);
-                    });
-                setIsUploading(false)
-            } else {
-                console.error('Failed to read the file content.');
-            }
-        };
+        try {
+            setIsUploading(true)
+            const data = new FormData();
+            data.set('file', file);
 
-        reader.readAsDataURL(file);
+            await axios.post('/api/file/upload/', data).then(res => {
+                if (res.data.status === 200) {
+                    console.log(`Uploaded successfully`)
+                    const redirectTo = res.data.data.redirectTo
+                    router.push(redirectTo)
+                }
+            }).catch(error => {
+                console.error('Error uploading the file:', error.response.data.message);
+            });
+            
+        } catch (error) {
+            console.log(error)
+        }
+        setIsUploading(false)
     };
 
     return (

@@ -2,35 +2,46 @@ import AWS from "aws-sdk";
 import { config as configDotenv } from "dotenv";
 import prisma from "@/lib/prisma";
 import { v4 } from "uuid";
+import { NextRequest } from "next/server";
 
 configDotenv();
 
-export async function POST(req: any) {
+export async function POST(req: NextRequest) {
   const response = {
     status: 400,
     message: "",
     data: {},
   };
-  const requested = await req.json();
-  const { data, fileName } = requested;
 
+  const data = await req.formData();
+  const file: File | null = data.get("file") as unknown as File;
+  const fileName = file?.name;
+  
+  if (!file) {
+    response.status = 400;
+    response.message = "File not found";
+    response.data = {};
+  }
+  
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+  
   // AWS configuration
   const s3 = new AWS.S3({
     accessKeyId: "AKIATIQPEIGEHWZIEOP3",
     secretAccessKey: "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",
     region: "ap-south-1",
   });
-
-  // Decode Base64 data to a Buffer
-  const fileContent = Buffer.from(data, "base64");
-
+  
   // S3 parameters
+  const fileContent = buffer;
   const params = {
     Bucket: "aljannat/exceltodatabase/raw",
     Key: fileName,
     Body: fileContent,
   };
 
+  
   // Upload to S3
   try {
     const result = await s3.upload(params).promise();
