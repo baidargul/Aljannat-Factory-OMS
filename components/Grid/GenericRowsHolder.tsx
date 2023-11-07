@@ -8,6 +8,8 @@ type Props = {
 }
 
 const GenericRowsHolder = (props: Props) => {
+
+
     return (
         <ScrollArea className='w-full h-[550px]'>
             <div>
