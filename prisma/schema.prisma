@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://baidargul:iamacracker@localhost:5432/exceltodb"
+  url      = "postgresql://LAiba@localhost:5432/exceltodb"
 }
 
 model orders {
