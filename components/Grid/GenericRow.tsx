@@ -19,11 +19,15 @@ const GenericRow = (props: Props) => {
   function DataRow() {
     return (
       <div
-        className="p-2 grid grid-cols-8 w-full justify-items-start gap-10 text-xs text-start border select-none"
+        className={`p-2 grid grid-cols-8 w-full justify-items-start gap-10 text-xs text-start border select-none ${String(row.status).toLocaleLowerCase()==="fake" && "opacity-40 line-through"}`}
         onClick={handleRowClick}
       >
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis ">
           {row.dateOfBooking.toDateString()}
+        </div>
+        <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
+          {row.customers.name.charAt(0).toUpperCase() +
+            row.customers.name.slice(1).toLowerCase()}
         </div>
         <div className="font-semibold w-36 overflow-hidden whitespace-nowrap text-ellipsis">
           {row.product.charAt(0).toUpperCase() +
@@ -42,14 +46,10 @@ const GenericRow = (props: Props) => {
         </div>
 
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.customers.name.charAt(0).toUpperCase() +
-            row.customers.name.slice(1).toLowerCase()}
+          Rs {row.amount}
         </div>
-        <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.customers.phone}
-        </div>
-        <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.customers.phone2}
+        <div className={` ${rowStatusStyle(row.status)} p-1 text-center rounded-md w-36 overflow-hidden whitespace-nowrap text-ellipsis`}>
+          {row.status}
         </div>
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
           {row.note}
@@ -158,3 +158,22 @@ const GenericRow = (props: Props) => {
 };
 
 export default GenericRow;
+
+function rowStatusStyle(status: string) {
+  switch (String(status).toLocaleLowerCase()) {
+    case "dispatched":
+      return "bg-indigo-100 text-indigo-800";
+    case "credit":
+      return "bg-green-100 text-green-800";
+    case "completed":
+      return "bg-green-100 text-green-800";
+    case "delivered":
+      return "bg-green-100 text-green-800";
+    case "fake":
+      return "bg-slate-100 text-slate-800";
+    case "cancelled":
+      return "bg-red-100 text-red-500";
+    default:
+      return "bg-yellow-300";
+  }
+}
