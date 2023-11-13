@@ -4,6 +4,7 @@ import React from 'react'
 import * as XLSX from 'xlsx';
 import { v4 } from 'uuid';
 import { redirect } from 'next/navigation'
+import { product } from '@prisma/client';
 type Props = {
     params: any
     req: any
@@ -19,6 +20,7 @@ async function page(props: Props, context: any) {
         }
     })
 
+
     let isComplete = false
     if (processFile) {
         try {
@@ -31,52 +33,169 @@ async function page(props: Props, context: any) {
             const tableHeaders: any = fileData[0]
             const data = fileData
 
-            data.map(async (row: any, index: number) => {
-                if (index === 0) return
-                let rowObject: any = {
-                    id: v4(),
-                }
-                const fetchedCustomer = await getCustomer(row, tableHeaders)
-                if (fetchedCustomer) {
-                    row.map((cell: any, index: number) => {
-                        if (tableHeaders[index] === "Booking") {
-                            rowObject = {
-                                ...rowObject,
-                                [tableHeaders[index]]: excelSerialToDate(cell)
+            let row:any
+
+            let index = 0
+            for (row of data) {
+                try {
+                    await createLog(`Processing index: ${index}`)
+                    if (index > 0) {
+                        let rowObject: any = {
+                            id: v4(),
+                        }
+        
+                        const fetchedCustomer = await getCustomer(row, tableHeaders);
+                        if (fetchedCustomer) {
+                            row.map((cell: any, iindex: number) => {
+                                if (tableHeaders[iindex] === "Booking") {
+                                    rowObject = {
+                                        ...rowObject,
+                                        [tableHeaders[iindex]]: excelSerialToDate(cell)
+                                    }
+                                    return
+                                }
+                                rowObject = {
+                                    ...rowObject,
+                                    [tableHeaders[iindex]]: cell
+                                }
+                            })
+                            console.log(rowObject) 
+        
+                            if (!rowObject.Booking) {
+                                await createLog(`No date found on index: '${index}', skipping`)
+                                return
                             }
-                            return
+                            if (!rowObject.Product) {
+                                await createLog(`No product found on index: '${index}', skipping`)
+                                return
+                            }
+
+                            let product: product | null = await prisma.product.findFirst({
+                                where: {
+                                    name: rowObject.Product.toLocaleLowerCase()
+                                }
+                            })
+        
+                            if (!product) {
+                                await createLog(`Product not found creating...`)
+                                product = await prisma.product.create({
+                                    data: {
+                                        id: v4(),
+                                        name: String(rowObject.Product).toLocaleLowerCase(),
+                                    }
+                                })
+                                await createLog(`created: ${JSON.stringify(product)}`)
+                            } else
+                            {
+                                await createLog(`Product found`)
+                            }
+        
+                            const order = await prisma.orders.create({
+                                data: {
+                                    id: String(rowObject.id),
+                                    dateOfBooking: rowObject.Booking ? new Date(rowObject.Booking).toISOString() : "",
+                                    status: rowObject.Status ? String(rowObject.Status) : "",
+                                    note: rowObject.Note ? String(rowObject.Note) : "",
+                                    confirmedBy: rowObject.Confirmed ? String(rowObject.Confirmed) : "",
+                                    product: product.id,
+                                    variant: rowObject.Variant ? String(rowObject.Variant) : "",
+                                    weight: rowObject.Weight ? String(rowObject.Weight) : "",
+                                    amount: rowObject.Amount ? Number(rowObject.Amount) : 0,
+                                    courier: rowObject.Courier ? String(rowObject.Courier) : "",
+                                    trackingNo: rowObject.Tracking ? String(rowObject.Tracking) : "",
+                                    customerId: String(fetchedCustomer.id),
+                                }
+                            })
+        
+                        } else {
+                            await createLog(`Customer can't be fetched for: ${row}`)
+                            console.log(`Customer can't be fetched for:`, row)
                         }
-                        rowObject = {
-                            ...rowObject,
-                            [tableHeaders[index]]: cell
-                        }
-                    })
-                    await prisma.orders.create({
-                        data: {
-                            id: String(rowObject.id),
-                            dateOfBooking: rowObject.Booking ? rowObject.Booking : "",
-                            status: rowObject.Status ? String(rowObject.Status) : "",
-                            note: rowObject.Note ? String(rowObject.Note) : "",
-                            confirmedBy: rowObject.Confirmed ? String(rowObject.Confirmed) : "",
-                            product: rowObject.Product ? String(rowObject.Product) : "",
-                            variant: rowObject.Variant ? String(rowObject.Variant) : "",
-                            weight: rowObject.Weight ? String(rowObject.Weight) : "",
-                            amount: rowObject.Amount ? Number(rowObject.Amount) : 0,
-                            courier: rowObject.Courier ? String(rowObject.Courier) : "",
-                            trackingNo: rowObject.Tracking ? String(rowObject.Tracking) : "",
-                            customerId: String(fetchedCustomer.id),
-                        }
-                    })
-                } else {
-                    console.log(`Customer can't be fetched for:`, row)
+                    } else{
+                        await createLog(`Skipping index: ${index}`)
+                    }
+                    index = index + 1
+                    await createLog(`Processed index: ${index}`)
+                } catch (error) {
+                    await createLog(`Error on index: ${index}, ${error}`)
                 }
-            })
+            }
+
+
+            // await Promise.all(data.map(async (row: any, index: number) => {
+            //     if (index === 0) return
+            //     let rowObject: any = {
+            //         id: v4(),
+            //     }
+
+            //     const fetchedCustomer = await getCustomer(row, tableHeaders);
+            //     if (fetchedCustomer) {
+            //         row.map((cell: any, index: number) => {
+            //             if (tableHeaders[index] === "Booking") {
+            //                 rowObject = {
+            //                     ...rowObject,
+            //                     [tableHeaders[index]]: excelSerialToDate(cell)
+            //                 }
+            //                 return
+            //             }
+            //             rowObject = {
+            //                 ...rowObject,
+            //                 [tableHeaders[index]]: cell
+            //             }
+            //         })
+
+            //         if (!rowObject.Booking) {
+            //             // console.log(`No date found on index: '${index}', skipping`)
+            //             return
+            //         }
+
+            //         let product: product | null = await prisma.product.findUnique({
+            //             where: {
+            //                 name: rowObject.Product
+            //             }
+            //         })
+
+            //         console.log(product)
+
+            //         if (!product) {
+            //             console.log(`product not found creating...`)
+            //             product = await prisma.product.create({
+            //                 data: {
+            //                     id: v4(),
+            //                     name: String(rowObject.Product).toLocaleLowerCase(),
+            //                 }
+            //             })
+            //             console.log(`created: `, product)
+            //         }
+
+            //         const order = await prisma.orders.create({
+            //             data: {
+            //                 id: String(rowObject.id),
+            //                 dateOfBooking: rowObject.Booking ? new Date(rowObject.Booking).toISOString() : "",
+            //                 status: rowObject.Status ? String(rowObject.Status) : "",
+            //                 note: rowObject.Note ? String(rowObject.Note) : "",
+            //                 confirmedBy: rowObject.Confirmed ? String(rowObject.Confirmed) : "",
+            //                 product: product.id,
+            //                 variant: rowObject.Variant ? String(rowObject.Variant) : "",
+            //                 weight: rowObject.Weight ? String(rowObject.Weight) : "",
+            //                 amount: rowObject.Amount ? Number(rowObject.Amount) : 0,
+            //                 courier: rowObject.Courier ? String(rowObject.Courier) : "",
+            //                 trackingNo: rowObject.Tracking ? String(rowObject.Tracking) : "",
+            //                 customerId: String(fetchedCustomer.id),
+            //             }
+            //         })
+
+            //     } else {
+            //         console.log(`Customer can't be fetched for:`, row)
+            //     }
+            // }))
 
             await prisma.sheets.delete({
                 where: {
                     id: id
                 }
             })
+
 
             isComplete = true
 
@@ -142,9 +261,16 @@ function toLocalDateAndTimeFormat(date: any, time: boolean = false, systemFormat
 }
 
 async function getCustomer(row: any, tableHeaders: any) {
+
     try {
         let customer: any = {}
+        let hasDate = true;
         row.map((cell: any, index: number) => {
+            if (tableHeaders[index] === "Booking") {
+                if (!cell) {
+                    hasDate = false
+                }
+            }
             if (tableHeaders[index] === "Customer") {
                 customer.name = cell
             }
@@ -170,7 +296,10 @@ async function getCustomer(row: any, tableHeaders: any) {
             }
         })
 
-        console.log(`target phone: `, customer.phone, ` | `, customer.phone2)
+        if (!hasDate) {
+            return null
+        }
+
         const fetchedCustomer = await prisma.customers.findFirst({
             where: {
                 OR: [
@@ -204,4 +333,15 @@ async function getCustomer(row: any, tableHeaders: any) {
         console.log(`ERROR:`, error)
     }
 
+}
+
+
+
+async function createLog(description: string) {
+    await prisma.errorlogs.create({
+        data: {
+            id: v4(),
+            description: description,
+        }
+    })
 }

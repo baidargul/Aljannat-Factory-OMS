@@ -58,7 +58,7 @@ const GenericRow = (props: Props) => {
     );
   }
 
-  console.log(row);
+
   const title = `${
     row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"
   } ${
