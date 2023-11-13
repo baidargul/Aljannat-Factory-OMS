@@ -9,6 +9,7 @@ datasource db {
 
 model orders {
   id             String           @id @unique
+  index          Int              @default(autoincrement())
   dateOfBooking  DateTime         @default(now()) @db.Timestamptz(6)
   status         String?
   note           String?
@@ -26,6 +27,7 @@ model orders {
 
 model customers {
   id        String   @id @unique @default(uuid())
+  index     Int      @default(autoincrement())
   name      String?
   phone     String
   phone2    String?
@@ -38,6 +40,7 @@ model customers {
 
 model sheets {
   id        String   @id @unique @default(uuid())
+  index    Int      @default(autoincrement())
   name      String
   url       String
   content   String
@@ -47,6 +50,7 @@ model sheets {
 
 model product {
   id                String              @id @default(uuid())
+  index             Int                 @default(autoincrement())
   name              String              @unique
   ordersRegister    ordersRegister[]
   productVariations productVariations[]
@@ -54,13 +58,14 @@ model product {
 
 model errorlogs {
   id          String   @id @default(uuid())
+  index       Int      @default(autoincrement())
   description String?
   date        DateTime @default(now()) @db.Timestamptz(6)
-  index       Int      @default(autoincrement())
 }
 
 model ordersRegister {
   id                String             @id @default(uuid())
+  index             Int                @default(autoincrement())
   orderId           String?
   productId         String?
   variantId         String?
@@ -71,8 +76,9 @@ model ordersRegister {
 
 model productVariations {
   id             String           @id @default(uuid())
-  productId      String?
-  name           String?          @unique
+  index          Int              @default(autoincrement())
+  productId      String
+  name           String          @unique
   ordersRegister ordersRegister[]
   product        product?         @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
 }

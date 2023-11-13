@@ -63,78 +63,106 @@ async function page(props: Props, context: any) {
 
                             if (!rowObject.Booking) {
                                 await createLog(`No date found on index: '${index}', skipping`)
-                                return
-                            }
-                            if (!rowObject.Product) {
-                                await createLog(`No product found on index: '${index}', skipping`)
-                                return
-                            }
-
-                            let product: product | null = await prisma.product.findFirst({
-                                where: {
-                                    name: rowObject.Product.toLocaleLowerCase()
-                                }
-                            })
-
-                            if (!product) {
-                                await createLog(`Product not found creating...`)
-                                product = await prisma.product.create({
-                                    data: {
-                                        id: v4(),
-                                        name: String(rowObject.Product).toLocaleLowerCase(),
-                                    }
-                                })
-                                await createLog(`created: ${JSON.stringify(product)}`)
+                                
                             } else {
-                                await createLog(`Product found`)
-                            }
-
-                            let variant: productVariations | null = await prisma.productVariations.findFirst({
-                                where: {
-                                    name: rowObject.Product.toLocaleLowerCase(),
-                                    productId: product.id
+                                if (!rowObject.Product) {
+                                    await createLog(`No product found on index: '${index}', skipping`)
+                                    
                                 }
-                            })
+                                else {
+                                    let product: product | null = await prisma.product.findFirst({
+                                        where: {
+                                            name: rowObject.Product.toLocaleLowerCase()
+                                        }
+                                    })
 
-                            if (!variant) {
-                                await createLog(`'${rowObject.Variant}' variation not found in product ${product.name.toLocaleUpperCase()}, Adding it...`)
-                                variant = await prisma.productVariations.create({
-                                    data: {
-                                        id: v4(),
-                                        productId: product.id,
-                                        name: String(rowObject.Variant).toLocaleLowerCase(),
+                                    if (!product) {
+                                        await createLog(`Product not found creating...`)
+                                        product = await prisma.product.create({
+                                            data: {
+                                                id: v4(),
+                                                name: String(rowObject.Product).toLocaleLowerCase(),
+                                            }
+                                        })
+                                        await createLog(`created: ${JSON.stringify(product)}`)
+                                    } else {
+                                        await createLog(`Product found`)
                                     }
-                                })
-                                await createLog(`created variation: ${JSON.stringify(variant)}`)
-                            } else {
-                                await createLog(`Variant found`)
+
+                                    let variant: productVariations | null = await prisma.productVariations.findUnique({
+                                        where: {
+                                            name: rowObject.Variant.toLocaleLowerCase(),
+                                            productId: product.id
+                                        }
+                                    })
+
+                                    if (!variant) {
+                                        await createLog(`'${rowObject.Variant}' variation not found in product ${product.name.toLocaleUpperCase()}, Adding it...`)
+                                        variant = await prisma.productVariations.create({
+                                            data: {
+                                                id: v4(),
+                                                productId: product.id,
+                                                name: String(rowObject.Variant).toLocaleLowerCase(),
+                                            }
+                                        })
+                                        await createLog(`created variation: ${JSON.stringify(variant)}`)
+                                    } else {
+                                        await createLog(`Variant found`)
+                                    }
+
+                                    await createLog(`Checking if order already exists with Tracking: ${rowObject.Tracking}`)
+                                    const trackingAlreadyExists = await prisma.orders.findFirst({
+                                        where: {
+                                            trackingNo: String(rowObject.Tracking)
+                                        }
+                                    })
+
+
+                                    if (!trackingAlreadyExists) {
+                                        await createLog(`Creating new order ${rowObject.Tracking}`)
+                                        const order = await prisma.orders.create({
+                                            data: {
+                                                id: String(rowObject.id),
+                                                dateOfBooking: rowObject.Booking ? new Date(rowObject.Booking).toISOString() : "",
+                                                status: rowObject.Status ? String(rowObject.Status) : "",
+                                                note: rowObject.Note ? String(rowObject.Note) : "",
+                                                confirmedBy: rowObject.Confirmed ? String(rowObject.Confirmed) : "",
+                                                product: product.id,
+                                                variant: rowObject.Variant ? String(rowObject.Variant) : "",
+                                                weight: rowObject.Weight ? String(rowObject.Weight) : "",
+                                                amount: rowObject.Amount ? Number(rowObject.Amount) : 0,
+                                                courier: rowObject.Courier ? String(rowObject.Courier) : "",
+                                                trackingNo: rowObject.Tracking ? String(rowObject.Tracking) : "",
+                                                customerId: String(fetchedCustomer.id),
+                                            }
+                                        })
+                                        await prisma.ordersRegister.create({
+                                            data: {
+                                                id: v4(),
+                                                orderId: rowObject.id,
+                                                productId: product.id,
+                                                variantId: variant.id,
+                                            }
+                                        })
+                                    } else {
+                                        await createLog(`Order with tracking no '${rowObject.Tracking}' already exists, altering it...`)
+                                        await prisma.ordersRegister.create({
+                                            data: {
+                                                id: v4(),
+                                                orderId: trackingAlreadyExists.id,
+                                                productId: product.id,
+                                                variantId: variant.id,
+                                            }
+                                        })
+
+                                    }
+                                }
+
                             }
 
-                            const order = await prisma.orders.create({
-                                data: {
-                                    id: String(rowObject.id),
-                                    dateOfBooking: rowObject.Booking ? new Date(rowObject.Booking).toISOString() : "",
-                                    status: rowObject.Status ? String(rowObject.Status) : "",
-                                    note: rowObject.Note ? String(rowObject.Note) : "",
-                                    confirmedBy: rowObject.Confirmed ? String(rowObject.Confirmed) : "",
-                                    product: product.id,
-                                    variant: rowObject.Variant ? String(rowObject.Variant) : "",
-                                    weight: rowObject.Weight ? String(rowObject.Weight) : "",
-                                    amount: rowObject.Amount ? Number(rowObject.Amount) : 0,
-                                    courier: rowObject.Courier ? String(rowObject.Courier) : "",
-                                    trackingNo: rowObject.Tracking ? String(rowObject.Tracking) : "",
-                                    customerId: String(fetchedCustomer.id),
-                                }
-                            })
 
-                            await prisma.ordersRegister.create({
-                                data: {
-                                    id: v4(),
-                                    orderId: order.id,
-                                    productId: product.id,
-                                    variantId: variant.id,
-                                }
-                            })
+
+
 
                         } else {
                             await createLog(`Customer can't be fetched for: ${row}`)
