@@ -69,89 +69,115 @@ const GenericRow = (props: Props) => {
   let orderDate: any = new Date(row.dateOfBooking).toDateString();
   return (
     <SheetProvider trigger={DataRow()}>
-      <div className="select-none mt-10 flex flex-col p-2  gap-2 ">
-        <div className="flex justify-between text-xs items-center">
-          <p className="p-1 border-b-2 border-red-900/30 tracking-wide ">
-            {orderDate}
-          </p>
-          <p className="text-red-900 p-1 border-b-2 border-red-900/30 border-double-2 font-semibold">
-            {row.status}
-          </p>
-        </div>
-        <div className="bg-red-900 p-1 font-semibold">
-          <div className="bg-yellow-300 rounded flex p-2 gap-2 w-full justify-evenly">
-            <p className="text-red-900">
-              {row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"}
+      <ScrollArea>
+        <div className="select-none mt-10 flex flex-col p-2  gap-2 ">
+          <div className="flex justify-between text-xs items-center">
+            <p className="p-1 border-b-2 border-red-900/30 tracking-wide ">
+              {orderDate}
             </p>
-            <p className="">{row.product}</p>
-            <p className="text-red-900">{row.variant}</p>
+            <p className="text-red-900 p-1 border-b-2 border-red-900/30 border-double-2 font-semibold">
+              {row.status}
+            </p>
           </div>
-        </div>
-        <div>
-          <div className="grid grid-cols-2 w-full">
-            <div className="font-semibold">
-              <p className="">Customer</p>
-              <p className="">Phone 01</p>
-              <p className="">Phone 02</p>
-              <p className="">City</p>
-              <p className="">Address</p>
+          <div className="bg-red-900 p-1 font-semibold">
+            <div className="bg-yellow-300 rounded flex p-2 gap-2 w-full justify-evenly">
+              <p className="text-red-900">
+                {row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"}
+              </p>
+              <p className="">{formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)}</p>
+              <p className="text-red-900">{row.variant}</p>
             </div>
-            <div className="">
-              <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                {row.customers.name.charAt(0).toUpperCase() +
-                  row.customers.name.slice(1).toLowerCase()}
-              </p>
-              <p className="">
-                {row.customers.phone !== "00000000001"
-                  ? row.customers.phone
-                  : "N/A"}
-              </p>
-              <p className="">
-                {row.customers.phone2 !== "00000000001"
-                  ? row.customers.phone2
-                  : "N/A"}
-              </p>
-              <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                {row.customers.city.charAt(0).toUpperCase() +
-                  row.customers.city.slice(1).toLowerCase()}
-              </p>
-              <div className="text-ellipsis overflow-hidden whitespace-nowrap">
-                {row.customers.address.charAt(0).toUpperCase() +
-                  row.customers.address.slice(1).toLowerCase()}
+          </div>
+          <div>
+            <div className="grid grid-cols-2 w-full">
+              <div className="font-semibold">
+                <p className="">Customer</p>
+                <p className="">Phone 01</p>
+                <p className="">Phone 02</p>
+                <p className="">City</p>
+                <p className="">Address</p>
+              </div>
+              <div className="">
+                <p className="text-ellipsis overflow-hidden whitespace-nowrap">
+                  {row.customers.name.charAt(0).toUpperCase() +
+                    row.customers.name.slice(1).toLowerCase()}
+                </p>
+                <p className="">
+                  {row.customers.phone !== "00000000001"
+                    ? row.customers.phone
+                    : "N/A"}
+                </p>
+                <p className="">
+                  {row.customers.phone2 !== "00000000001"
+                    ? row.customers.phone2
+                    : "N/A"}
+                </p>
+                <p className="text-ellipsis overflow-hidden whitespace-nowrap">
+                  {row.customers.city.charAt(0).toUpperCase() +
+                    row.customers.city.slice(1).toLowerCase()}
+                </p>
+                <div className="text-ellipsis overflow-hidden whitespace-nowrap">
+                  {row.customers.address.charAt(0).toUpperCase() +
+                    row.customers.address.slice(1).toLowerCase()}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div>
           <div>
-            <p className="font-semibold">Note</p>
-            <p className="w-full text-xs tracking-tight">{row.note}</p>
+            <div>
+              <p className="font-semibold">Note</p>
+              <p className="w-full text-xs tracking-tight">{row.note}</p>
+            </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-3">
-          <div>
-            <p className="font-semibold">Status</p>
-            <p className="text-xs tracking-tight">{row.status}</p>
+          <div className="grid grid-cols-3">
+            <div>
+              <p className="font-semibold">Status</p>
+              <p className="text-xs tracking-tight">{row.status}</p>
+            </div>
+            <div>
+              <p className="font-semibold">Service</p>
+              <p className="text-xs tracking-tight">{row.courier}</p>
+            </div>
+            <div>
+              <p className="font-semibold">#</p>
+              <p className="text-xs tracking-tight">{row.trackingNo}</p>
+            </div>
           </div>
-          <div>
-            <p className="font-semibold">Service</p>
-            <p className="text-xs tracking-tight">{row.courier}</p>
+            <div className="grid grid-cols-3 -mb-2 bg-slate-300 items-center px-2">
+              <p className="font-semibold text-sm">Product</p>
+              <p className="font-semibold text-sm">Variant</p>
+              <p className="font-semibold text-sm">Quantity</p>
+            </div>
+          <div className="">
+            {
+              row.ordersRegister.map((item: any) => {
+                return (
+                  <div className="grid grid-cols-3 px-2 border-b border-x" key={formalizeText( item.product.name)}>
+                    <div>
+                      <p className="text-xs tracking-tight">{formalizeText(item.product.name)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs tracking-tight">{formalizeText(item.productVariations.name)}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs tracking-tight">{item.quantity}</p>
+                    </div>
+                  </div>
+                )
+              })
+            }
           </div>
-          <div>
-            <p className="font-semibold">#</p>
-            <p className="text-xs tracking-tight">{row.trackingNo}</p>
+          <div className="flex justify-between mt-10">
+            <p className="font-semibold text-lg text-green-700">
+              {row.confirmedBy}
+            </p>
+            <p className="font-semibold text-lg text-green-700">
+              Rs {row.amount}
+            </p>
           </div>
         </div>
-        <div className="flex justify-between mt-10">
-          <p className="font-semibold text-lg text-green-700">
-            {row.confirmedBy}
-          </p>
-          <p className="font-semibold text-lg text-green-700">
-            Rs {row.amount}
-          </p>
-        </div>
-      </div>
+      </ScrollArea>
     </SheetProvider>
   );
 };
