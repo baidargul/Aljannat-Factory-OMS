@@ -30,8 +30,11 @@ const GenericRow = (props: Props) => {
             row.customers.name.slice(1).toLowerCase()}
         </div>
         <div className="font-semibold w-36 overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.product.charAt(0).toUpperCase() +
-            row.product.slice(1).toLowerCase()}
+          {/* {row.product.charAt(0).toUpperCase() +
+            row.product.slice(1).toLowerCase()} */}
+            {
+             formalizeText( row.ordersRegister.length>1? row.ordersRegister `${row.ordersRegister[0].product.name}...` : `${row.ordersRegister[0].product.name}`)
+            }
         </div>
         <div
           className={`${
@@ -176,4 +179,8 @@ function rowStatusStyle(status: string) {
     default:
       return "bg-yellow-300";
   }
+}
+
+function formalizeText(text: string) {
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
