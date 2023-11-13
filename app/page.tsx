@@ -29,12 +29,30 @@ async function getOrders() {
 
   const orders = await prisma.orders.findMany({
     include: {
-      customers: true
+     customers: true,
+     ordersRegister:{
+        include:{
+          productVariations:{
+            select:{
+              id:true,
+              name:true,
+            }
+          },
+          product:{
+            select:{
+              id:true,
+              name:true,
+            }
+          },
+          }
+     }
     },
     orderBy: {
-      dateOfBooking: "asc"
+        dateOfBooking: "asc"
     }
-  })
+});
 
+
+  console.log(orders)
   return orders
 }

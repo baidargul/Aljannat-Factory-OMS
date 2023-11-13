@@ -8,19 +8,20 @@ datasource db {
 }
 
 model orders {
-  id            String     @id @unique
-  dateOfBooking DateTime   @default(now()) @db.Timestamptz(6)
-  status        String?
-  note          String?
-  confirmedBy   String?
-  product       String?
-  variant       String?
-  weight        String?
-  amount        Int?
-  courier       String?
-  trackingNo    String?
-  customerId    String?
-  customers     customers? @relation(fields: [customerId], references: [id])
+  id             String           @id @unique
+  dateOfBooking  DateTime         @default(now()) @db.Timestamptz(6)
+  status         String?
+  note           String?
+  confirmedBy    String?
+  product        String?
+  variant        String?
+  weight         String?
+  amount         Int?
+  courier        String?
+  trackingNo     String?
+  customerId     String?
+  customers      customers?       @relation(fields: [customerId], references: [id])
+  ordersRegister ordersRegister[]
 }
 
 model customers {
@@ -45,13 +46,33 @@ model sheets {
 }
 
 model product {
-  id   String  @id @default(uuid())
-  name String @unique
+  id                String              @id @default(uuid())
+  name              String              @unique
+  ordersRegister    ordersRegister[]
+  productVariations productVariations[]
 }
 
 model errorlogs {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   description String?
-  date DateTime @default(now()) @db.Timestamptz(6)
-  index Int @default(autoincrement())
+  date        DateTime @default(now()) @db.Timestamptz(6)
+  index       Int      @default(autoincrement())
+}
+
+model ordersRegister {
+  id                String             @id @default(uuid())
+  orderId           String?
+  productId         String?
+  variantId         String?
+  orders            orders?            @relation(fields: [orderId], references: [id], onDelete: Cascade, map: "orderId")
+  product           product?           @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
+  productVariations productVariations? @relation(fields: [variantId], references: [id], onDelete: Cascade, map: "variantId")
+}
+
+model productVariations {
+  id             String           @id @default(uuid())
+  productId      String?
+  name           String?          @unique
+  ordersRegister ordersRegister[]
+  product        product?         @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
 }

@@ -4,7 +4,7 @@ import React from 'react'
 import * as XLSX from 'xlsx';
 import { v4 } from 'uuid';
 import { redirect } from 'next/navigation'
-import { product } from '@prisma/client';
+import { product, productVariations } from '@prisma/client';
 type Props = {
     params: any
     req: any
@@ -33,7 +33,7 @@ async function page(props: Props, context: any) {
             const tableHeaders: any = fileData[0]
             const data = fileData
 
-            let row:any
+            let row: any
 
             let index = 0
             for (row of data) {
@@ -43,7 +43,7 @@ async function page(props: Props, context: any) {
                         let rowObject: any = {
                             id: v4(),
                         }
-        
+
                         const fetchedCustomer = await getCustomer(row, tableHeaders);
                         if (fetchedCustomer) {
                             row.map((cell: any, iindex: number) => {
@@ -59,8 +59,8 @@ async function page(props: Props, context: any) {
                                     [tableHeaders[iindex]]: cell
                                 }
                             })
-                            console.log(rowObject) 
-        
+                            console.log(rowObject)
+
                             if (!rowObject.Booking) {
                                 await createLog(`No date found on index: '${index}', skipping`)
                                 return
@@ -75,7 +75,7 @@ async function page(props: Props, context: any) {
                                     name: rowObject.Product.toLocaleLowerCase()
                                 }
                             })
-        
+
                             if (!product) {
                                 await createLog(`Product not found creating...`)
                                 product = await prisma.product.create({
@@ -85,11 +85,31 @@ async function page(props: Props, context: any) {
                                     }
                                 })
                                 await createLog(`created: ${JSON.stringify(product)}`)
-                            } else
-                            {
+                            } else {
                                 await createLog(`Product found`)
                             }
-        
+
+                            let variant: productVariations | null = await prisma.productVariations.findFirst({
+                                where: {
+                                    name: rowObject.Product.toLocaleLowerCase(),
+                                    productId: product.id
+                                }
+                            })
+
+                            if (!variant) {
+                                await createLog(`'${rowObject.Variant}' variation not found in product ${product.name.toLocaleUpperCase()}, Adding it...`)
+                                variant = await prisma.productVariations.create({
+                                    data: {
+                                        id: v4(),
+                                        productId: product.id,
+                                        name: String(rowObject.Variant).toLocaleLowerCase(),
+                                    }
+                                })
+                                await createLog(`created variation: ${JSON.stringify(variant)}`)
+                            } else {
+                                await createLog(`Variant found`)
+                            }
+
                             const order = await prisma.orders.create({
                                 data: {
                                     id: String(rowObject.id),
@@ -106,12 +126,21 @@ async function page(props: Props, context: any) {
                                     customerId: String(fetchedCustomer.id),
                                 }
                             })
-        
+
+                            await prisma.ordersRegister.create({
+                                data: {
+                                    id: v4(),
+                                    orderId: order.id,
+                                    productId: product.id,
+                                    variantId: variant.id,
+                                }
+                            })
+
                         } else {
                             await createLog(`Customer can't be fetched for: ${row}`)
                             console.log(`Customer can't be fetched for:`, row)
                         }
-                    } else{
+                    } else {
                         await createLog(`Skipping index: ${index}`)
                     }
                     index = index + 1
