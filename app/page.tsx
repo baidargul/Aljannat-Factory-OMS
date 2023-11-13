@@ -51,7 +51,5 @@ async function getOrders() {
         dateOfBooking: "asc"
     }
 });
-
-
   return orders
 }

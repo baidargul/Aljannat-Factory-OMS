@@ -11,7 +11,7 @@ const GenericRow = (props: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
   const { row } = props;
-
+  console.log(row)
   const handleRowClick = () => {
     setSelectedOrder(row);
   };
@@ -19,7 +19,7 @@ const GenericRow = (props: Props) => {
   function DataRow() {
     return (
       <div
-        className={`p-2 grid grid-cols-8 w-full justify-items-start gap-10 text-xs text-start border select-none ${String(row.status).toLocaleLowerCase()==="fake" && "opacity-40 line-through"}`}
+        className={`p-2 grid grid-cols-8 w-full justify-items-start gap-10 text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
         onClick={handleRowClick}
       >
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis ">
@@ -32,14 +32,13 @@ const GenericRow = (props: Props) => {
         <div className="font-semibold w-36 overflow-hidden whitespace-nowrap text-ellipsis">
           {/* {row.product.charAt(0).toUpperCase() +
             row.product.slice(1).toLowerCase()} */}
-            {
-             formalizeText( row.ordersRegister.length>1? row.ordersRegister `${row.ordersRegister[0].product.name}...` : `${row.ordersRegister[0].product.name}`)
-            }
+          {
+            formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)
+          }
         </div>
         <div
-          className={`${
-            row.weight && "opacity-100"
-          } opacity-40 w-36 overflow-hidden whitespace-nowrap text-ellipsis`}
+          className={`${row.weight && "opacity-100"
+            } opacity-40 w-36 overflow-hidden whitespace-nowrap text-ellipsis`}
         >
           {row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"}
         </div>
@@ -55,20 +54,17 @@ const GenericRow = (props: Props) => {
           {row.status}
         </div>
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.note}
+          {row.trackingNo}
         </div>
       </div>
     );
   }
 
 
-  const title = `${
-    row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"
-  } ${
-    row.product.charAt(0).toUpperCase() + row.product.slice(1).toLowerCase()
-  }   (${
-    row.variant.charAt(0).toUpperCase() + row.variant.slice(1).toLowerCase()
-  })`;
+  const title = `${row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"
+    } ${row.product.charAt(0).toUpperCase() + row.product.slice(1).toLowerCase()
+    }   (${row.variant.charAt(0).toUpperCase() + row.variant.slice(1).toLowerCase()
+    })`;
 
   let orderDate: any = new Date(row.dateOfBooking).toDateString();
   return (
