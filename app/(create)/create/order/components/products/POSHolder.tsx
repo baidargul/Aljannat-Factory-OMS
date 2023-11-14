@@ -28,13 +28,13 @@ const POSHolder = (props: Props) => {
 
     return (
         <div className="flex gap-2 min-h-screen">
-            <div className='w-[40%] text-ellipsis overflow-hidden whitespace-nowrap p-2'>
+            <div className='w-[40%] text-ellipsis overflow-hidden whitespace-nowrap p-2 bg-slate-200'>
                 <div className='bg-red-800 text-white p-2'>Products</div>
                 <div className={`grid grid-cols-2 ${selectedProduct && "hidden"}`}>
                     {
                         props.products.map((product: any) => {
                             return (
-                                <div key={product.name}>
+                                <div key={product.name} className=''>
                                     <POSItem
                                         key={product.id}
                                         product={product}
