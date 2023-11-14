@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SheetProvider from "../SheetProvider/SheetProvider";
 import { ScrollArea } from "../ui/scroll-area";
 
@@ -9,6 +9,9 @@ type Props = {
 
 const GenericRow = (props: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [rowTotalAmount, setRowTotalAmount] = useState<any>(0);
+
+
 
   const { row } = props;
   console.log(row)
@@ -30,14 +33,12 @@ const GenericRow = (props: Props) => {
             row.customers.name.slice(1).toLowerCase()}
         </div>
         <div className="font-semibold w-36 overflow-hidden whitespace-nowrap text-ellipsis">
-          {/* {row.product.charAt(0).toUpperCase() +
-            row.product.slice(1).toLowerCase()} */}
           {
             formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)
           }
         </div>
         <div
-          className={`${row.ordersRegister[0].weight !=="0KG" ? "opacity-100" : "opacity-40 "
+          className={`${row.ordersRegister[0].weight !== "0KG" ? "opacity-100" : "opacity-40 "
             } w-36 overflow-hidden whitespace-nowrap text-ellipsis`}
         >
           {row.ordersRegister[0].weight ? String(row.ordersRegister[0].weight).toLocaleUpperCase() : "0KG"}
@@ -48,7 +49,7 @@ const GenericRow = (props: Props) => {
         </div>
 
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
-          Rs {row.amount}
+          Rs {rowTotalAmount}
         </div>
         <div className={` ${rowStatusStyle(row.status)} p-1 text-center rounded-md w-36 overflow-hidden whitespace-nowrap text-ellipsis`}>
           {row.status}
@@ -67,6 +68,11 @@ const GenericRow = (props: Props) => {
     })`;
 
   let orderDate: any = new Date(row.dateOfBooking).toDateString();
+
+  useEffect(() => {
+    setRowTotalAmount(calculateRowTotal(row));
+  }, [row]); // Only re-run the effect if 'row' changes
+
   return (
     <SheetProvider trigger={DataRow()}>
       <ScrollArea>
@@ -144,17 +150,17 @@ const GenericRow = (props: Props) => {
               <p className="text-xs tracking-tight">{row.trackingNo}</p>
             </div>
           </div>
-            <div className="grid grid-cols-4 -mb-2 bg-slate-300 items-center px-2">
-              <p className="font-semibold text-sm">Product</p>
-              <p className="font-semibold text-sm">Variant</p>
-              <p className="font-semibold text-sm">Weight</p>
-              <p className="font-semibold text-sm">Amount</p>
-            </div>
+          <div className="grid grid-cols-4 -mb-2 bg-slate-300 items-center px-2">
+            <p className="font-semibold text-sm">Product</p>
+            <p className="font-semibold text-sm">Variant</p>
+            <p className="font-semibold text-sm">Weight</p>
+            <p className="font-semibold text-sm">Amount</p>
+          </div>
           <div className="">
             {
               row.ordersRegister.map((item: any) => {
                 return (
-                  <div className="grid grid-cols-4 px-2 border-b border-x" key={formalizeText( item.product.name)}>
+                  <div className="grid grid-cols-4 px-2 border-b border-x" key={formalizeText(item.product.name)}>
                     <div>
                       <p className="text-xs tracking-tight">{formalizeText(item.product.name)}</p>
                     </div>
@@ -172,12 +178,17 @@ const GenericRow = (props: Props) => {
               })
             }
           </div>
-          <div className="flex justify-between mt-10">
+          <div className="flex justify-between mt-10 items-center">
+            <div className="text-sm flex gap-1 text-slate-700 items-center">
+              <p className="font-semibold ">
+                EMP:
+              </p>
+              <p className="tracking-wide">
+                {formalizeText(row.confirmedBy)}
+              </p>
+            </div>
             <p className="font-semibold text-lg text-green-700">
-              {row.confirmedBy}
-            </p>
-            <p className="font-semibold text-lg text-green-700">
-              Rs {row.amount}
+              Rs {rowTotalAmount}
             </p>
           </div>
         </div>
@@ -209,4 +220,12 @@ function rowStatusStyle(status: string) {
 
 function formalizeText(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+}
+
+function calculateRowTotal(row: any) {
+  let total = 0;
+  row.ordersRegister.map((item: any) => {
+    total += item.amount;
+  });
+  return total;
 }
