@@ -19,7 +19,7 @@ const GenericRow = (props: Props) => {
   function DataRow() {
     return (
       <div
-        className={`p-2 grid grid-cols-8 w-full justify-items-start gap-10 text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
+        className={`p-2 grid grid-cols-8 w-full justify-items-start items-center gap-10 text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
         onClick={handleRowClick}
       >
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis ">
@@ -37,10 +37,10 @@ const GenericRow = (props: Props) => {
           }
         </div>
         <div
-          className={`${row.weight && "opacity-100"
-            } opacity-40 w-36 overflow-hidden whitespace-nowrap text-ellipsis`}
+          className={`${row.ordersRegister[0].weight !=="0KG" ? "opacity-100" : "opacity-40 "
+            } w-36 overflow-hidden whitespace-nowrap text-ellipsis`}
         >
-          {row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"}
+          {row.ordersRegister[0].weight ? String(row.ordersRegister[0].weight).toLocaleUpperCase() : "0KG"}
         </div>
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
           {row.variant.charAt(0).toUpperCase() +
@@ -144,16 +144,17 @@ const GenericRow = (props: Props) => {
               <p className="text-xs tracking-tight">{row.trackingNo}</p>
             </div>
           </div>
-            <div className="grid grid-cols-3 -mb-2 bg-slate-300 items-center px-2">
+            <div className="grid grid-cols-4 -mb-2 bg-slate-300 items-center px-2">
               <p className="font-semibold text-sm">Product</p>
               <p className="font-semibold text-sm">Variant</p>
-              <p className="font-semibold text-sm">Quantity</p>
+              <p className="font-semibold text-sm">Weight</p>
+              <p className="font-semibold text-sm">Amount</p>
             </div>
           <div className="">
             {
               row.ordersRegister.map((item: any) => {
                 return (
-                  <div className="grid grid-cols-3 px-2 border-b border-x" key={formalizeText( item.product.name)}>
+                  <div className="grid grid-cols-4 px-2 border-b border-x" key={formalizeText( item.product.name)}>
                     <div>
                       <p className="text-xs tracking-tight">{formalizeText(item.product.name)}</p>
                     </div>
@@ -161,7 +162,10 @@ const GenericRow = (props: Props) => {
                       <p className="text-xs tracking-tight">{formalizeText(item.productVariations.name)}</p>
                     </div>
                     <div>
-                      <p className="text-xs tracking-tight">{item.quantity}</p>
+                      <p className="text-xs tracking-tight">{item.weight}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs tracking-tight">Rs {item.amount}</p>
                     </div>
                   </div>
                 )

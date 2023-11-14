@@ -69,6 +69,8 @@ model ordersRegister {
   orderId           String?
   productId         String?
   variantId         String?
+  weight            String? @default("0KG")
+  amount            Int?    @default(0)
   orders            orders?            @relation(fields: [orderId], references: [id], onDelete: Cascade, map: "orderId")
   product           product?           @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
   productVariations productVariations? @relation(fields: [variantId], references: [id], onDelete: Cascade, map: "variantId")

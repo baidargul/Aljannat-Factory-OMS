@@ -142,6 +142,8 @@ async function page(props: Props, context: any) {
                                                 orderId: rowObject.id,
                                                 productId: product.id,
                                                 variantId: variant.id,
+                                                weight: rowObject.Weight ? String(rowObject.Weight) : "0KG",
+                                                amount: rowObject.Amount ? Number(rowObject.Amount) : 0,
                                             }
                                         })
                                     } else {
@@ -152,6 +154,8 @@ async function page(props: Props, context: any) {
                                                 orderId: trackingAlreadyExists.id,
                                                 productId: product.id,
                                                 variantId: variant.id,
+                                                weight: rowObject.Weight ? String(rowObject.Weight) : "0KG",
+                                                amount: rowObject.Amount ? Number(rowObject.Amount) : 0,
                                             }
                                         })
 
