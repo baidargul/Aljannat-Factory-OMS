@@ -15,12 +15,20 @@ type Props = {
 const POSHolder = (props: Props) => {
     const [selectedProduct, setSelectedProduct] = useState<any>(null)
     const [products, setProducts] = useState<any>([])
+    const [totalAmount, setTotalAmount] = useState<number>(0)
     const POS: any = usePOS()
 
     useEffect(() => {
         setProducts(POS.products)
-        console.log(`first render`)
     }, [POS.products])
+
+    useEffect(() => {
+        let total = 0
+        products.forEach((item: any) => {
+            total += item.amount
+        })
+        setTotalAmount(total)
+    }, [products])
 
     const handleBackButton = () => {
         setSelectedProduct(null)
@@ -71,7 +79,8 @@ const POSHolder = (props: Props) => {
                 {
                     products && (
                         <div className=' bg-slate-200 p-2 min-h-screen flex flex-col'>
-                            <div className='grid grid-cols-4 items-center gap-2 bg-red-800 text-white p-2'>
+                            <div className='grid grid-cols-5 items-center gap-2 bg-red-800 text-white p-2 font-semibold'>
+                                <p>#</p>
                                 <p>Product</p>
                                 <p>Variation</p>
                                 <p>Weight (KG)</p>
@@ -80,11 +89,12 @@ const POSHolder = (props: Props) => {
                             <div className='border border-red-800/40'>
                                 <ScrollArea className='h-[500px]'>
                                     {
-                                        products.map((item: any) => {
+                                        products.map((item: any,index:number) => {
                                             return (
                                                 <div key={v4()}>
-                                                    <div className='p-2 bg-slate-50 border-b hover:bg-yellow-100'>
-                                                        <div className='grid grid-cols-4 items-center gap-2'>
+                                                    <div className='p-2 relative group bg-slate-50 border-b hover:bg-yellow-100'>
+                                                        <div className='grid grid-cols-5 items-center gap-2'>
+                                                            <div className='w-4 opacity-20'>{index+1}</div>
                                                             <div>
                                                                 {formalizeText(item.productName)}
                                                             </div>
@@ -98,6 +108,7 @@ const POSHolder = (props: Props) => {
                                                                 <Input className='text-sm' type='number' placeholder='Rs ' />
                                                             </div>
                                                         </div>
+                                                        <button onClick={()=>POS.removeProduct(item.id)} className='group-hover:block group-active:block hidden absolute top-2 left-8 bg-red-800 text-white rounded-md w-6 h-6 text-center cursor-pointer'>x</button>
                                                     </div>
                                                 </div>
                                             )
@@ -106,7 +117,7 @@ const POSHolder = (props: Props) => {
                                 </ScrollArea>
                             </div>
                             <div className='flex justify-end'>
-                                Totals
+                                Balance: Rs {totalAmount}
                             </div>
                         </div>
                     )
