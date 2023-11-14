@@ -26,7 +26,7 @@ const GenericRow = (props: Props) => {
         onClick={handleRowClick}
       >
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis ">
-          {row.dateOfBooking.toDateString()}
+          {row.createdAt.toDateString() + " " + row.createdAt.toLocaleTimeString()}
         </div>
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
           {row.customers.name.charAt(0).toUpperCase() +

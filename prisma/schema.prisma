@@ -10,6 +10,8 @@ datasource db {
 model orders {
   id             String           @id @unique
   index          Int              @default(autoincrement())
+  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime         @default(now()) @db.Timestamptz(6)
   dateOfBooking  DateTime         @default(now()) @db.Timestamptz(6)
   status         String?
   note           String?
@@ -84,3 +86,4 @@ model productVariations {
   ordersRegister ordersRegister[]
   product        product?         @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
 }
+
