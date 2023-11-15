@@ -43,7 +43,7 @@ export const usePOS = create((set) => ({
 
     getTotalAmount(){
         let total = 0;
-        this.products.forEach((item: any) => {
+        this?.products.forEach((item: any) => {
             total += Number(item.amount);
         });
         return total;
@@ -51,7 +51,7 @@ export const usePOS = create((set) => ({
 
     getTotalWeight(){
         let total = 0;
-        this.products.forEach((item: any) => {
+        this?.products.forEach((item: any) => {
             total += Number(item.weight);
         });
         return total;
