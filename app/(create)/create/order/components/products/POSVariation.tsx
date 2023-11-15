@@ -15,7 +15,7 @@ const POSVariation = (props: Props) => {
     const POS:any = usePOS()
 
     function handleItemClick() {
-        POS.addProduct(v4(), props.selectedProduct.name, props.variation.name, 0,0)
+        POS.addProduct(v4(), props.selectedProduct.name, props.variation.name, props.variation.defaultWeight,props.variation.defaultAmount, props.variation.defaultUnit)
         props.setSelectedProduct(null)
     }
     return (

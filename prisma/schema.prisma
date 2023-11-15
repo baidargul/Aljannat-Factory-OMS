@@ -9,9 +9,6 @@ datasource db {
 
 model orders {
   id             String           @id @unique
-  index          Int              @default(autoincrement())
-  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt      DateTime         @default(now()) @db.Timestamptz(6)
   dateOfBooking  DateTime         @default(now()) @db.Timestamptz(6)
   status         String?
   note           String?
@@ -23,13 +20,15 @@ model orders {
   courier        String?
   trackingNo     String?
   customerId     String?
+  index          Int              @default(autoincrement())
+  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime         @default(now()) @db.Timestamptz(6)
   customers      customers?       @relation(fields: [customerId], references: [id])
   ordersRegister ordersRegister[]
 }
 
 model customers {
   id        String   @id @unique @default(uuid())
-  index     Int      @default(autoincrement())
   name      String?
   phone     String
   phone2    String?
@@ -37,42 +36,43 @@ model customers {
   city      String?
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @db.Timestamptz(6)
+  index     Int      @default(autoincrement())
   orders    orders[]
 }
 
 model sheets {
   id        String   @id @unique @default(uuid())
-  index    Int      @default(autoincrement())
   name      String
   url       String
   content   String
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @db.Timestamptz(6)
+  index     Int      @default(autoincrement())
 }
 
 model product {
   id                String              @id @default(uuid())
-  index             Int                 @default(autoincrement())
   name              String              @unique
+  index             Int                 @default(autoincrement())
   ordersRegister    ordersRegister[]
   productVariations productVariations[]
 }
 
 model errorlogs {
   id          String   @id @default(uuid())
-  index       Int      @default(autoincrement())
   description String?
   date        DateTime @default(now()) @db.Timestamptz(6)
+  index       Int      @default(autoincrement())
 }
 
 model ordersRegister {
   id                String             @id @default(uuid())
-  index             Int                @default(autoincrement())
   orderId           String?
   productId         String?
   variantId         String?
-  weight            String? @default("0KG")
-  amount            Int?    @default(0)
+  index             Int                @default(autoincrement())
+  weight            String?            @default("0KG")
+  amount            Int?               @default(0)
   orders            orders?            @relation(fields: [orderId], references: [id], onDelete: Cascade, map: "orderId")
   product           product?           @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
   productVariations productVariations? @relation(fields: [variantId], references: [id], onDelete: Cascade, map: "variantId")
@@ -80,10 +80,12 @@ model ordersRegister {
 
 model productVariations {
   id             String           @id @default(uuid())
-  index          Int              @default(autoincrement())
   productId      String
-  name           String          @unique
+  name           String           @unique
+  index          Int              @default(autoincrement())
+  defaultWeight  String?          @default("1")
+  defaultAmount  String?          @default("750")
+  defaultUnit    String?          @default("kg")
   ordersRegister ordersRegister[]
-  product        product?         @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
+  product        product          @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
 }
-

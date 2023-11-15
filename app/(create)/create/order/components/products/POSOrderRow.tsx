@@ -96,7 +96,7 @@ const POSOrderRow = (props: Props) => {
                         name='amount'
                         className='text-sm'
                         type='number'
-                        placeholder='0.5'
+                        placeholder={`0.5 (${props.item.unit.toUpperCase()})`}
                         onChange={handleWeightChange}
                         onBlur={handleWeightBlur}
                         onFocus={handleWeightFocus}
