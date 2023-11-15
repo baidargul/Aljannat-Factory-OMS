@@ -19,10 +19,6 @@ const POSItem = (props: Props) => {
         props.setSelectedProduct(props.product)
     }
 
-    useEffect(() => {
-        console.log(POS.products)
-    }, [POS])
-
     return (
         <div onClick={handleItemClick} className='p-2 bg-slate-200 border-slate-300 hover:bg-slate-100 hover:border-slate-300 active:bg-slate-300 border'>
             <div className='flex gap-2 '>

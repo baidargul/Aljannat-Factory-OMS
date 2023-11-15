@@ -8,6 +8,7 @@ type Props = {
     variation: any
     setSelectedProduct: any
     selectedProduct: any
+
 }
 
 const POSVariation = (props: Props) => {
