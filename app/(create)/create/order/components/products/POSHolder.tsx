@@ -12,9 +12,9 @@ type Props = {
 }
 
 type productSpecifications = {
-    id:string,
-    weight:number,
-    amount:number
+    id: string,
+    weight: number,
+    amount: number
 }
 
 const POSHolder = (props: Props) => {
@@ -25,7 +25,7 @@ const POSHolder = (props: Props) => {
 
     useEffect(() => {
         setProducts(POS.products)
-        console.log(`POS Products: `,POS.products)
+        console.log(`POS Products: `, POS.products)
     }, [POS.products])
 
     useEffect(() => {
@@ -71,7 +71,7 @@ const POSHolder = (props: Props) => {
                                         selectedProduct.productVariations.map((variation: any) => {
                                             return (
                                                 <div key={variation.id}>
-                                                    <POSVariation  selectedProduct={selectedProduct} variation={variation} setSelectedProduct={setSelectedProduct} />
+                                                    <POSVariation selectedProduct={selectedProduct} variation={variation} setSelectedProduct={setSelectedProduct} />
                                                 </div>
                                             )
                                         })
@@ -96,18 +96,23 @@ const POSHolder = (props: Props) => {
                             <div className='border border-red-800/40'>
                                 <ScrollArea className='h-[500px]'>
                                     {
-                                        products.map((item: any,index:number) => {
+                                        products.map((item: any, index: number) => {
                                             return (
                                                 <div key={v4()}>
-                                                    <POSOrderRow products={products} setProducts={setProducts} index={index} item={item}/>
+                                                    <POSOrderRow products={products} setProducts={setProducts} index={index} item={item} />
                                                 </div>
                                             )
                                         })
                                     }
                                 </ScrollArea>
                             </div>
-                            <div className='flex justify-end'>
-                                Balance: Rs {totalAmount}
+                            <div className='flex justify-between items-center p-2 bg-red-800 text-white text-sm'>
+                                <div>
+                                    Items: {products.length}
+                                </div>
+                                <div>
+                                    Rs {totalAmount}
+                                </div>
                             </div>
                         </div>
                     )
