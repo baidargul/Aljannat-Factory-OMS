@@ -2,6 +2,7 @@
 import React from 'react'
 import POSItem from '../POSItem'
 import POSVariation from '../POSVariation'
+import { ArrowLeft } from 'lucide-react'
 
 type Props = {
     products: any
@@ -37,7 +38,7 @@ const POSItemsHolder = (props: Props) => {
                     {
                         props.selectedProduct && (
                             <div className='flex flex-col gap-2 text-ellipsis overflow-hidden whitespace-nowrap '>
-                                <button onClick={handleBackButton} className='p-2 w-16 px-2 rounded-md mt-2 bg-red-800 text-white'>Return</button>
+                                <button onClick={handleBackButton} className='p-2 w-16 px-2 rounded-md mt-2 bg-red-800 text-white'><ArrowLeft className='animate-pulse'/></button>
                                 <div className='grid grid-cols-2'>
                                     {
                                         props.selectedProduct.productVariations.map((variation: any) => {
