@@ -23,7 +23,7 @@ export const usePOS = create((set) => ({
         });
     },
 
-    changeWeight(id: string, weight: string) {
+    changeWeight(id: string, weight: number) {
         set((state: any) => {
             const updatedProducts = state.products.map((item: any) => item.id === id ? { ...item, weight } : item);
             return {
@@ -39,5 +39,21 @@ export const usePOS = create((set) => ({
                 products: updatedProducts,
             };
         });
+    },
+
+    getTotalAmount(){
+        let total = 0;
+        this.products.forEach((item: any) => {
+            total += Number(item.amount);
+        });
+        return total;
+    },
+
+    getTotalWeight(){
+        let total = 0;
+        this.products.forEach((item: any) => {
+            total += Number(item.weight);
+        });
+        return total;
     }
 }))

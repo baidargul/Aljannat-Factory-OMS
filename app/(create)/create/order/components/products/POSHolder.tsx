@@ -111,7 +111,7 @@ const POSHolder = (props: Props) => {
                                     Items: {products.length}
                                 </div>
                                 <div>
-                                    Rs {totalAmount}
+                                    Rs {POS.getTotalAmount()}
                                 </div>
                             </div>
                         </div>
