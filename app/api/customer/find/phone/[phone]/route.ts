@@ -1,0 +1,64 @@
+import { NextApiRequest } from "next";
+import prisma from "@/lib/prisma"
+
+export async function GET(req: NextApiRequest, props: any) {
+    const response = {
+        status: 400,
+        message: "Bad Request",
+        data: null as any
+    }
+
+    const { phone } = props.params;
+
+    console.log(`Searching customer:`, phone)
+    if(phone === "00000000001")
+    {
+        response.status = 404
+        response.message = `Customer with phone ${phone} not found`
+        response.data = null
+    }
+
+    let customer = await prisma.customers.findFirst({
+        where: {
+            phone: phone
+        },
+        orderBy:{
+            createdAt: 'desc'
+        }
+    })
+
+    if(!customer){
+        customer = await prisma.customers.findFirst({
+            where: {
+                phone2: phone
+            },
+            orderBy:{
+                createdAt: 'desc'
+            }
+        })
+    }
+
+    if(!customer){
+        response.status = 404
+        response.message = `Customer with phone ${phone} not found`
+        response.data = null
+    }
+
+    if(customer?.phone==="00000000001")
+    {
+        customer.phone= ""
+    }
+    if(customer?.phone2==="00000000001")
+    {
+        customer.phone2= ""
+    }
+
+
+    if(customer){
+        response.status = 200
+        response.message = `Customer with phone ${phone} found`
+        response.data = customer
+    }
+
+    return new Response(JSON.stringify(response))
+}
