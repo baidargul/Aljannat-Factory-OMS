@@ -1,6 +1,5 @@
 import React from 'react'
 import ProductCollection from './components/products/ProductCollection'
-import { ComboBoxProvider } from '@/components/ComboBox/ComboBoxProvider'
 
 type Props = {}
 

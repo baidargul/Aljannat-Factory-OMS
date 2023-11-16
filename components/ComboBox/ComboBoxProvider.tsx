@@ -26,6 +26,7 @@ type ComboBoxProviderProps = {
     placeholder?: string
     emptyString?: string
     setValue?: React.Dispatch<React.SetStateAction<string>>
+    returnLabel?: boolean
 }
 export function ComboBoxProvider(props: ComboBoxProviderProps) {
     const sampleInput = [
@@ -63,8 +64,8 @@ export function ComboBoxProvider(props: ComboBoxProviderProps) {
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0">
                 <Command>
-                    <CommandInput placeholder={props.placeholder? props.placeholder : "Search..."} />
-                    <CommandEmpty>{props.emptyString? props.emptyString: "Nothing found."}</CommandEmpty>
+                    <CommandInput placeholder={props.placeholder ? props.placeholder : "Search..."} />
+                    <CommandEmpty>{props.emptyString ? props.emptyString : "Nothing found."}</CommandEmpty>
                     <CommandGroup>
                         {frameworks.map((framework) => (
                             <CommandItem
@@ -72,7 +73,7 @@ export function ComboBoxProvider(props: ComboBoxProviderProps) {
                                 value={framework.name}
                                 onSelect={(currentValue) => {
                                     setValue(currentValue === value ? "" : currentValue)
-                                    props.setValue? props.setValue(currentValue) : ""
+                                    props.setValue ? props.returnLabel ? props.setValue(framework.label) : props.setValue(currentValue) : ""
                                     setOpen(false)
                                 }}
                             >

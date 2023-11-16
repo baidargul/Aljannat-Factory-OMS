@@ -1,7 +1,5 @@
 import React from 'react'
 import prisma from '@/lib/prisma'
-import { formalizeText } from '@/lib/my'
-import POSItem from './POSItem'
 import POSHolder from './POSHolder'
 type Props = {}
 
