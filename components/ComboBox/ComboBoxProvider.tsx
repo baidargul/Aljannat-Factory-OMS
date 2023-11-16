@@ -23,6 +23,8 @@ import {
 type ComboBoxProviderProps = {
     children: React.ReactNode
     content?: Array<{ name: string, label: string }>
+    placeholder?: string
+    emptyString?: string
 }
 export function ComboBoxProvider(props: ComboBoxProviderProps) {
     const sampleInput = [
@@ -60,8 +62,8 @@ export function ComboBoxProvider(props: ComboBoxProviderProps) {
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0">
                 <Command>
-                    <CommandInput placeholder="Search framework..." />
-                    <CommandEmpty>No framework found.</CommandEmpty>
+                    <CommandInput placeholder={props.placeholder? props.placeholder : "Search..."} />
+                    <CommandEmpty>{props.emptyString? props.emptyString: "Nothing found."}</CommandEmpty>
                     <CommandGroup>
                         {frameworks.map((framework) => (
                             <CommandItem
