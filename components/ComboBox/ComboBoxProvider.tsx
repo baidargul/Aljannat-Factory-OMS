@@ -25,6 +25,7 @@ type ComboBoxProviderProps = {
     content?: Array<{ name: string, label: string }>
     placeholder?: string
     emptyString?: string
+    setValue?: React.Dispatch<React.SetStateAction<string>>
 }
 export function ComboBoxProvider(props: ComboBoxProviderProps) {
     const sampleInput = [
@@ -71,6 +72,7 @@ export function ComboBoxProvider(props: ComboBoxProviderProps) {
                                 value={framework.name}
                                 onSelect={(currentValue) => {
                                     setValue(currentValue === value ? "" : currentValue)
+                                    props.setValue? props.setValue(currentValue) : ""
                                     setOpen(false)
                                 }}
                             >

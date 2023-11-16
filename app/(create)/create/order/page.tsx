@@ -1,5 +1,6 @@
 import React from 'react'
 import ProductCollection from './components/products/ProductCollection'
+import { ComboBoxProvider } from '@/components/ComboBox/ComboBoxProvider'
 
 type Props = {}
 
@@ -9,7 +10,7 @@ const page = (props: Props) => {
             <div className='bg-slate-300 rounded-md border drop-shadow-md p-2 select-none'>
                 <div>
                     <section>
-                        <ProductCollection/>
+                        <ProductCollection />
                     </section>
                 </div>
             </div>
