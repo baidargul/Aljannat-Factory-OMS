@@ -9,7 +9,7 @@ import React from 'react'
 
 type Props = {
     children: React.ReactNode
-    content: React.ReactNode
+    content: React.ReactNode | string
 }
 
 const ToolTipProvider = (props: Props) => {
@@ -19,7 +19,7 @@ const ToolTipProvider = (props: Props) => {
                 <TooltipTrigger>{props.children}</TooltipTrigger>
                 <TooltipContent>
                     {
-                        typeof props.content === 'string' ? (<p>Add to library</p>) : props.content
+                        typeof props.content === 'string' ? (<div>{props.content}</div>) : props.content
                     }
                 </TooltipContent>
             </Tooltip>
