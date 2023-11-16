@@ -6,6 +6,7 @@ import POSOrderRowHolder from './POSHolder/POSOrderRowHolder'
 import HoverCardProvider from '@/components/HoverCardProvider/HoverCardProvider'
 import CustomerInput from './POSHolder/CustomerInput/CustomerInput'
 import { Input } from '@/components/ui/input'
+import { DatePicker } from '@/components/DatePicker/DatePicker'
 
 type Props = {
     products: any
@@ -33,31 +34,46 @@ const POSHolder = (props: Props) => {
 
     return (
         <>
-            <div className='flex gap-2 p-4 bg-red-800 text-white'>
-                <HoverCardProvider content={<CustomerInput setCustomer={setCustomer} />}>
-                    <div className='flex flex-col'>
-                        <p className='font-semibold text-sm tracking-wider'>Name:</p>
-                        <Input name='name' placeholder='Customer' className='text-black' value={customer?.name} onChange={(e: any) => {
-                            setCustomer({ ...customer, name: e.target.value })
-                        }} />
+            <div className='flex gap-2 p-4 bg-red-800 text-white items-center'>
+                <div className='opacity-80 border p-2 rounded-md h-24'>
+                    <div className=''>
+                        <DatePicker >
+                            <section>
+                                <p className='font-semibold text-sm tracking-wider'>Booking Date:</p>
+                                <button className='text-sm border-b border-spacing-2'>
+                                    {new Date().toDateString()}
+                                </button>
+                            </section>
+                        </DatePicker>
+                        <p className='text-center mt-2 text-sm font-semibold border-b-2 border-white rounded-md hover:bg-red-500 cursor-pointer transition-colors'>TODAY</p>
                     </div>
-                </HoverCardProvider>
-                <div className='flex gap-2'>
-                    <div className='flex flex-col'>
-                        <p className='font-semibold text-sm tracking-wider'>Phone 01:</p>
-                        <Input name='phone01' placeholder='Phone01' className='text-black' value={customer?.phone} onChange={(e: any) => { setCustomer({ ...customer, phone: e.target.value }) }} />
-                    </div>
-                    <div className='flex flex-col'>
-                        <p className='font-semibold text-sm tracking-wider'>Phone 02:</p>
-                        <Input name='phone02' placeholder='Phone02' className='text-black' value={customer?.phone2} onChange={(e: any) => { setCustomer({ ...customer, phone2: e.target.value }) }}/>
-                    </div>
-                    <div className='flex flex-col'>
-                        <p className='font-semibold text-sm tracking-wider'>City:</p>
-                        <Input name='city' placeholder='City' className='text-black' value={customer?.city} onChange={(e: any) => { setCustomer({ ...customer, city: e.target.value }) }}/>
-                    </div>
-                    <div className='flex flex-col'>
-                        <p className='font-semibold text-sm tracking-wider'>Address:</p>
-                        <Input name='address' placeholder='Address' className='text-black' value={customer?.address} onChange={(e: any) => { setCustomer({ ...customer, address: e.target.value }) }}/>
+                </div>
+                <div>
+                    <HoverCardProvider content={<CustomerInput setCustomer={setCustomer} />}>
+                        <div className='flex flex-col'>
+                            <p className='font-semibold text-sm tracking-wider'>Name:</p>
+                            <Input name='name' placeholder='Customer' className='text-black' value={customer?.name} onChange={(e: any) => {
+                                setCustomer({ ...customer, name: e.target.value })
+                            }} />
+                        </div>
+                    </HoverCardProvider>
+                    <div className='flex gap-2'>
+                        <div className='flex flex-col'>
+                            <p className='font-semibold text-sm tracking-wider'>Phone 01:</p>
+                            <Input name='phone01' placeholder='Phone01' className='text-black' value={customer?.phone} onChange={(e: any) => { setCustomer({ ...customer, phone: e.target.value }) }} />
+                        </div>
+                        <div className='flex flex-col'>
+                            <p className='font-semibold text-sm tracking-wider'>Phone 02:</p>
+                            <Input name='phone02' placeholder='Phone02' className='text-black' value={customer?.phone2} onChange={(e: any) => { setCustomer({ ...customer, phone2: e.target.value }) }} />
+                        </div>
+                        <div className='flex flex-col'>
+                            <p className='font-semibold text-sm tracking-wider'>City:</p>
+                            <Input name='city' placeholder='City' className='text-black' value={customer?.city} onChange={(e: any) => { setCustomer({ ...customer, city: e.target.value }) }} />
+                        </div>
+                        <div className='flex flex-col'>
+                            <p className='font-semibold text-sm tracking-wider'>Address:</p>
+                            <Input name='address' placeholder='Address' className='text-black' value={customer?.address} onChange={(e: any) => { setCustomer({ ...customer, address: e.target.value }) }} />
+                        </div>
                     </div>
                 </div>
             </div>
