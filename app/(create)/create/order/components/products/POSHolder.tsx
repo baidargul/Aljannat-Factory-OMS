@@ -87,21 +87,21 @@ const POSHolder = (props: Props) => {
                     </div>
                     <div>
                         {/* <HoverCardProvider content={<CustomerInput setCustomer={setCustomer} />}> */}
-                            <div className='flex flex-col'>
-                                <p className='font-semibold text-sm tracking-wider'>Name:</p>
-                                <Input disabled={isLoading} name='customername' placeholder='Customer' className='text-black' value={customer ? customer?.name : ""} onChange={(e: any) => {
-                                    setCustomer({ ...customer, name: e.target.value })
-                                }} />
-                            </div>
+                        <div className='flex flex-col'>
+                            <p className='font-semibold text-sm tracking-wider'>Name:</p>
+                            <Input disabled={isLoading} name='customername' placeholder='Customer' className='text-black' value={customer ? customer?.name : ""} onChange={(e: any) => {
+                                setCustomer({ ...customer, name: e.target.value })
+                            }} />
+                        </div>
                         {/* </HoverCardProvider> */}
                         <div className='flex gap-2'>
                             <div className='flex flex-col'>
                                 <p className='font-semibold text-sm tracking-wider'>Phone 01:</p>
-                                <Input disabled={isLoading} name='customerphone01' placeholder='Phone01' type='number' className='text-black' value={customer ? customer?.phone : ""} onChange={(e: any) => { setCustomer({ ...customer, phone: e.target.value }) }} onKeyDown={async(e: any) => e.key === "Enter" ? await handleSearch(customer?.phone) : null} />
+                                <Input disabled={isLoading} name='customerphone01' placeholder='Phone01' type='number' className='text-black' value={customer ? customer?.phone : ""} onChange={(e: any) => { setCustomer({ ...customer, phone: e.target.value }) }} maxLength={11} onKeyDown={async (e: any) => e.key === "Enter" ? await handleSearch(customer?.phone) : null} />
                             </div>
                             <div className='flex flex-col'>
                                 <p className='font-semibold text-sm tracking-wider'>Phone 02:</p>
-                                <Input disabled={isLoading} name='customerphone02' placeholder='Phone02' type='number' className='text-black' value={customer ? customer?.phone2 : ""} onChange={(e: any) => { setCustomer({ ...customer, phone2: e.target.value }) }} onKeyDown={async(e: any) => e.key === "Enter" ? await handleSearch(customer?.phone2) : null} />
+                                <Input disabled={isLoading} name='customerphone02' placeholder='Phone02' type='number' className='text-black' value={customer ? customer?.phone2 : ""} onChange={(e: any) => { setCustomer({ ...customer, phone2: e.target.value }) }} maxLength={11} onKeyDown={async (e: any) => e.key === "Enter" ? await handleSearch(customer?.phone2) : null} />
                             </div>
                             <div className='flex flex-col'>
                                 <p className='font-semibold text-sm tracking-wider'>City:</p>
