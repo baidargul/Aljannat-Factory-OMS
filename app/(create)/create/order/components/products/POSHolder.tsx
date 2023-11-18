@@ -69,7 +69,16 @@ const POSHolder = (props: Props) => {
 
     return (
         <>
-            {isLoading && (<label className='absolute z-50 text-black left-[50%] top-[50%]'>Please wait</label>)}
+            {isLoading && (
+                <label className='absolute z-50 text-black left-[45%] top-[45%]'>
+                    <div className='p-2 flex justify-center items-center gap-2 bg-red-800 text-white rounded-md'>
+                        <Loader className='animate-spin' />
+                        <p>
+                            Please wait...
+                        </p>
+                    </div>
+                </label>)
+            }
             <div className={`${isLoading && "bg-red-500/40 blur-lg"}`}>
                 <div className='flex gap-2 p-4 justify-between bg-slate-200 items-center drop-shadow-md'>
                     <div className='opacity-80 border p-2 rounded-md h-24'>
