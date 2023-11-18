@@ -33,11 +33,11 @@ const CustomerInput = (props: Props) => {
     return (
         <div className='p-4 bg-yellow-100 rounded'>
             <h1 className='font-semibold mb-2'>
-                Customer
+                Search Customer
             </h1>
             <section className='border p-2 flex flex-col gap-2'>
                 <div className='text-sm flex flex-col gap-2'>
-                    <p className='font-semibold'>Phone:</p>
+                    <p className='font-semibold'>By phone:</p>
                     <div className='flex gap-2'>
                         <Input placeholder='0300123456789' className='text-xs' value={phone} onChange={(e: any) => setPhone(e.target.value
                         )} />

@@ -24,6 +24,10 @@ const POSHolder = (props: Props) => {
     const [customer, setCustomer] = useState<any>(null)
     const POS: any = usePOS()
 
+    useEffect(() => {
+        POS.customer = customer
+    }, [customer, POS])
+
     // useEffect(() => {
     //     console.log(`POS Products: `, POS.products)
     // }, [POS.products])
@@ -32,9 +36,18 @@ const POSHolder = (props: Props) => {
         console.log(customer)
     }, [customer])
 
+    function handleNewOrder() {
+        console.log(`Clearing data`)
+        setCustomer(null)
+        setSelectedProduct(null)
+        POS.products = []
+        POS.customer = null
+        console.log(`Data cleared`)
+    }
+
     return (
         <>
-            <div className='flex gap-2 p-4 bg-red-800 text-white items-center'>
+            <div className='flex gap-2 p-4 justify-between bg-red-800 text-white items-center'>
                 <div className='opacity-80 border p-2 rounded-md h-24'>
                     <div className=''>
                         <DatePicker >
@@ -52,7 +65,7 @@ const POSHolder = (props: Props) => {
                     <HoverCardProvider content={<CustomerInput setCustomer={setCustomer} />}>
                         <div className='flex flex-col'>
                             <p className='font-semibold text-sm tracking-wider'>Name:</p>
-                            <Input name='name' placeholder='Customer' className='text-black' value={customer?.name} onChange={(e: any) => {
+                            <Input name='customername' placeholder='Customer' className='text-black' value={customer ? customer?.name : ""} onChange={(e: any) => {
                                 setCustomer({ ...customer, name: e.target.value })
                             }} />
                         </div>
@@ -60,24 +73,32 @@ const POSHolder = (props: Props) => {
                     <div className='flex gap-2'>
                         <div className='flex flex-col'>
                             <p className='font-semibold text-sm tracking-wider'>Phone 01:</p>
-                            <Input name='phone01' placeholder='Phone01' className='text-black' value={customer?.phone} onChange={(e: any) => { setCustomer({ ...customer, phone: e.target.value }) }} />
+                            <Input name='customerphone01' placeholder='Phone01' className='text-black' value={customer ?customer?.phone : ""} onChange={(e: any) => { setCustomer({ ...customer, phone: e.target.value }) }} />
                         </div>
                         <div className='flex flex-col'>
                             <p className='font-semibold text-sm tracking-wider'>Phone 02:</p>
-                            <Input name='phone02' placeholder='Phone02' className='text-black' value={customer?.phone2} onChange={(e: any) => { setCustomer({ ...customer, phone2: e.target.value }) }} />
+                            <Input name='customerphone02' placeholder='Phone02' className='text-black' value={customer ? customer?.phone2 : ""} onChange={(e: any) => { setCustomer({ ...customer, phone2: e.target.value }) }} />
                         </div>
                         <div className='flex flex-col'>
                             <p className='font-semibold text-sm tracking-wider'>City:</p>
-                            <Input name='city' placeholder='City' className='text-black' value={customer?.city} onChange={(e: any) => { setCustomer({ ...customer, city: e.target.value }) }} />
+                            <Input name='customercity' placeholder='City' className='text-black' value={customer ? customer?.city : ""} onChange={(e: any) => { setCustomer({ ...customer, city: e.target.value }) }} />
                         </div>
                         <div className='flex flex-col'>
                             <p className='font-semibold text-sm tracking-wider'>Address:</p>
-                            <Input name='address' placeholder='Address' className='text-black' value={customer?.address} onChange={(e: any) => { setCustomer({ ...customer, address: e.target.value }) }} />
+                            <Input name='customeraddress' placeholder='Address' className='text-black' value={customer? customer?.address: ""} onChange={(e: any) => { setCustomer({ ...customer, address: e.target.value }) }} />
                         </div>
                     </div>
                 </div>
+                <div className='grid grid-cols-2 gap-2 bg-slate-300 rounded-md p-1 w-56 h-24 place-items-center justify-items-center'>
+                    <button onClick={() => handleNewOrder()} className='bg-red-800 hover:bg-red-800/90 text-white p-2 rounded-md h-fit'>
+                        New order
+                    </button>
+                    <button className='bg-red-800  text-white p-2 rounded-md h-fit'>
+                        Save order
+                    </button>
+                </div>
             </div>
-            <div className="flex gap-2 min-h-screen">
+            <div className="flex gap-2 min-h-screen mt-2">
                 <div className='w-[40%] text-ellipsis overflow-hidden whitespace-nowrap p-2 bg-slate-200'>
                     <POSItemsHolder products={props.products} selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
                 </div>

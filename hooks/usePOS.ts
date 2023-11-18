@@ -4,6 +4,7 @@ import { create } from 'zustand'
 
 export const usePOS = create((set) => ({
     products: [],
+    customer: null as any,
 
     addProduct(id: string, productName: string, variantName: string, weight: number, amount: number, unit: string) {
         set((state: any) => {
