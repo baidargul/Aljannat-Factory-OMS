@@ -108,16 +108,10 @@ const GenericRow = (props: Props) => {
                     row.customers.name.slice(1).toLowerCase()}
                 </p>
                 <p className="">
-                  {row.customers.phone !== "00000000001"
-                    ? row.customers.phone
-                    : "N/A"}
-                    {row.customers.phone ? row.customers.phone : "N/A"}
+                  {row.customers.phone ? row.customers.phone !== "00000000001" ? row.customers.phone : "N/A": "N/A"}
                 </p>
                 <p className="">
-                  {row.customers.phone2 !== "00000000001"
-                    ? row.customers.phone2
-                    : "N/A"}
-                    {row.customers.phone2?row.customers.phone2:"N/A"}
+                {row.customers.phone2 ? row.customers.phone2 !== "00000000001" ? row.customers.phone2 : "N/A": "N/A"}
                 </p>
                 <p className="text-ellipsis overflow-hidden whitespace-nowrap">
                   {formalizeText(row.customers.city)}
