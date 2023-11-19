@@ -8,7 +8,8 @@ import { DatePicker } from '@/components/DatePicker/DatePicker'
 import axios from 'axios'
 import { Loader } from 'lucide-react'
 import Image from 'next/image'
-
+import { useClerk } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
 
 type Props = {
     products: any
@@ -28,6 +29,8 @@ const POSHolder = (props: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [currentUser, setCurrentUser] = useState<any>(props.currentUser)
     const POS: any = usePOS()
+    const { signOut } = useClerk()
+    const router = useRouter()
 
     useEffect(() => {
         // setCurrentUser(user.user)
@@ -75,6 +78,11 @@ const POSHolder = (props: Props) => {
             console.log(`Customer: `, err)
         })
         setIsLoading(false)
+    }
+
+    const handleLogout = () => {
+        signOut() 
+        router.push('/') 
     }
 
     return (
@@ -145,7 +153,7 @@ const POSHolder = (props: Props) => {
                     <div className='w-[40%] text-ellipsis overflow-hidden whitespace-nowrap p-2 bg-slate-200 flex flex-col justify-between'>
                         <POSItemsHolder products={props.products} selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
                         <div className='py-4 px-1 w-full flex gap-2 items-center bg-slate-50'>
-                            <Image src={currentUser.imageURL} alt='loggedInUser' width={44} height={44} className='rounded-md' />
+                            <Image src={currentUser.imageURL} alt='loggedInUser' width={65} height={65} className='rounded-md' />
                             <section>
                                 <h1>
                                     {
@@ -155,6 +163,11 @@ const POSHolder = (props: Props) => {
                                 <p className='text-xs'>
                                     {currentUser && currentUser.role}
                                 </p>
+                                <div>
+                                    <button onClick={handleLogout} className='text-xs text-red-800 border-b border-red-800/40 p-0'>
+                                        Logout
+                                    </button>
+                                </div>
                             </section>
                         </div>
                     </div>

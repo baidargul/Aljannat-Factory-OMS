@@ -12,11 +12,7 @@ model orders {
   dateOfBooking  DateTime         @default(now()) @db.Timestamptz(6)
   status         String?
   note           String?
-  confirmedBy    String?
-  product        String?
-  variant        String?
-  weight         String?
-  amount         Int?
+  userId         String?
   courier        String?
   trackingNo     String?
   customerId     String?
@@ -24,6 +20,7 @@ model orders {
   createdAt      DateTime         @default(now()) @db.Timestamptz(6)
   updatedAt      DateTime         @default(now()) @db.Timestamptz(6)
   customers      customers?       @relation(fields: [customerId], references: [id])
+  profile        profile?         @relation(fields: [userId], references: [userId], onDelete: Cascade, map: "userId")
   ordersRegister ordersRegister[]
 }
 
@@ -90,20 +87,22 @@ model productVariations {
   product        product          @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
 }
 
-enum Role {
-  SUPERADMIN
-  ADMIN
-  MANAGER
-  SALESMAN
-  USER
-}
 model profile {
   id        String    @id @default(uuid())
-  userId    String?   @unique(map: "userID")
+  userId    String?   @unique
   name      String
   imageURL  String?
   email     String
   createdAt DateTime? @default(now()) @db.Timestamptz(6)
   updatedAt DateTime? @default(now()) @db.Timestamptz(6)
   role      Role      @default(SUPERADMIN)
+  orders    orders[]
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  MANAGER
+  SALESMAN
+  USER
 }
