@@ -3,15 +3,16 @@ import React, { useEffect, useState } from 'react'
 import { usePOS } from '@/hooks/usePOS'
 import POSItemsHolder from './POSHolder/POSItemsHolder'
 import POSOrderRowHolder from './POSHolder/POSOrderRowHolder'
-import HoverCardProvider from '@/components/HoverCardProvider/HoverCardProvider'
-import CustomerInput from './POSHolder/CustomerInput/CustomerInput'
 import { Input } from '@/components/ui/input'
 import { DatePicker } from '@/components/DatePicker/DatePicker'
 import axios from 'axios'
 import { Loader } from 'lucide-react'
+import Image from 'next/image'
+
 
 type Props = {
     products: any
+    currentUser: any
 }
 
 type productSpecifications = {
@@ -25,7 +26,16 @@ const POSHolder = (props: Props) => {
     const [totalAmount, setTotalAmount] = useState<number>(0)
     const [customer, setCustomer] = useState<any>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [currentUser, setCurrentUser] = useState<any>(props.currentUser)
     const POS: any = usePOS()
+
+    useEffect(() => {
+        // setCurrentUser(user.user)
+        // console.log(user)
+
+        console.log(currentUser)
+    }, [currentUser])
+
 
     useEffect(() => {
         POS.customer = customer
@@ -132,8 +142,21 @@ const POSHolder = (props: Props) => {
                     </div>
                 </div>
                 <div className="flex gap-2 min-h-screen mt-2 drop-shadow-md">
-                    <div className='w-[40%] text-ellipsis overflow-hidden whitespace-nowrap p-2 bg-slate-200'>
+                    <div className='w-[40%] text-ellipsis overflow-hidden whitespace-nowrap p-2 bg-slate-200 flex flex-col justify-between'>
                         <POSItemsHolder products={props.products} selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
+                        <div className='py-4 px-1 w-full flex gap-2 items-center bg-slate-50'>
+                            <Image src={currentUser.imageURL} alt='loggedInUser' width={44} height={44} className='rounded-md' />
+                            <section>
+                                <h1>
+                                    {
+                                        currentUser && currentUser.name
+                                    }
+                                </h1>
+                                <p className='text-xs'>
+                                    {currentUser && currentUser.role}
+                                </p>
+                            </section>
+                        </div>
                     </div>
                     <div className='w-[60%] text-ellipsis overflow-hidden whitespace-nowrap px-2 bg-slate-200'>
                         <POSOrderRowHolder />

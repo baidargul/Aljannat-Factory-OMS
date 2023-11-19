@@ -89,3 +89,21 @@ model productVariations {
   ordersRegister ordersRegister[]
   product        product          @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
 }
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+  MANAGER
+  SALESMAN
+  USER
+}
+model profile {
+  id        String    @id @default(uuid())
+  userId    String?   @unique(map: "userID")
+  name      String
+  imageURL  String?
+  email     String
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime? @default(now()) @db.Timestamptz(6)
+  role      Role      @default(SUPERADMIN)
+}

@@ -1,7 +1,9 @@
 import React from 'react'
 import prisma from '@/lib/prisma'
 import POSHolder from './POSHolder'
-type Props = {}
+type Props = {
+    currentUser: any
+}
 
 const ProductCollection = async (props: Props) => {
 
@@ -16,7 +18,7 @@ const ProductCollection = async (props: Props) => {
 
     return (
         <div className=''>
-            <POSHolder products={products} />
+            <POSHolder products={products} currentUser={props.currentUser}/>
         </div>
     )
 }

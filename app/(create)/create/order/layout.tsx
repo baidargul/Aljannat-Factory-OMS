@@ -1,3 +1,4 @@
+
 import React from 'react'
 
 type Props = {
@@ -5,6 +6,9 @@ type Props = {
 }
 
 const layout = (props: Props) => {
+
+
+
   return (
     <div className=' min-h-screen'>
         {props.children}

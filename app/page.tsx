@@ -1,11 +1,11 @@
 import UploadButton from "@/components/File/UploadButton"
 import GenericGrid from "@/components/Grid/GenericGrid";
 import prisma from "@/lib/prisma"
-
+import { initialProfile } from "@/lib/initial-profile"
 export default async function Home() {
 
   const orders = await getOrders()
-
+  const profile = await initialProfile();
 
 
 
@@ -16,7 +16,7 @@ export default async function Home() {
       <div className="w-full p-10">
 
         <div>
-          <GenericGrid orders={orders}/>
+          <GenericGrid orders={orders} />
         </div>
 
       </div>
@@ -29,27 +29,27 @@ async function getOrders() {
 
   const orders = await prisma.orders.findMany({
     include: {
-     customers: true,
-     ordersRegister:{
-        include:{
-          productVariations:{
-            select:{
-              id:true,
-              name:true,
+      customers: true,
+      ordersRegister: {
+        include: {
+          productVariations: {
+            select: {
+              id: true,
+              name: true,
             }
           },
-          product:{
-            select:{
-              id:true,
-              name:true,
+          product: {
+            select: {
+              id: true,
+              name: true,
             }
           },
-          }
-     }
+        }
+      }
     },
     orderBy: {
-        dateOfBooking: "asc"
+      dateOfBooking: "asc"
     }
-});
+  });
   return orders
 }
