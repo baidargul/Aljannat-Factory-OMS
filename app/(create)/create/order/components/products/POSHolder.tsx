@@ -149,7 +149,7 @@ const POSHolder = (props: Props) => {
                                 Save order
                             </button>
                         </div>
-                        <div className='-mt-5 text-xs font-semibold tracking-wider flex gap-1 items-center bg-white rounded-lg w-fit px-2'>
+                        <div className='-mt-5 text-xs font-semibold tracking-wider flex gap-2 items-center bg-zinc-100 rounded-t-md border-b border-slate-300 w-full justify-center px-2'>
                             <div className='bg-green-500 w-2 h-2 rounded-full animate-pulse'>
 
                             </div>
@@ -157,7 +157,7 @@ const POSHolder = (props: Props) => {
                                 {currentUser.name}
                             </p>
                             <p className='font-normal leading-tight tracking-tight opacity-25'>
-                                | {currentUser.role}
+                                - {currentUser.role}
                             </p>
                         </div>
                     </div>
