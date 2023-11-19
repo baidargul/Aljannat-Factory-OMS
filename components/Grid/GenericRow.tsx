@@ -54,7 +54,7 @@ const GenericRow = (props: Props) => {
           {row.status}
         </div>
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.trackingNo}
+          {row.trackingNo? row.trackingNo : "N/A"}
         </div>
       </div>
     );
