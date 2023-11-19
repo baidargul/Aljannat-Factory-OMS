@@ -11,9 +11,7 @@ export default async function Home() {
 
   return (
     <div className={`flex flex-col gap-2 justify-center items-center p-4 cursor-default`}>
-      <UploadButton />
-
-      <div className="w-full p-10">
+      <div className="w-full">
 
         <div>
           <GenericGrid orders={orders} />

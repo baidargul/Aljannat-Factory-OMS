@@ -9,7 +9,7 @@ type Props = {
 const GenericGrid = (props: Props) => {
     const orders = props.orders
     return (
-        <div className='w-full border border-slate-400 rounded-md h-[550px]'>
+        <div className='w-full'>
            <GenericRowsHolder orders={orders}/>
         </div>
     )
