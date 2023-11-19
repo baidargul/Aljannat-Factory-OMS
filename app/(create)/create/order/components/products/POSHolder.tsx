@@ -33,9 +33,6 @@ const POSHolder = (props: Props) => {
     const router = useRouter()
 
     useEffect(() => {
-        // setCurrentUser(user.user)
-        // console.log(user)
-
         console.log(currentUser)
     }, [currentUser])
 
@@ -83,6 +80,17 @@ const POSHolder = (props: Props) => {
     const handleLogout = () => {
         signOut()
         router.push('/')
+    }
+
+    const handleSaveOrder = async () => {
+        setIsLoading(true)
+        const data = {
+            customer: { ...customer },
+            products: [...POS.products],
+        }
+
+        const res = await axios.post("/api/order/create", data)
+        setIsLoading(false)
     }
 
     return (
@@ -145,7 +153,7 @@ const POSHolder = (props: Props) => {
                             <button onClick={() => handleNewOrder()} className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>
                                 New order
                             </button>
-                            <button className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>
+                            <button onClick={handleSaveOrder} className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>
                                 Save order
                             </button>
                         </div>
