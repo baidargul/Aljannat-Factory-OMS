@@ -45,10 +45,6 @@ const POSHolder = (props: Props) => {
     //     console.log(`POS Products: `, POS.products)
     // }, [POS.products])
 
-    useEffect(() => {
-        console.log(customer)
-    }, [customer])
-
     function handleNewOrder() {
         setIsLoading(true)
         setCustomer(null)
@@ -83,12 +79,46 @@ const POSHolder = (props: Props) => {
     }
 
     const handleSaveOrder = async () => {
-        setIsLoading(true)
         const data = {
             customer: { ...customer },
             products: [...POS.products],
         }
 
+        if(POS.products.length<1)
+        {
+            console.log(`No products selected`)
+            return
+        }
+
+        if(!customer){
+            console.log(`Please enter customer information`)
+            return
+        }
+
+        if(!customer.name)
+        {
+            console.log(`Please enter customer name`)
+            return
+        }
+
+        if(!customer.phone)
+        {
+            console.log(`Please enter customer first phone number`)
+            return
+        }
+
+       if(!customer.city)
+       {
+        console.log(`Please enter delivery city`)
+        return
+       }
+
+       if(!customer.address){
+        console.log(`Please enter delivery address`)
+        return
+       }
+
+       setIsLoading(true)
         const res = await axios.post("/api/order/create", data).then((res:any)=>{
             console.log(res.data)
         })
