@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
         if (!customer.phone) {
             response.status = 400
-            response.message = "Customer phone is required"
+            response.message = "Customer phone is required! Please enter a phone number in 'Phone 01'."
             response.data = null
             return new Response(JSON.stringify(response))
         }
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
         }
 
         //Verifications that all products have necessary information filled
-        for(const item of products){
+        for (const item of products) {
             if (item.productName === "" || !item.productName) {
                 response.status = 400
                 response.message = "Product name is required"
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
                 }
             })
 
-            if(!exists){
+            if (!exists) {
                 response.status = 400
                 response.message = `Product ${item.productName} not exists in database.`
                 response.data = null
@@ -86,13 +86,13 @@ export async function POST(req: NextRequest) {
             }
 
             exists = await prisma.productVariations.findFirst({
-                where:{
+                where: {
                     name: String(item.variantName).toLocaleLowerCase(),
                     productId: exists.id
                 }
             })
 
-            if(!exists){
+            if (!exists) {
                 response.status = 400
                 response.message = `Product variation ${item.variantName} not exists in database.`
                 response.data = null
@@ -124,11 +124,13 @@ export async function POST(req: NextRequest) {
         })
 
         if (!isExists) {
-            isExists = await prisma.customers.findFirst({
-                where: {
-                    phone2: customer.phone2
-                }
-            })
+            if (customer.phone2) {
+                isExists = await prisma.customers.findFirst({
+                    where: {
+                        phone2: customer.phone2
+                    }
+                })
+            }
         }
 
         let dbCustomer;
@@ -157,29 +159,28 @@ export async function POST(req: NextRequest) {
             }
         })
 
-        for(const item of products){
+        for (const item of products) {
             const product = await prisma.product.findUnique({
                 where: {
                     name: String(item.productName).toLocaleLowerCase()
                 }
             })
 
-            if(!product)
-            {
+            if (!product) {
                 response.status = 400
                 response.message = `Product ${item.productName} not found.`
                 response.data = null
                 return new Response(JSON.stringify(response))
             }
-            
+
             const variation = await prisma.productVariations.findFirst({
-                where:{
+                where: {
                     name: String(item.variantName).toLocaleLowerCase(),
-                    productId: product.id 
+                    productId: product.id
                 }
             })
 
-            if(!variation){
+            if (!variation) {
                 response.status = 400
                 response.message = `Product variation ${item.variantName} not found.`
                 response.data = null
@@ -187,7 +188,7 @@ export async function POST(req: NextRequest) {
             }
 
             const orderRegister = await prisma.ordersRegister.create({
-                data:{
+                data: {
                     id: v4(),
                     orderId: newOrder.id,
                     productId: product.id,
@@ -196,8 +197,7 @@ export async function POST(req: NextRequest) {
                     amount: Number(item.amount)
                 }
             })
-            if(!orderRegister)
-            {
+            if (!orderRegister) {
                 response.status = 400
                 response.message = `Unable to create order register for ${item.productName} ${item.variantName}.`
                 response.data = null
@@ -207,7 +207,7 @@ export async function POST(req: NextRequest) {
 
         response.status = 200
         response.message = "Order created successfully"
-        response.data = {...newOrder, orderRegister: {...products}}
+        response.data = { ...newOrder, orderRegister: { ...products }, customer: { ...dbCustomer } }
     } catch (error) {
         console.log(`[ORDER CREATE]-ERROR: `, error)
         response.status = 500
