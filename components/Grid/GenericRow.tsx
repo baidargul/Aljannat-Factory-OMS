@@ -60,17 +60,11 @@ const GenericRow = (props: Props) => {
     );
   }
 
-
-  // const title = `${row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"
-  //   } ${row.product.charAt(0).toUpperCase() + row.product.slice(1).toLowerCase()
-  //   }   (${row.variant.charAt(0).toUpperCase() + row.variant.slice(1).toLowerCase()
-  //   })`;
-
   let orderDate: any = new Date(row.dateOfBooking).toDateString();
 
   useEffect(() => {
     setRowTotalAmount(calculateRowTotal(row));
-  }, [row]); // Only re-run the effect if 'row' changes
+  }, [row]);
 
   return (
     <SheetProvider trigger={DataRow()}>
