@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
             return new Response(JSON.stringify(response))
         }
 
-        const { customer, products } = data
+        const { customer, products, userId } = data
 
         console.log(products)
 
@@ -154,7 +154,7 @@ export async function POST(req: NextRequest) {
                 id: v4(),
                 status: "BOOKED",
                 note: "just booked.",
-                userId: "user_2Y5CMgs7LiO4uLJqVbQXuoZrc9f",
+                userId: userId,
                 customerId: dbCustomer.id
             }
         })

@@ -82,6 +82,7 @@ const POSHolder = (props: Props) => {
         const data = {
             customer: { ...customer },
             products: [...POS.products],
+            userId: currentUser.userId,
         }
 
         if(POS.products.length<1)
