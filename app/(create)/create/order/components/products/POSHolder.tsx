@@ -81,8 +81,8 @@ const POSHolder = (props: Props) => {
     }
 
     const handleLogout = () => {
-        signOut() 
-        router.push('/') 
+        signOut()
+        router.push('/')
     }
 
     return (
@@ -140,14 +140,28 @@ const POSHolder = (props: Props) => {
                             </div>
                         </div>
                     </div>
-                    <div className='grid grid-cols-2 gap-2 rounded-md p-1 w-56 h-24 place-items-center justify-items-center'>
-                        <button onClick={() => handleNewOrder()} className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>
-                            New order
-                        </button>
-                        <button className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>
-                            Save order
-                        </button>
+                    <div className='flex flex-col items-center'>
+                        <div className='grid grid-cols-2 gap-2 rounded-md p-1 w-56 h-24 place-items-center justify-items-center'>
+                            <button onClick={() => handleNewOrder()} className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>
+                                New order
+                            </button>
+                            <button className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>
+                                Save order
+                            </button>
+                        </div>
+                        <div className='-mt-5 text-xs font-semibold tracking-wider flex gap-1 items-center bg-white rounded-lg w-fit px-2'>
+                            <div className='bg-green-500 w-2 h-2 rounded-full animate-pulse'>
+
+                            </div>
+                            <p>
+                                {currentUser.name}
+                            </p>
+                            <p className='font-normal leading-tight tracking-tight opacity-25'>
+                                | {currentUser.role}
+                            </p>
+                        </div>
                     </div>
+
                 </div>
                 <div className="flex gap-2 min-h-screen mt-2 drop-shadow-md">
                     <div className={`w-[40%] text-ellipsis overflow-hidden whitespace-nowrap p-2 bg-slate-200`}>
