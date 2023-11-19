@@ -5,6 +5,7 @@ import { ScrollArea } from "../ui/scroll-area";
 
 type Props = {
   row: any;
+  index: number;
 };
 
 const GenericRow = (props: Props) => {
@@ -21,40 +22,43 @@ const GenericRow = (props: Props) => {
   function DataRow() {
     return (
       <div
-        className={`p-2 grid grid-cols-8 w-full justify-items-start items-center gap-10 text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
+        className={`p-2 w-full justify-items-start grid grid-cols-9 text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
         onClick={handleRowClick}
       >
-        <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis ">
-          {row.createdAt.toDateString() + " " + row.createdAt.toLocaleTimeString()}
+        <div className=" overflow-hidden whitespace-nowrap text-ellipsis opacity-40">
+          {props.index + 1}
         </div>
-        <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
+        <div className="overflow-hidden whitespace-nowrap text-ellipsis ">
+          {row.createdAt.toDateString()}
+        </div>
+        <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
           {row.customers.name.charAt(0).toUpperCase() +
             row.customers.name.slice(1).toLowerCase()}
         </div>
-        <div className="font-semibold w-36 overflow-hidden whitespace-nowrap text-ellipsis">
+        <div className="font-semibold  overflow-hidden whitespace-nowrap text-ellipsis">
           {
             formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)
           }
         </div>
         <div
           className={`${row.ordersRegister[0].weight !== 0 ? "opacity-100" : "opacity-40 "
-            } w-36 overflow-hidden whitespace-nowrap text-ellipsis`}
+            }  overflow-hidden whitespace-nowrap text-ellipsis`}
         >
           {getTotalWeight(row)}
         </div>
-        <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
+        <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
           {row.ordersRegister[0].productVariations.name.charAt(0).toUpperCase() +
             row.ordersRegister[0].productVariations.name.slice(1).toLowerCase()}
         </div>
 
-        <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
+        <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
           Rs {rowTotalAmount}
         </div>
-        <div className={` ${rowStatusStyle(row.status)} p-1 text-center rounded-md w-36 overflow-hidden whitespace-nowrap text-ellipsis`}>
+        <div className={` ${rowStatusStyle(row.status)} p-1 text-center rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
           {row.status}
         </div>
-        <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.trackingNo? row.trackingNo : "N/A"}
+        <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
+          {row.trackingNo ? row.trackingNo : "N/A"}
         </div>
       </div>
     );

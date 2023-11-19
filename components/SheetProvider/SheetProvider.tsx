@@ -7,6 +7,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import React from 'react'
+import { DialogTrigger } from "../ui/dialog"
 
 type Props = {
     title?: string
@@ -17,7 +18,7 @@ type Props = {
 const SheetProvider = (props: Props) => {
     return (
         <Sheet>
-            <SheetTrigger>{props.trigger}</SheetTrigger>
+            <SheetTrigger className="w-full">{props.trigger}</SheetTrigger>
             <SheetContent>
                 <SheetHeader>
                 </SheetHeader>

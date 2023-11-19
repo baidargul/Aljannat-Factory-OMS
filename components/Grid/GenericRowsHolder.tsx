@@ -12,11 +12,11 @@ const GenericRowsHolder = (props: Props) => {
 
     return (
         <ScrollArea className='w-full h-[550px]'>
-            <div>
+            <div className=''>
                 {
-                    props.orders.length > 0 && props.orders.map((row: any) => (
+                    props.orders.length > 0 && props.orders.map((row: any,index:number) => (
                         <div key={row.id} className=''>
-                            <GenericRow row={row} />
+                            <GenericRow row={row} index={index} />
                         </div>
                     ))
                 }

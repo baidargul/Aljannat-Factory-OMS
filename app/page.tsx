@@ -49,7 +49,7 @@ async function getOrders() {
       }
     },
     orderBy: {
-      dateOfBooking: "asc"
+      dateOfBooking: "desc"
     }
   });
   return orders
