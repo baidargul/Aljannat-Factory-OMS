@@ -89,7 +89,9 @@ const POSHolder = (props: Props) => {
             products: [...POS.products],
         }
 
-        const res = await axios.post("/api/order/create", data)
+        const res = await axios.post("/api/order/create", data).then((res:any)=>{
+            console.log(res.data)
+        })
         setIsLoading(false)
     }
 

@@ -1,4 +1,6 @@
+import prisma from "@/lib/prisma";
 import { NextRequest } from "next/server";
+import { v4 } from "uuid";
 
 
 export async function POST(req: NextRequest) {
@@ -22,37 +24,32 @@ export async function POST(req: NextRequest) {
 
         console.log(products)
 
-        if(!customer.name) 
-        {
+        if (!customer.name) {
             response.status = 400
             response.message = "Customer name is required"
             response.data = null
             return new Response(JSON.stringify(response))
         }
 
-        if(!customer.phone) 
-        {
+        if (!customer.phone) {
             response.status = 400
             response.message = "Customer phone is required"
             response.data = null
             return new Response(JSON.stringify(response))
         }
 
-        if(!customer.phone2)
-        {
-            customer.phone2= ""
+        if (!customer.phone2) {
+            customer.phone2 = ""
         }
 
-        if(!customer.city)
-        {
+        if (!customer.city) {
             response.status = 400
             response.message = "Customer city is required"
             response.data = null
             return new Response(JSON.stringify(response))
         }
 
-        if(!customer.address) 
-        {
+        if (!customer.address) {
             response.status = 400
             response.message = "Customer address is required"
             response.data = null
@@ -60,43 +57,157 @@ export async function POST(req: NextRequest) {
         }
 
         //Verifications that all products have necessary information filled
-        products.map((product:any)=>{
-            if(product.productName === "" || !product.productName)
-            {
+        for(const item of products){
+            if (item.productName === "" || !item.productName) {
                 response.status = 400
                 response.message = "Product name is required"
                 response.data = null
                 return new Response(JSON.stringify(response))
             }
 
-            if(product.variantName === "" || !product.variantName)
-            {
+            let exists = await prisma.product.findFirst({
+                where: {
+                    name: String(item.productName).toLocaleLowerCase()
+                }
+            })
+
+            if(!exists){
+                response.status = 400
+                response.message = `Product ${item.productName} not exists in database.`
+                response.data = null
+                return new Response(JSON.stringify(response))
+            }
+
+            if (item.variantName === "" || !item.variantName) {
                 response.status = 400
                 response.message = "Variant name is required"
                 response.data = null
                 return new Response(JSON.stringify(response))
             }
 
-            if(product.weight === "" || !product.weight)
-            {
+            exists = await prisma.productVariations.findFirst({
+                where:{
+                    name: String(item.variantName).toLocaleLowerCase(),
+                    productId: exists.id
+                }
+            })
+
+            if(!exists){
+                response.status = 400
+                response.message = `Product variation ${item.variantName} not exists in database.`
+                response.data = null
+                return new Response(JSON.stringify(response))
+            }
+
+            if (item.weight === "" || !item.weight) {
                 response.status = 400
                 response.message = "Weight is required"
                 response.data = null
                 return new Response(JSON.stringify(response))
             }
 
-            if(product.amount === "" || !product.amount)
-            {
+            if (item.amount === "" || !item.amount) {
                 response.status = 400
                 response.message = "Amount is required"
                 response.data = null
                 return new Response(JSON.stringify(response))
             }
+        }
+
+        let isExists = await prisma.customers.findFirst({
+            where: {
+                phone: customer.phone
+            },
+            orderBy: {
+                createdAt: "desc"
+            }
         })
 
-        
+        if (!isExists) {
+            isExists = await prisma.customers.findFirst({
+                where: {
+                    phone2: customer.phone2
+                }
+            })
+        }
 
+        let dbCustomer;
+        if (!isExists) {
+            dbCustomer = await prisma.customers.create({
+                data: {
+                    id: v4(),
+                    name: customer.name,
+                    phone: customer.phone,
+                    phone2: customer.phone2,
+                    city: customer.city,
+                    address: customer.address
+                }
+            })
+        } else {
+            dbCustomer = isExists
+        }
 
+        const newOrder = await prisma.orders.create({
+            data: {
+                id: v4(),
+                status: "BOOKED",
+                note: "just booked.",
+                userId: "user_2Y5CMgs7LiO4uLJqVbQXuoZrc9f",
+                customerId: dbCustomer.id
+            }
+        })
+
+        for(const item of products){
+            const product = await prisma.product.findUnique({
+                where: {
+                    name: String(item.productName).toLocaleLowerCase()
+                }
+            })
+
+            if(!product)
+            {
+                response.status = 400
+                response.message = `Product ${item.productName} not found.`
+                response.data = null
+                return new Response(JSON.stringify(response))
+            }
+            
+            const variation = await prisma.productVariations.findFirst({
+                where:{
+                    name: String(item.variantName).toLocaleLowerCase(),
+                    productId: product.id 
+                }
+            })
+
+            if(!variation){
+                response.status = 400
+                response.message = `Product variation ${item.variantName} not found.`
+                response.data = null
+                return new Response(JSON.stringify(response))
+            }
+
+            const orderRegister = await prisma.ordersRegister.create({
+                data:{
+                    id: v4(),
+                    orderId: newOrder.id,
+                    productId: product.id,
+                    variantId: variation.id,
+                    weight: Number(item.weight),
+                    amount: Number(item.amount)
+                }
+            })
+            if(!orderRegister)
+            {
+                response.status = 400
+                response.message = `Unable to create order register for ${item.productName} ${item.variantName}.`
+                response.data = null
+                return new Response(JSON.stringify(response))
+            }
+        }
+
+        response.status = 200
+        response.message = "Order created successfully"
+        response.data = {...newOrder, orderRegister: {...products}}
     } catch (error) {
         console.log(`[ORDER CREATE]-ERROR: `, error)
         response.status = 500
