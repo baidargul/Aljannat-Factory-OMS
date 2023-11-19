@@ -14,7 +14,6 @@ const GenericRow = (props: Props) => {
 
 
   const { row } = props;
-  console.log(row)
   const handleRowClick = () => {
     setSelectedOrder(row);
   };
@@ -38,14 +37,14 @@ const GenericRow = (props: Props) => {
           }
         </div>
         <div
-          className={`${row.ordersRegister[0].weight !== "0KG" ? "opacity-100" : "opacity-40 "
+          className={`${row.ordersRegister[0].weight !== 0 ? "opacity-100" : "opacity-40 "
             } w-36 overflow-hidden whitespace-nowrap text-ellipsis`}
         >
-          {row.ordersRegister[0].weight ? String(row.ordersRegister[0].weight).toLocaleUpperCase() : "0KG"}
+          {getTotalWeight(row)}
         </div>
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.variant.charAt(0).toUpperCase() +
-            row.variant.slice(1).toLowerCase()}
+          {row.ordersRegister[0].productVariations.name.charAt(0).toUpperCase() +
+            row.ordersRegister[0].productVariations.name.slice(1).toLowerCase()}
         </div>
 
         <div className="w-36 overflow-hidden whitespace-nowrap text-ellipsis">
@@ -62,10 +61,10 @@ const GenericRow = (props: Props) => {
   }
 
 
-  const title = `${row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"
-    } ${row.product.charAt(0).toUpperCase() + row.product.slice(1).toLowerCase()
-    }   (${row.variant.charAt(0).toUpperCase() + row.variant.slice(1).toLowerCase()
-    })`;
+  // const title = `${row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"
+  //   } ${row.product.charAt(0).toUpperCase() + row.product.slice(1).toLowerCase()
+  //   }   (${row.variant.charAt(0).toUpperCase() + row.variant.slice(1).toLowerCase()
+  //   })`;
 
   let orderDate: any = new Date(row.dateOfBooking).toDateString();
 
@@ -86,12 +85,12 @@ const GenericRow = (props: Props) => {
             </p>
           </div>
           <div className="bg-red-900 p-1 font-semibold">
-            <div className="bg-yellow-300 rounded flex p-2 gap-2 w-full justify-evenly">
+            <div className="bg-yellow-300 rounded flex p-2 gap-2 w-full items-center justify-between text-center">
               <p className="text-red-900">
-                {row.weight ? String(row.weight).toLocaleUpperCase() : "0KG"}
+                {getTotalWeight(row)}
               </p>
               <p className="">{formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)}</p>
-              <p className="text-red-900">{row.variant}</p>
+              <p className="text-red-900">{formalizeText(row.ordersRegister[0].productVariations.name)}</p>
             </div>
           </div>
           <div>
@@ -160,7 +159,7 @@ const GenericRow = (props: Props) => {
             {
               row.ordersRegister.map((item: any) => {
                 return (
-                  <div className="grid grid-cols-4 px-2 border-b border-x" key={formalizeText(item.product.name)}>
+                  <div className="grid grid-cols-4 px-2 border-b border-x" key={formalizeText(item.name)}>
                     <div>
                       <p className="text-xs tracking-tight">{formalizeText(item.product.name)}</p>
                     </div>
@@ -184,7 +183,7 @@ const GenericRow = (props: Props) => {
                 EMP:
               </p>
               <p className="tracking-wide">
-                {formalizeText(row.confirmedBy)}
+                {formalizeText((row.profile.name))}
               </p>
             </div>
             <p className="font-semibold text-lg text-green-700">
@@ -219,6 +218,9 @@ function rowStatusStyle(status: string) {
 }
 
 function formalizeText(text: string) {
+  if (!text) {
+    return "N/A"
+  }
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
@@ -228,4 +230,21 @@ function calculateRowTotal(row: any) {
     total += item.amount;
   });
   return total;
+}
+
+function getTotalWeight(row: any) {
+  let total = 0;
+  const units = [] as any;
+  row.ordersRegister.map((item: any) => {
+    total += Number(item.weight);
+    if (!units.includes(item.productVariations.defaultUnit)) {
+      units.push(item.productVariations.defaultUnit)
+    }
+  });
+  let unitString = "(";
+  units.map((unit: any) => {
+    unitString = unitString.length > 1 ? unitString + "/" + unit : unitString + unit;
+  })
+  unitString = String(unitString + ")").toLocaleUpperCase();
+  return `${total} ${units.length > 1 ? unitString : String(units[0]).toLocaleUpperCase()}`;
 }
