@@ -261,6 +261,8 @@ function getStageControls(stage: string) {
 }
 
 function _orderVerificationStageControls() {
+  const [otherNote, setOtherNote] = useState<string>("");
+  
   return (
     <div className="flex flex-col gap-1">
       <div className="grid grid-cols-3 gap-1">
@@ -272,7 +274,7 @@ function _orderVerificationStageControls() {
         <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order verified</button>
       </div>
       <div className="flex gap-1 items-center">
-        <Input placeholder="Other" className="text-xs"/>
+        <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e:any)=>{setOtherNote(e.target.value)}}/>
         <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Update</button>
       </div>
       <div className="grid grid-cols-2 gap-1 mt-5">
