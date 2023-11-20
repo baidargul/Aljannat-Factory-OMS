@@ -8,6 +8,12 @@ type Props = {
 }
 
 const GenericRowsHolder = (props: Props) => {
+    let totalWeight = 0
+    props.orders.map((order: any) => {
+        order.ordersRegister.map((register: any) => {
+            totalWeight = totalWeight + register.weight
+        })
+    })
 
 
     return (
@@ -19,7 +25,7 @@ const GenericRowsHolder = (props: Props) => {
                     <div>Job Created</div>
                     <div>Customer</div>
                     <div>Product</div>
-                    <div>Weight</div>
+                    <div>({totalWeight}) Weight</div>
                     <div>City</div>
                     <div>Bill</div>
                     <div>Status</div>
