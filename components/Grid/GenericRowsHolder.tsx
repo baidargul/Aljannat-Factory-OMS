@@ -20,7 +20,7 @@ const GenericRowsHolder = (props: Props) => {
                     <div>Customer</div>
                     <div>Product</div>
                     <div>Weight</div>
-                    <div>Variation</div>
+                    <div>City</div>
                     <div>Bill</div>
                     <div>Status</div>
                     <div>Courier#</div>

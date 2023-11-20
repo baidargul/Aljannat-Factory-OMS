@@ -47,8 +47,7 @@ const GenericRow = (props: Props) => {
           {getTotalWeight(row)}
         </div>
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.ordersRegister[0].productVariations.name.charAt(0).toUpperCase() +
-            row.ordersRegister[0].productVariations.name.slice(1).toLowerCase()}
+          {row.customers.city}
         </div>
 
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
