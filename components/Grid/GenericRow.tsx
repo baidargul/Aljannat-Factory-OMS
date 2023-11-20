@@ -158,7 +158,7 @@ const GenericRow = (props: Props) => {
                       <p className="text-xs tracking-tight">{formalizeText(item.productVariations.name)}</p>
                     </div>
                     <div>
-                      <p className="text-xs tracking-tight">{item.weight}</p>
+                      <p className="text-xs tracking-tight">{`${item.weight} ${item.productVariations.defaultUnit}`}</p>
                     </div>
                     <div>
                       <p className="text-xs tracking-tight">Rs {item.amount}</p>
@@ -171,7 +171,7 @@ const GenericRow = (props: Props) => {
           <div className="flex justify-between mt-10 items-center">
             <div className="text-sm flex gap-1 text-slate-700 items-center">
               <p className="font-semibold ">
-                EMP:
+                Last handler:
               </p>
               <p className="tracking-wide">
                 {formalizeText((row.profile.name))}
