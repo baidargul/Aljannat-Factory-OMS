@@ -15,9 +15,15 @@ import {
 
 type Props = {
     children: React.ReactNode
+    setValue: (value: Date) => void
 }
 export function DatePicker(props: Props) {
   const [date, setDate] = React.useState<Date>()
+
+  function handleSelect(date: any) {
+    setDate(date)
+    props.setValue(date)
+  }
 
   return (
     <Popover>
@@ -30,7 +36,7 @@ export function DatePicker(props: Props) {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={handleSelect}
           initialFocus
         />
       </PopoverContent>

@@ -1,6 +1,9 @@
 import React from 'react'
 import GenericRow from './GenericRow'
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { ComboBoxProvider } from '../ComboBox/ComboBoxProvider'
+import { DatePicker } from '../DatePicker/DatePicker'
+import GridWithFilters from './GridFilters'
 
 type Props = {
     orders: any
@@ -8,18 +11,12 @@ type Props = {
 }
 
 const GenericRowsHolder = (props: Props) => {
-    let totalWeight = 0
-    props.orders.map((order: any) => {
-        order.ordersRegister.map((register: any) => {
-            totalWeight = totalWeight + register.weight
-        })
-    })
-
-
     return (
         <>
-            <div className='text-sm my-2'>Jobs: {props.orders.length}</div>
-            <div className='border border-red-800'>
+            <div className='w-full'>
+                <GridWithFilters orders={props.orders} />
+            </div>
+            {/* <div className='border border-red-800'>
                 <div className='grid grid-cols-9 tracking-wide text-sm justify-items-start bg-red-800 text-white border-red-800 border p-2'>
                     <div>#</div>
                     <div>Job Created</div>
@@ -42,7 +39,7 @@ const GenericRowsHolder = (props: Props) => {
                         }
                     </div>
                 </ScrollArea>
-            </div>
+            </div> */}
         </>
     )
 }

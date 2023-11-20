@@ -2,10 +2,12 @@
 import React, { useEffect, useState } from "react";
 import SheetProvider from "../SheetProvider/SheetProvider";
 import { ScrollArea } from "../ui/scroll-area";
+import { Input } from "../ui/input";
 
 type Props = {
   row: any;
   index: number;
+  stage?: "orderVerification" | "paymentVerification" | "DispatchDivision" | "InventoryManager"
 };
 
 const GenericRow = (props: Props) => {
@@ -180,6 +182,9 @@ const GenericRow = (props: Props) => {
               Rs {rowTotalAmount}
             </p>
           </div>
+          <div>
+            {props.stage && getStageControls(props.stage)}
+          </div>
         </div>
       </ScrollArea>
     </SheetProvider>
@@ -237,4 +242,43 @@ function getTotalWeight(row: any) {
   })
   unitString = String(unitString + ")").toLocaleUpperCase();
   return `${total} ${units.length > 1 ? unitString : String(units[0]).toLocaleUpperCase()}`;
+}
+
+function getStageControls(stage: string) {
+  switch (stage) {
+    case "orderVerification":
+      return _orderVerificationStageControls();
+      break;
+    case "paymentVerification":
+      break;
+    case "DispatchDivision":
+      break;
+    case "InventoryManager":
+      break;
+    default:
+      return null;
+  }
+}
+
+function _orderVerificationStageControls() {
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="grid grid-cols-3 gap-1">
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Calling</button>
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">On hold</button>
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">No response</button>
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Powered off</button>
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake order</button>
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order verified</button>
+      </div>
+      <div className="flex gap-1 items-center">
+        <Input placeholder="Other" className="text-xs"/>
+        <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Update</button>
+      </div>
+      <div className="grid grid-cols-2 gap-1 mt-5">
+        <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order Verified</button>
+        <button className="bg-orange-100 hover:bg-orange-50 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+      </div>
+    </div>
+  )
 }
