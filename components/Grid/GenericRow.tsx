@@ -4,6 +4,7 @@ import SheetProvider from "../SheetProvider/SheetProvider";
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
 import axios from "axios";
+import ToolTipProvider from "../ToolTipProvider/ToolTipProvider";
 
 type Props = {
   row: any;
@@ -59,9 +60,22 @@ const GenericRow = (props: Props) => {
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
           Rs {rowTotalAmount}
         </div>
-        <div className={` ${rowStatusStyle(row.status)} p-1 text-center rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
-          {row.status}
-        </div>
+        <ToolTipProvider content={row.orderNotes[0].note}>
+          <div className="flex items-center gap-1">
+            <div className={` ${rowStatusStyle(row.status)} p-1 text-center rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
+              {row.status}
+            </div>
+            <p>
+              {row.orderNotes.length > 1 ? (
+                <div className="text-xs w-4 h-4 border-b border-zinc-500 text-zinc-800 justify-center items-center flex text-center">
+                  <p className="scale-75">
+                    {row.orderNotes.length-1}
+                  </p>
+                </div>
+              ) : null}
+            </p>
+          </div>
+        </ToolTipProvider>
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
           {row.trackingNo ? row.trackingNo : "N/A"}
         </div>
@@ -130,7 +144,7 @@ const GenericRow = (props: Props) => {
               <div className="w-full text-xs tracking-tight flex gap-1 items-center">
                 <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-zinc-200 border border-zinc-500 text-zinc-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
                   <p className="scale-75">
-                    {row.orderNotes.length}
+                    {row.orderNotes.length-1}
                   </p>
                 </div>
                 {formalizeText(row.orderNotes[0].note)}
