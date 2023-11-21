@@ -3,23 +3,27 @@ import React, { useEffect, useState } from "react";
 import SheetProvider from "../SheetProvider/SheetProvider";
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
+import axios from "axios";
 
 type Props = {
   row: any;
   index: number;
   stage?: "orderVerification" | "paymentVerification" | "DispatchDivision" | "InventoryManager"
+  profile: any
 };
 
 const GenericRow = (props: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [row, setRow] = useState<any>(props.row);
   const [rowTotalAmount, setRowTotalAmount] = useState<any>(0);
 
-
-
-  const { row } = props;
   const handleRowClick = () => {
     setSelectedOrder(row);
   };
+
+  function updateRow(newRow: any) {
+    setRow(newRow);
+  }
 
   function DataRow() {
     return (
@@ -31,7 +35,7 @@ const GenericRow = (props: Props) => {
           {props.index + 1}
         </div>
         <div className="overflow-hidden whitespace-nowrap text-ellipsis ">
-          {row.createdAt.toDateString()}
+          {new Date(row.createdAt).toDateString()}
         </div>
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
           {row.customers.name.charAt(0).toUpperCase() +
@@ -123,7 +127,14 @@ const GenericRow = (props: Props) => {
           <div>
             <div>
               <p className="font-semibold">Note</p>
-              <p className="w-full text-xs tracking-tight">{formalizeText(row.orderNotes[0].note)}</p>
+              <div className="w-full text-xs tracking-tight flex gap-1 items-center">
+                <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-zinc-200 border border-zinc-500 text-zinc-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
+                  <p className="scale-75">
+                    {row.orderNotes.length}
+                  </p>
+                </div>
+                {formalizeText(row.orderNotes[0].note)}
+              </div>
             </div>
           </div>
 
@@ -183,7 +194,7 @@ const GenericRow = (props: Props) => {
             </p>
           </div>
           <div>
-            {props.stage && getStageControls(props.stage)}
+            {props.stage && getStageControls(props.stage, props.profile, row, updateRow)}
           </div>
         </div>
       </ScrollArea>
@@ -244,10 +255,10 @@ function getTotalWeight(row: any) {
   return `${total} ${units.length > 1 ? unitString : String(units[0]).toLocaleUpperCase()}`;
 }
 
-function getStageControls(stage: string) {
+function getStageControls(stage: string, profile: any, row: any, updateRow: any) {
   switch (stage) {
     case "orderVerification":
-      return _orderVerificationStageControls();
+      return _orderVerificationStageControls(profile, row, updateRow);
     case "paymentVerification":
       return _paymentVerification();
       break;
@@ -260,28 +271,44 @@ function getStageControls(stage: string) {
   }
 }
 
-function _orderVerificationStageControls() {
+function _orderVerificationStageControls(profile: any, row: any, updateRow: any) {
   const [otherNote, setOtherNote] = useState<string>("");
+  const [isWorking, setIsWorking] = useState<boolean>(false);
 
 
-  function handleNote(text: string)
-  {
+  function handleNote(text: string) {
     setOtherNote(text);
+  }
+
+  async function handleUpdateNote() {
+    const userId = profile.userId;
+    const note = `'${formalizeText(otherNote)}' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
   }
 
   return (
     <div className="flex flex-col gap-1">
       <div className="grid grid-cols-3 gap-1">
-        <button onClick={()=>handleNote("Calling")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Calling</button>
-        <button onClick={()=>handleNote("On hold")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">On hold</button>
-        <button onClick={()=>handleNote("No response")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">No response</button>
-        <button onClick={()=>handleNote("Powered off")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Powered off</button>
-        <button onClick={()=>handleNote("Fake order")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake order</button>
-        <button onClick={()=>handleNote("Order verified")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order verified</button>
+        <button onClick={() => handleNote("Calling")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Calling</button>
+        <button onClick={() => handleNote("On hold")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">On hold</button>
+        <button onClick={() => handleNote("No response")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">No response</button>
+        <button onClick={() => handleNote("Powered off")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Powered off</button>
+        <button onClick={() => handleNote("Fake order")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake order</button>
+        <button onClick={() => handleNote("Order verified")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order verified</button>
       </div>
       <div className="flex gap-1 items-center">
-        <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e:any)=>{setOtherNote(e.target.value)}}/>
-        <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Update</button>
+        <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
+        <button onClick={() => handleUpdateNote()} className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">{isWorking ? "..." : "Update"}</button>
       </div>
       <div className="grid grid-cols-2 gap-1 mt-5">
         <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order Verified</button>
@@ -291,7 +318,7 @@ function _orderVerificationStageControls() {
   )
 }
 
-function _paymentVerification () {
+function _paymentVerification() {
   const [otherNote, setOtherNote] = useState<string>("");
   return (
     <div className="flex flex-col gap-1">
@@ -304,7 +331,7 @@ function _paymentVerification () {
         <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Received</button>
       </div>
       <div className="flex gap-1 items-center">
-        <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e:any)=>setOtherNote(e.target.value)}/>
+        <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e: any) => setOtherNote(e.target.value)} />
         <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Update</button>
       </div>
       <div className="grid grid-cols-2 gap-1 mt-5">

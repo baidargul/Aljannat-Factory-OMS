@@ -1,5 +1,4 @@
 import React from 'react'
-import GenericRow from './GenericRow'
 import GenericRowsHolder from './GenericRowsHolder'
 
 type Props = {

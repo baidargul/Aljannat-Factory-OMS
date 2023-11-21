@@ -7,6 +7,7 @@ import GenericRow from './GenericRow'
 
 type Props = {
     orders: any
+    profile: any
 }
 
 const GridWithFilters = (props: Props) => {
@@ -26,7 +27,7 @@ const GridWithFilters = (props: Props) => {
                     <button>
                         <div className='text-sm flex gap-1 w-44'>
                             <div className='font-semibold'>From:</div>
-                            <div className='border-b border-red-800/40'>{fromDate?formalizeText((fromDate?.toDateString())):""}</div>
+                            <div className='border-b border-red-800/40'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
                         </div>
                     </button>
                 </DatePicker>
@@ -34,7 +35,7 @@ const GridWithFilters = (props: Props) => {
                     <button>
                         <div className='text-sm flex gap-1 w-44'>
                             <div className='font-semibold'>To:</div>
-                            <div className='border-b border-red-800/40'>{toDate? formalizeText((toDate?.toDateString())):""}</div>
+                            <div className='border-b border-red-800/40'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
                         </div>
                     </button>
                 </DatePicker>
@@ -55,13 +56,12 @@ const GridWithFilters = (props: Props) => {
                     <div className='w-full'>
                         {
                             props.orders.length > 0 && props.orders.map((row: any, index: number) => {
-                                if(row.dateOfBooking < fromDate || row.dateOfBooking > toDate)
-                                {
+                                if (row.dateOfBooking < fromDate || row.dateOfBooking > toDate) {
                                     return null
                                 }
                                 return (
                                     <div key={row.id} className=''>
-                                        <GenericRow stage='orderVerification' row={row} index={index} />
+                                        <GenericRow stage='orderVerification' row={row} index={index} profile={props.profile} />
                                     </div>
                                 )
                             })
