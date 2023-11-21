@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/sheet"
 import React from 'react'
 import { DialogTrigger } from "../ui/dialog"
+import { ScrollArea } from "../ui/scroll-area"
 
 type Props = {
     title?: string
@@ -20,11 +21,13 @@ const SheetProvider = (props: Props) => {
         <Sheet>
             <SheetTrigger className="w-full">{props.trigger}</SheetTrigger>
             <SheetContent>
+                <ScrollArea className="w-full h-[700px] p-2" type="always">
                 <SheetHeader>
                 </SheetHeader>
                 {
                     props.children
                 }
+                </ScrollArea>
             </SheetContent>
         </Sheet>
     )

@@ -1,4 +1,4 @@
- "use client";
+"use client";
 import React, { useEffect, useState } from "react";
 import SheetProvider from "../SheetProvider/SheetProvider";
 import { ScrollArea } from "../ui/scroll-area";
@@ -69,7 +69,7 @@ const GenericRow = (props: Props) => {
               {row.orderNotes.length > 1 ? (
                 <div className="text-xs w-4 h-4 border-b border-zinc-500 text-zinc-800 justify-center items-center flex text-center">
                   <p className="scale-75">
-                    {row.orderNotes.length-1}
+                    {row.orderNotes.length - 1}
                   </p>
                 </div>
               ) : null}
@@ -91,127 +91,125 @@ const GenericRow = (props: Props) => {
 
   return (
     <SheetProvider trigger={DataRow()}>
-      <ScrollArea>
-        <div className="select-none mt-10 flex flex-col p-2  gap-2 ">
-          <div className="flex justify-between text-xs items-center">
-            <p className="p-1 border-b-2 border-red-900/30 tracking-wide ">
-              {orderDate}
+      <div className="select-none mt-2 flex flex-col p-2  gap-2 ">
+        <div className="flex justify-between text-xs items-center">
+          <p className="p-1 border-b-2 border-red-900/30 tracking-wide ">
+            {orderDate}
+          </p>
+          <p className="text-red-900 p-1 border-b-2 border-red-900/30 border-double-2 font-semibold">
+            {row.status}
+          </p>
+        </div>
+        <div className="bg-red-900 p-1 font-semibold">
+          <div className="bg-yellow-300 rounded flex p-2 gap-2 w-full items-center justify-between text-center">
+            <p className="text-red-900">
+              {getTotalWeight(row)}
             </p>
-            <p className="text-red-900 p-1 border-b-2 border-red-900/30 border-double-2 font-semibold">
-              {row.status}
-            </p>
-          </div>
-          <div className="bg-red-900 p-1 font-semibold">
-            <div className="bg-yellow-300 rounded flex p-2 gap-2 w-full items-center justify-between text-center">
-              <p className="text-red-900">
-                {getTotalWeight(row)}
-              </p>
-              <p className="">{formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)}</p>
-              <p className="text-red-900">{formalizeText(row.ordersRegister[0].productVariations.name)}</p>
-            </div>
-          </div>
-          <div>
-            <div className="grid grid-cols-2 w-full">
-              <div className="font-semibold">
-                <p className="">Customer</p>
-                <p className="">Phone 01</p>
-                <p className="">Phone 02</p>
-                <p className="">City</p>
-                <p className="">Address</p>
-              </div>
-              <div className="">
-                <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                  {formalizeText(row.customers.name)}
-                </p>
-                <p className="">
-                  {row.customers.phone ? row.customers.phone !== "00000000001" ? <a className="text-blue-400" href={`tel:${row.customers.phone}`}>{row.customers.phone}</a> : "N/A" : "N/A"}
-                </p>
-                <p className="">
-                  {row.customers.phone2 ? row.customers.phone2 !== "00000000001" ? <a className="text-blue-400" href={`tel:${row.customers.phone2}`}>{row.customers.phone2}</a> : "N/A" : "N/A"}
-                </p>
-                <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                  {formalizeText(row.customers.city)}
-                </p>
-                <div className="text-ellipsis overflow-hidden whitespace-nowrap">
-                  {formalizeText(row.customers.address)}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div>
-              <p className="font-semibold">Note</p>
-              <div className="w-full text-xs tracking-tight flex gap-1 items-center">
-                <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-zinc-200 border border-zinc-500 text-zinc-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
-                  <p className="scale-75">
-                    {row.orderNotes.length-1}
-                  </p>
-                </div>
-                {formalizeText(row.orderNotes[0].note)}
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3">
-            <div>
-              <p className="font-semibold">Status</p>
-              <p className="text-xs tracking-tight">{row.status}</p>
-            </div>
-            <div>
-              <p className="font-semibold">Service</p>
-              <p className="text-xs tracking-tight">{row.courier}</p>
-            </div>
-            <div>
-              <p className="font-semibold">#</p>
-              <p className="text-xs tracking-tight">{row.trackingNo}</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-4 -mb-2 bg-slate-300 items-center px-2">
-            <p className="font-semibold text-sm">Product</p>
-            <p className="font-semibold text-sm">Variant</p>
-            <p className="font-semibold text-sm">Weight</p>
-            <p className="font-semibold text-sm">Amount</p>
-          </div>
-          <div className="">
-            {
-              row.ordersRegister.map((item: any) => {
-                return (
-                  <div className="grid grid-cols-4 px-2 border-b border-x" key={formalizeText(item.name)}>
-                    <div>
-                      <p className="text-xs tracking-tight">{formalizeText(item.product.name)}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs tracking-tight">{formalizeText(item.productVariations.name)}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs tracking-tight">{`${item.weight} ${item.productVariations.defaultUnit}`}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs tracking-tight">Rs {item.amount}</p>
-                    </div>
-                  </div>
-                )
-              })
-            }
-          </div>
-          <div className="flex justify-between mt-10 items-center">
-            <div className="text-sm flex gap-1 text-slate-700 items-center">
-              <p className="font-semibold ">
-                Last handler:
-              </p>
-              <p className="tracking-wide">
-                {formalizeText((row.profile.name))}
-              </p>
-            </div>
-            <p className="font-semibold text-lg text-green-700">
-              Rs {rowTotalAmount}
-            </p>
-          </div>
-          <div>
-            {props.stage && getStageControls(props.stage, props.profile, row, updateRow)}
+            <p className="">{formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)}</p>
+            <p className="text-red-900">{formalizeText(row.ordersRegister[0].productVariations.name)}</p>
           </div>
         </div>
-      </ScrollArea>
+        <div>
+          <div className="grid grid-cols-2 w-full">
+            <div className="font-semibold">
+              <p className="">Customer</p>
+              <p className="">Phone 01</p>
+              <p className="">Phone 02</p>
+              <p className="">City</p>
+              <p className="">Address</p>
+            </div>
+            <div className="">
+              <p className="text-ellipsis overflow-hidden whitespace-nowrap">
+                {formalizeText(row.customers.name)}
+              </p>
+              <p className="">
+                {row.customers.phone ? row.customers.phone !== "00000000001" ? <a className="text-blue-400" href={`tel:${row.customers.phone}`}>{row.customers.phone}</a> : "N/A" : "N/A"}
+              </p>
+              <p className="">
+                {row.customers.phone2 ? row.customers.phone2 !== "00000000001" ? <a className="text-blue-400" href={`tel:${row.customers.phone2}`}>{row.customers.phone2}</a> : "N/A" : "N/A"}
+              </p>
+              <p className="text-ellipsis overflow-hidden whitespace-nowrap">
+                {formalizeText(row.customers.city)}
+              </p>
+              <div className="text-ellipsis overflow-hidden whitespace-nowrap">
+                {formalizeText(row.customers.address)}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <p className="font-semibold">Note</p>
+            <div className="w-full text-xs tracking-tight flex gap-1 items-center">
+              <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-zinc-200 border border-zinc-500 text-zinc-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
+                <p className="scale-75">
+                  {row.orderNotes.length - 1}
+                </p>
+              </div>
+              {formalizeText(row.orderNotes[0].note)}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3">
+          <div>
+            <p className="font-semibold">Status</p>
+            <p className="text-xs tracking-tight">{row.status}</p>
+          </div>
+          <div>
+            <p className="font-semibold">Service</p>
+            <p className="text-xs tracking-tight">{row.courier}</p>
+          </div>
+          <div>
+            <p className="font-semibold">#</p>
+            <p className="text-xs tracking-tight">{row.trackingNo}</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-4 -mb-2 bg-slate-300 items-center px-2">
+          <p className="font-semibold text-sm">Product</p>
+          <p className="font-semibold text-sm">Variant</p>
+          <p className="font-semibold text-sm">Weight</p>
+          <p className="font-semibold text-sm">Amount</p>
+        </div>
+        <div className="">
+          {
+            row.ordersRegister.map((item: any) => {
+              return (
+                <div className="grid grid-cols-4 px-2 border-b border-x" key={formalizeText(item.name)}>
+                  <div>
+                    <p className="text-xs tracking-tight">{formalizeText(item.product.name)}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs tracking-tight">{formalizeText(item.productVariations.name)}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs tracking-tight">{`${item.weight} ${item.productVariations.defaultUnit}`}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs tracking-tight">Rs {item.amount}</p>
+                  </div>
+                </div>
+              )
+            })
+          }
+        </div>
+        <div className="flex justify-between mt-10 items-center">
+          <div className="text-sm flex gap-1 text-slate-700 items-center">
+            <p className="font-semibold ">
+              Last handler:
+            </p>
+            <p className="tracking-wide">
+              {formalizeText((row.profile.name))}
+            </p>
+          </div>
+          <p className="font-semibold text-lg text-green-700">
+            Rs {rowTotalAmount}
+          </p>
+        </div>
+        <div>
+          {props.stage && getStageControls(props.stage, props.profile, row, updateRow)}
+        </div>
+      </div>
     </SheetProvider>
   );
 };
@@ -296,8 +294,7 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
 
   async function handleUpdateNote() {
     const userId = profile.userId;
-    if(!otherNote)
-    {
+    if (!otherNote) {
       return
     }
     const note = `'${formalizeText(otherNote)}' - ${formalizeText(profile.name)}`;
@@ -330,6 +327,14 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
       </div>
       <div className="grid grid-cols-2 gap-1 mt-5">
         <button className="bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order Verified</button>
+        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
         <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
       </div>
     </div>
