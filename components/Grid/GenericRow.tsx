@@ -91,7 +91,7 @@ const GenericRow = (props: Props) => {
 
   return (
     <SheetProvider trigger={DataRow()}>
-      <div className="select-none mt-2 flex flex-col p-2  gap-2 ">
+      <div className="select-none -mt-2 flex flex-col p-2  gap-2 ">
         <div className="flex justify-between text-xs items-center">
           <p className="p-1 border-b-2 border-red-900/30 tracking-wide ">
             {orderDate}
@@ -327,14 +327,6 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
       </div>
       <div className="grid grid-cols-2 gap-1 mt-5">
         <button className="bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order Verified</button>
-        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
-        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
-        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
-        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
-        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
-        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
-        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
-        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
         <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
       </div>
     </div>
