@@ -4,21 +4,29 @@ import { DatePicker } from '../DatePicker/DatePicker'
 import { formalizeText } from '@/lib/my'
 import { ScrollArea } from '../ui/scroll-area'
 import GenericRow from './GenericRow'
+import { ComboBoxProvider } from '../ComboBox/ComboBoxProvider'
 
 type Props = {
     orders: any
     profile: any
+    availableCities: availableCity[]
+}
+
+type availableCity = {
+    name: String
+    label: String
 }
 
 const GridWithFilters = (props: Props) => {
     const [isMounted, setIsMounted] = React.useState(false)
     const [fromDate, setFromDate] = React.useState(new Date())
     const [toDate, setToDate] = React.useState(new Date())
+    const [cityFilter, setCityFilter] = React.useState(null)
 
 
     useEffect(() => {
         setIsMounted(true)
-    },[])
+    }, [])
 
     useEffect(() => {
         setFromDate(new Date(new Date().setDate(new Date().getDate() - 1)))
@@ -33,10 +41,24 @@ const GridWithFilters = (props: Props) => {
     })
     return (
         <div className=''>
-            <div className='flex gap-2 w-full my-2'>
+            <div className='flex gap-2 w-full my-2 justify-end items-center'>
+                <div>
+                    <ComboBoxProvider setValue={setCityFilter} content={props.availableCities}>
+                        <div className={`relative`}>
+                            <div onClick={() => setCityFilter(null)} className='absolute top-[8px] left-2 bg-slate-400 border border-slate-500 font-semibold flex items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white'>
+                                <p className=''>
+                                    x
+                                </p>
+                            </div>
+                            <div className='bg-slate-100 border-slate-200 border-t-2 text-sm p-1 rounded-md w-36 text-center'>
+                                {cityFilter ? formalizeText(cityFilter) : "Select city"}
+                            </div>
+                        </div>
+                    </ComboBoxProvider>
+                </div>
                 <DatePicker setValue={setFromDate}>
                     <button>
-                        <div className='text-sm flex gap-1 w-44'>
+                        <div className='text-sm text-right flex gap-1 w-40'>
                             <div className='font-semibold'>From:</div>
                             <div className='border-b border-red-800/40'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
                         </div>
@@ -44,7 +66,7 @@ const GridWithFilters = (props: Props) => {
                 </DatePicker>
                 <DatePicker setValue={setToDate}>
                     <button>
-                        <div className='text-sm flex gap-1 w-44'>
+                        <div className='text-sm text-right flex gap-1 w-40'>
                             <div className='font-semibold'>To:</div>
                             <div className='border-b border-red-800/40'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
                         </div>

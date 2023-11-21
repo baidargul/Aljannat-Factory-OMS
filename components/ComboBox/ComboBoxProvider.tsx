@@ -22,10 +22,10 @@ import {
 
 type ComboBoxProviderProps = {
     children: React.ReactNode
-    content?: Array<{ name: string, label: string }>
+    content?: any
     placeholder?: string
     emptyString?: string
-    setValue?: React.Dispatch<React.SetStateAction<string>>
+    setValue?: any
     returnLabel?: boolean
 }
 export function ComboBoxProvider(props: ComboBoxProviderProps) {
