@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { DatePicker } from '../DatePicker/DatePicker'
 import { formalizeText } from '@/lib/my'
 import { ScrollArea } from '../ui/scroll-area'
@@ -11,8 +11,19 @@ type Props = {
 }
 
 const GridWithFilters = (props: Props) => {
+    const [isMounted, setIsMounted] = React.useState(false)
     const [fromDate, setFromDate] = React.useState(new Date())
     const [toDate, setToDate] = React.useState(new Date())
+
+
+    useEffect(() => {
+        setIsMounted(true)
+    },[])
+
+    useEffect(() => {
+        setFromDate(new Date(new Date().setDate(new Date().getDate() - 1)))
+        setToDate(new Date())
+    }, [isMounted])
 
     let totalWeight = 0
     props.orders.map((order: any) => {
