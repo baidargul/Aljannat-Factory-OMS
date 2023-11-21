@@ -45,7 +45,7 @@ const GridWithFilters = (props: Props) => {
                 <div>
                     <ComboBoxProvider setValue={setCityFilter} content={props.availableCities}>
                         <div className={`relative`}>
-                            <div onClick={() => setCityFilter(null)} className='absolute top-[8px] left-2 bg-slate-400 border border-slate-500 font-semibold flex items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white'>
+                            <div onClick={() => setCityFilter(null)} className={`absolute top-[8px] ${cityFilter === null && "hidden"} flex left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
                                 <p className=''>
                                     x
                                 </p>
@@ -93,7 +93,7 @@ const GridWithFilters = (props: Props) => {
                                     return null
                                 }
 
-                                if(String(row.customers.city).toLocaleLowerCase() !== String(cityFilter).toLocaleLowerCase() && cityFilter !== null) {
+                                if (String(row.customers.city).toLocaleLowerCase() !== String(cityFilter).toLocaleLowerCase() && cityFilter !== null) {
                                     return null
                                 }
                                 return (
