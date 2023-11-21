@@ -15,7 +15,7 @@ import {
 
 type Props = {
     children: React.ReactNode
-    setValue: (value: Date) => void
+    setValue?: (value: Date) => void
 }
 export function DatePicker(props: Props) {
   const [date, setDate] = React.useState<Date>()

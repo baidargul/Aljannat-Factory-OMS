@@ -38,6 +38,11 @@ async function getOrders() {
         include: {
             customers: true,
             profile: true,
+            orderNotes: {
+                orderBy: {
+                    createdAt: "desc",
+                }
+            },
             ordersRegister: {
                 include: {
                     productVariations: {
@@ -53,10 +58,10 @@ async function getOrders() {
                         }
                     },
                 }
-            }
+            },
         },
         orderBy: {
-            dateOfBooking: "desc"
+            dateOfBooking: "desc",
         }
     });
     return orders

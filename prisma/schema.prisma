@@ -8,20 +8,21 @@ datasource db {
 }
 
 model orders {
-  id             String           @id @unique
-  dateOfBooking  DateTime         @default(now()) @db.Timestamptz(6)
-  status         String?
-  note           String?
-  userId         String?
-  courier        String?
-  trackingNo     String?
-  customerId     String?
-  index          Int              @default(autoincrement())
-  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt      DateTime         @default(now()) @db.Timestamptz(6)
-  customers      customers?       @relation(fields: [customerId], references: [id])
-  profile        profile?         @relation(fields: [userId], references: [userId], onDelete: Cascade, map: "userId")
-  ordersRegister ordersRegister[]
+  id                                   String           @id @unique
+  dateOfBooking                        DateTime         @default(now()) @db.Timestamptz(6)
+  status                               String?
+  userId                               String?
+  courier                              String?
+  trackingNo                           String?
+  customerId                           String?
+  index                                Int              @default(autoincrement())
+  createdAt                            DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt                            DateTime         @default(now()) @db.Timestamptz(6)
+  noteId                               String?
+  orderNotes                           orderNotes[]
+  customers                            customers?       @relation(fields: [customerId], references: [id])
+  profile                              profile?         @relation(fields: [userId], references: [userId], onDelete: Cascade, map: "userId")
+  ordersRegister                       ordersRegister[]
 }
 
 model customers {
@@ -68,8 +69,8 @@ model ordersRegister {
   productId         String?
   variantId         String?
   index             Int                @default(autoincrement())
-  weight            Float
   amount            Int?               @default(0)
+  weight            Float
   orders            orders?            @relation(fields: [orderId], references: [id], onDelete: Cascade, map: "orderId")
   product           product?           @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
   productVariations productVariations? @relation(fields: [variantId], references: [id], onDelete: Cascade, map: "variantId")
@@ -88,15 +89,26 @@ model productVariations {
 }
 
 model profile {
-  id        String    @id @default(uuid())
-  userId    String?   @unique
-  name      String
-  imageURL  String?
-  email     String
-  createdAt DateTime? @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime? @default(now()) @db.Timestamptz(6)
-  role      Role      @default(SUPERADMIN)
-  orders    orders[]
+  id         String       @id @default(uuid())
+  userId     String?      @unique
+  name       String
+  imageURL   String?
+  email      String
+  createdAt  DateTime?    @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime?    @default(now()) @db.Timestamptz(6)
+  role       Role         @default(SUPERADMIN)
+  orderNotes orderNotes[]
+  orders     orders[]
+}
+
+model orderNotes {
+  id                               String    @id @default(uuid())
+  orderId                          String
+  userId                           String
+  note                             String
+  createdAt                        DateTime? @default(now()) @db.Timestamptz(6)
+  orders                           orders    @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "orderId")
+  profile                          profile   @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "userId")
 }
 
 enum Role {

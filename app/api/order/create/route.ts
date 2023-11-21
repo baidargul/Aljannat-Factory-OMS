@@ -149,13 +149,36 @@ export async function POST(req: NextRequest) {
             dbCustomer = isExists
         }
 
-        const newOrder = await prisma.orders.create({
+        const profile = await prisma.profile.findUnique({
+            where: {
+                userId: userId
+            }
+        })
+
+        let newOrder = await prisma.orders.create({
             data: {
                 id: v4(),
                 status: "BOOKED",
-                note: "just booked.",
                 userId: userId,
                 customerId: dbCustomer.id
+            }
+        })
+
+        const newNote = await prisma.orderNotes.create({
+            data: {
+                id: v4(),
+                note: profile ? `${profile.name} created this order.` : `Non profiled user created this order.`,
+                orderId: newOrder.id,
+                userId: userId
+            }
+        })
+
+        newOrder = await prisma.orders.update({
+            where: {
+                id: newOrder.id
+            },
+            data: {
+                noteId: newNote.id
             }
         })
 

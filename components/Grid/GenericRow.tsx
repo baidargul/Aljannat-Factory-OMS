@@ -123,7 +123,7 @@ const GenericRow = (props: Props) => {
           <div>
             <div>
               <p className="font-semibold">Note</p>
-              <p className="w-full text-xs tracking-tight">{formalizeText(row.note)}</p>
+              <p className="w-full text-xs tracking-tight">{formalizeText(row.orderNotes[0].note)}</p>
             </div>
           </div>
 
@@ -248,8 +248,8 @@ function getStageControls(stage: string) {
   switch (stage) {
     case "orderVerification":
       return _orderVerificationStageControls();
-      break;
     case "paymentVerification":
+      return _paymentVerification();
       break;
     case "DispatchDivision":
       break;
@@ -262,16 +262,22 @@ function getStageControls(stage: string) {
 
 function _orderVerificationStageControls() {
   const [otherNote, setOtherNote] = useState<string>("");
-  
+
+
+  function handleNote(text: string)
+  {
+    setOtherNote(text);
+  }
+
   return (
     <div className="flex flex-col gap-1">
       <div className="grid grid-cols-3 gap-1">
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Calling</button>
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">On hold</button>
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">No response</button>
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Powered off</button>
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake order</button>
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order verified</button>
+        <button onClick={()=>handleNote("Calling")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Calling</button>
+        <button onClick={()=>handleNote("On hold")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">On hold</button>
+        <button onClick={()=>handleNote("No response")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">No response</button>
+        <button onClick={()=>handleNote("Powered off")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Powered off</button>
+        <button onClick={()=>handleNote("Fake order")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake order</button>
+        <button onClick={()=>handleNote("Order verified")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order verified</button>
       </div>
       <div className="flex gap-1 items-center">
         <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e:any)=>{setOtherNote(e.target.value)}}/>
@@ -279,6 +285,30 @@ function _orderVerificationStageControls() {
       </div>
       <div className="grid grid-cols-2 gap-1 mt-5">
         <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order Verified</button>
+        <button className="bg-orange-100 hover:bg-orange-50 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+      </div>
+    </div>
+  )
+}
+
+function _paymentVerification () {
+  const [otherNote, setOtherNote] = useState<string>("");
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="grid grid-cols-3 gap-1">
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Sending</button>
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Delay</button>
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Not received</button>
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake receipt</button>
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">COD</button>
+        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Received</button>
+      </div>
+      <div className="flex gap-1 items-center">
+        <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e:any)=>setOtherNote(e.target.value)}/>
+        <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Update</button>
+      </div>
+      <div className="grid grid-cols-2 gap-1 mt-5">
+        <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Payment Verified</button>
         <button className="bg-orange-100 hover:bg-orange-50 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
       </div>
     </div>
