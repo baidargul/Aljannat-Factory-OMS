@@ -92,6 +92,10 @@ const GridWithFilters = (props: Props) => {
                                 if (row.dateOfBooking < fromDate || row.dateOfBooking > toDate) {
                                     return null
                                 }
+
+                                if(String(row.customers.city).toLocaleLowerCase() !== String(cityFilter).toLocaleLowerCase() && cityFilter !== null) {
+                                    return null
+                                }
                                 return (
                                     <div key={row.id} className=''>
                                         <GenericRow stage='orderVerification' row={row} index={index} profile={props.profile} />
