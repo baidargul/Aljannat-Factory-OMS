@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 import React, { useEffect, useState } from "react";
 import SheetProvider from "../SheetProvider/SheetProvider";
 import { ScrollArea } from "../ui/scroll-area";
@@ -296,6 +296,10 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
 
   async function handleUpdateNote() {
     const userId = profile.userId;
+    if(!otherNote)
+    {
+      return
+    }
     const note = `'${formalizeText(otherNote)}' - ${formalizeText(profile.name)}`;
     const orderId = row.id;
     if (!note) {
@@ -325,8 +329,8 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
         <button onClick={() => handleUpdateNote()} className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">{isWorking ? "..." : "Update"}</button>
       </div>
       <div className="grid grid-cols-2 gap-1 mt-5">
-        <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order Verified</button>
-        <button className="bg-orange-100 hover:bg-orange-50 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+        <button className="bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order Verified</button>
+        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
       </div>
     </div>
   )
