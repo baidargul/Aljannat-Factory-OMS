@@ -230,6 +230,8 @@ function rowStatusStyle(status: string) {
       return "bg-slate-100 text-slate-800";
     case "cancelled":
       return "bg-red-100 text-red-500";
+    case "verified order":
+      return "bg-cyan-100 text-cyan-700";
     default:
       return "bg-yellow-300";
   }
@@ -311,6 +313,67 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     setIsWorking(false)
   }
 
+  async function handleVerifiedButton() {
+    const userId = profile.userId;
+    const note = `'Order Verified' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = "VERIFIED ORDER"
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handleCancelledButton() {
+    const userId = profile.userId;
+    const note = `'Order is cancelled' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = "CANCELLED"
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handleResetButton() {
+    const userId = profile.userId;
+    const note = `'Requested to reset order' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = "BOOKED"
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+
   return (
     <div className="flex flex-col gap-1">
       <div className="grid grid-cols-3 gap-1">
@@ -326,8 +389,9 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
         <button onClick={() => handleUpdateNote()} className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">{isWorking ? "..." : "Update"}</button>
       </div>
       <div className="grid grid-cols-2 gap-1 mt-5">
-        <button className="bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order Verified</button>
-        <button className="bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
+        <button disabled={isWorking} onClick={() => handleResetButton()} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !=="BOOKED"? "": "hidden"}`}>Reset Status</button>
+        <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status ==="BOOKED"? "": "hidden"}`}>Order Verified</button>
+        <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status ==="BOOKED"? "": "hidden"}`}>Cancelled</button>
       </div>
     </div>
   )
