@@ -30,7 +30,7 @@ const GenericRow = (props: Props) => {
   function DataRow() {
     return (
       <div
-        className={`p-2 w-full justify-items-start grid grid-cols-9 text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
+        className={`p-2 w-full hover:bg-yellow-50 justify-items-start grid grid-cols-9 text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
         onClick={handleRowClick}
       >
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis opacity-40">
@@ -141,7 +141,7 @@ const GenericRow = (props: Props) => {
         <div>
           <div>
             <p className="font-semibold">Note</p>
-            <PopoverProvider content={getOrderNotes(row)}>
+            <PopoverProvider content={GetOrderNotes(row)}>
               <div className="w-full text-xs tracking-tight flex gap-1 items-center">
                 <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-zinc-200 border border-zinc-500 text-zinc-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
                   <p className="scale-75">
@@ -423,7 +423,34 @@ function _paymentVerification() {
   )
 }
 
-function getOrderNotes(row: any) {
+function GetOrderNotes(row: any) {
+  const [selectedRowIndex, setSelectedRowIndex] = useState<number>(-1);
+
+  function handleRowClick(index: number) {
+    if (index === selectedRowIndex) {
+      setSelectedRowIndex(-1);
+    } else {
+      setSelectedRowIndex(index);
+    }
+  }
+
+  const  keyPressEvent= (e: any)=> {
+    if (e.key === "Escape") {
+      setSelectedRowIndex(-1);
+    }
+
+    if (e.key === "ArrowUp")
+    {
+      const current = selectedRowIndex;
+      setSelectedRowIndex(current - 1);
+    }
+    if (e.key === "ArrowDown")
+    {
+      const current = selectedRowIndex;
+      setSelectedRowIndex(current + 1);
+    }
+  }
+
   return (
     <div className="w-[700px]">
       <div className="flex justify-center items-center text-sm tracking-widest text-zinc-500 font-semibold border-b-2 border-spacing-2 mb-2 shadow-sm">
@@ -438,9 +465,9 @@ function getOrderNotes(row: any) {
             const rowIndex = row.orderNotes.length - index - 1;
             return (
 
-              <div className="select-none cursor-default border-b scale-90" key={note.id}>
+              <div onKeyDown={keyPressEvent} onClick={() => handleRowClick(index)} className={`select-none cursor-default border-b scale-90 ${index === selectedRowIndex ? "bg-red-100" : "hover:bg-slate-50"} `} key={note.id}>
                 <div className="grid grid-cols-4 ">
-                  <div className="text-xs text-slate-700 w-4 h-4 text-center bg-slate-100">
+                  <div className="text-xs text-slate-700 w-4 h-4 text-center font-semibold opacity-50">
                     {rowIndex === 0 ? "-" : rowIndex}
                   </div>
                   <div className="text-xs text-slate-700">
