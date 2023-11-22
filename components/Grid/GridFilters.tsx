@@ -33,12 +33,23 @@ const GridWithFilters = (props: Props) => {
         setToDate(new Date())
     }, [isMounted])
 
-    let totalWeight = 0
+    let totalWeight: number = 0.0;
+
     props.orders.map((order: any) => {
         order.ordersRegister.map((register: any) => {
-            totalWeight = totalWeight + register.weight
-        })
-    })
+            const orderDate = new Date(order.dateOfBooking);
+
+            if (orderDate >= fromDate && orderDate <= toDate) {
+                if (cityFilter && String(cityFilter).toLocaleLowerCase() === String(order.customers.city).toLocaleLowerCase()) {
+                    totalWeight += Number(register.weight);
+                }
+                if (!cityFilter) {
+                    totalWeight += Number(register.weight);
+                }
+            }
+        });
+    });
+
     return (
         <div className=''>
             <div className='flex gap-2 w-full my-2 justify-end items-center'>
