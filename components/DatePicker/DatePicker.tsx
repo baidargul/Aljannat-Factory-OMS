@@ -14,22 +14,31 @@ import {
 } from "@/components/ui/popover"
 
 type Props = {
-    children: React.ReactNode
-    setValue?: (value: Date) => void
+  children: React.ReactNode
+  setValue?: (value: Date) => void
+  defaultValue: any
 }
-export function DatePicker(props: Props) {
-  const [date, setDate] = React.useState<Date>()
 
-  function handleSelect(date: any) {
-    setDate(date)
-    props.setValue(date)
+export function DatePicker(props: Props) {
+  const [date, setDate] = React.useState<Date>();
+
+  const handleSelect = (input: any) => {
+    setDate(input);
+    props.setValue && props.setValue(input);
   }
+
+  React.useEffect(() => {
+    if(props.defaultValue) {
+      setDate(props.defaultValue)
+      props.setValue && props.setValue(props.defaultValue)
+    }
+  },[])
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         {
-            props.children
+          props.children
         }
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
@@ -38,8 +47,9 @@ export function DatePicker(props: Props) {
           selected={date}
           onSelect={handleSelect}
           initialFocus
+          required
         />
       </PopoverContent>
     </Popover>
-  )
+  );
 }

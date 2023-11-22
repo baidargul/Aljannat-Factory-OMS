@@ -29,29 +29,39 @@ const GridWithFilters = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        setFromDate(new Date(new Date().setDate(new Date().getDate() - 1)))
-        setToDate(new Date())
+        setFromDate(new Date(new Date()))
+        setToDate(new Date(new Date().setDate(new Date().getDate() + 1)));
     }, [isMounted])
 
     let totalWeight: number = 0.0;
+    let totalBill: number = 0.0;
+    let totalDays: number = 0;
+    if (fromDate && toDate) {
+        if (!fromDate || !toDate) return
+        totalDays = Math.floor((toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24));
+    }
 
     props.orders.map((order: any) => {
         order.ordersRegister.map((register: any) => {
             const orderDate = new Date(order.dateOfBooking);
 
+            totalDays = Math.floor((toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24));
+
             if (orderDate >= fromDate && orderDate <= toDate) {
                 if (cityFilter && String(cityFilter).toLocaleLowerCase() === String(order.customers.city).toLocaleLowerCase()) {
                     totalWeight += Number(register.weight);
+                    totalBill += Number(register.amount);
                 }
                 if (!cityFilter) {
                     totalWeight += Number(register.weight);
+                    totalBill += Number(register.amount);
                 }
             }
         });
     });
 
     return (
-        <div className=''>
+        isMounted && <div className=''>
             <div className='flex gap-2 w-full my-2 justify-end items-center'>
                 <div>
                     <ComboBoxProvider setValue={setCityFilter} content={props.availableCities}>
@@ -67,30 +77,33 @@ const GridWithFilters = (props: Props) => {
                         </div>
                     </ComboBoxProvider>
                 </div>
-                <DatePicker setValue={setFromDate}>
-                    <button>
-                        <div className='text-sm text-right flex gap-1 w-40'>
-                            <div className='font-semibold'>From:</div>
-                            <div className='border-b border-red-800/40'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
-                        </div>
-                    </button>
-                </DatePicker>
-                <DatePicker setValue={setToDate}>
-                    <button>
-                        <div className='text-sm text-right flex gap-1 w-40'>
-                            <div className='font-semibold'>To:</div>
-                            <div className='border-b border-red-800/40'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
-                        </div>
-                    </button>
-                </DatePicker>
+                <div>
+                    <div className='text-xs text-slate-400 -my-1'>Range: {totalDays} {totalDays > 1 ? "days." : totalDays < 0 ? "Invalid date range." : "day."}</div>
+                    <DatePicker setValue={setFromDate} defaultValue={fromDate}>
+                        <button>
+                            <div className='text-sm text-right flex gap-1 w-40'>
+                                <div className='font-semibold'>From:</div>
+                                <div className='border-b border-red-800/40'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
+                            </div>
+                        </button>
+                    </DatePicker>
+                    <DatePicker setValue={setToDate} defaultValue={toDate}>
+                        <button>
+                            <div className='text-sm text-right flex gap-1 w-40'>
+                                <div className='font-semibold'>To:</div>
+                                <div className='border-b border-red-800/40'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
+                            </div>
+                        </button>
+                    </DatePicker>
+                </div>
             </div>
             <div className='border border-red-800 w-full'>
                 <div className='grid grid-cols-9 w-full tracking-wide text-sm justify-items-start bg-red-800 text-white border-red-800 border p-2'>
                     <div>#</div>
-                    <div>Job Created</div>
+                    <div>Job Created {totalDays}</div>
                     <div>Customer</div>
                     <div>Product</div>
-                    <div>({totalWeight}) Weight</div>
+                    <div>Weight</div>
                     <div>City</div>
                     <div>Bill</div>
                     <div>Status</div>
@@ -99,9 +112,16 @@ const GridWithFilters = (props: Props) => {
                 <ScrollArea className='w-full h-[550px]'>
                     <div className='w-full'>
                         {
-                            props.orders.length > 0 && props.orders.map((row: any, index: number) => {
-                                if (row.dateOfBooking < fromDate || row.dateOfBooking > toDate) {
-                                    return null
+                            fromDate && toDate && props.orders.length > 0 && props.orders.map((row: any, index: number) => {
+                                const bookingDate = new Date(row.dateOfBooking);
+                                const startOfDayFromDate = new Date(fromDate);
+                                startOfDayFromDate.setHours(0, 0, 0, 0);
+
+                                const endOfDayToDate = new Date(toDate);
+                                endOfDayToDate.setHours(23, 59, 59, 999);
+
+                                if (bookingDate < startOfDayFromDate || bookingDate > endOfDayToDate) {
+                                    return null;
                                 }
 
                                 if (String(row.customers.city).toLocaleLowerCase() !== String(cityFilter).toLocaleLowerCase() && cityFilter !== null) {
