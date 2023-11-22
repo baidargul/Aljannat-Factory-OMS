@@ -32,7 +32,7 @@ export function DatePicker(props: Props) {
       setDate(props.defaultValue)
       props.setValue && props.setValue(props.defaultValue)
     }
-  },[])
+  },[props])
 
   return (
     <Popover>
