@@ -427,7 +427,7 @@ function getOrderNotes(row: any) {
   return (
     <div className="w-[700px]">
       <div className="flex justify-center items-center text-sm tracking-widest text-zinc-500 font-semibold border-b-2 border-spacing-2 mb-2 shadow-sm">
-        LOG
+        ACTIVITY LOG
       </div>
       <ScrollArea className="w-full flex gap-1 justify-between items-center h-[200px]">
         {
@@ -439,9 +439,12 @@ function getOrderNotes(row: any) {
             return (
 
               <div className="select-none cursor-default border-b scale-90" key={note.id}>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-4 ">
                   <div className="text-xs text-slate-700 w-4 h-4 text-center bg-slate-100">
                     {rowIndex === 0 ? "-" : rowIndex}
+                  </div>
+                  <div className="text-xs text-slate-700">
+                    {new Date(note.createdAt).toDateString()}
                   </div>
                   <div className="text-xs text-slate-700">
                     {new Date(note.createdAt).toLocaleTimeString()}
