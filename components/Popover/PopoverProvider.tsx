@@ -17,7 +17,7 @@ const PopoverProvider = (props: Props) => {
       <PopoverTrigger>
         {props.children}
       </PopoverTrigger>
-      < PopoverContent >
+      < PopoverContent className="w-full">
         {props.content}
       </PopoverContent>
     </Popover>

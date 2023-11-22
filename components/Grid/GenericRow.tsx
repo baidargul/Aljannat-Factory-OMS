@@ -5,6 +5,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
 import axios from "axios";
 import ToolTipProvider from "../ToolTipProvider/ToolTipProvider";
+import PopoverProvider from "../Popover/PopoverProvider";
 
 type Props = {
   row: any;
@@ -140,14 +141,16 @@ const GenericRow = (props: Props) => {
         <div>
           <div>
             <p className="font-semibold">Note</p>
-            <div className="w-full text-xs tracking-tight flex gap-1 items-center">
-              <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-zinc-200 border border-zinc-500 text-zinc-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
-                <p className="scale-75">
-                  {row.orderNotes.length - 1}
-                </p>
+            <PopoverProvider content={getOrderNotes(row)}>
+              <div className="w-full text-xs tracking-tight flex gap-1 items-center">
+                <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-zinc-200 border border-zinc-500 text-zinc-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
+                  <p className="scale-75">
+                    {row.orderNotes.length - 1}
+                  </p>
+                </div>
+                {formalizeText(row.orderNotes[0].note)}
               </div>
-              {formalizeText(row.orderNotes[0].note)}
-            </div>
+            </PopoverProvider>
           </div>
         </div>
 
@@ -373,7 +376,6 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     });
     setIsWorking(false)
   }
-
   return (
     <div className="flex flex-col gap-1">
       <div className="grid grid-cols-3 gap-1">
@@ -389,9 +391,9 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
         <button onClick={() => handleUpdateNote()} className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">{isWorking ? "..." : "Update"}</button>
       </div>
       <div className="grid grid-cols-2 gap-1 mt-5">
-        <button disabled={isWorking} onClick={() => handleResetButton()} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !=="BOOKED"? "": "hidden"}`}>Reset Status</button>
-        <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status ==="BOOKED"? "": "hidden"}`}>Order Verified</button>
-        <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status ==="BOOKED"? "": "hidden"}`}>Cancelled</button>
+        <button disabled={isWorking} onClick={() => handleResetButton()} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== "BOOKED" ? "" : "hidden"}`}>Reset Status</button>
+        <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Order Verified</button>
+        <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Cancelled</button>
       </div>
     </div>
   )
@@ -417,6 +419,42 @@ function _paymentVerification() {
         <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Payment Verified</button>
         <button className="bg-orange-100 hover:bg-orange-50 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
       </div>
+    </div>
+  )
+}
+
+function getOrderNotes(row: any) {
+  return (
+    <div className="w-[700px]">
+      <div className="flex justify-center items-center text-sm tracking-widest text-zinc-500 font-semibold border-b-2 border-spacing-2 mb-2 shadow-sm">
+        LOG
+      </div>
+      <ScrollArea className="w-full flex gap-1 justify-between items-center h-[200px]">
+        {
+          row.orderNotes.map((note: any, index: number) => {
+            // if (index >= 5) {
+            //   return
+            // }
+            const rowIndex = row.orderNotes.length - index - 1;
+            return (
+
+              <div className="select-none cursor-default border-b scale-90" key={note.id}>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="text-xs text-slate-700 w-4 h-4 text-center bg-slate-100">
+                    {rowIndex === 0 ? "-" : rowIndex}
+                  </div>
+                  <div className="text-xs text-slate-700">
+                    {new Date(note.createdAt).toLocaleTimeString()}
+                  </div>
+                  <div className="text-xs text-slate-700">
+                    {String(note.note).charAt(0).toUpperCase() + String(note.note).slice(1).toLowerCase()}
+                  </div>
+                </div>
+              </div>
+            )
+          })
+        }
+      </ScrollArea>
     </div>
   )
 }
