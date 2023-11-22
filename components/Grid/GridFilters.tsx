@@ -36,6 +36,7 @@ const GridWithFilters = (props: Props) => {
     let totalWeight: number = 0.0;
     let totalBill: number = 0.0;
     let totalDays: number = 0;
+    let totalPending: number = 0;
     if (fromDate && toDate) {
         if (!fromDate || !toDate) return
         totalDays = Math.floor((toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24));
@@ -46,13 +47,19 @@ const GridWithFilters = (props: Props) => {
             const orderDate = new Date(order.dateOfBooking);
 
             totalDays = Math.floor((toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24));
-
+            
             if (orderDate >= fromDate && orderDate <= toDate) {
                 if (cityFilter && String(cityFilter).toLocaleLowerCase() === String(order.customers.city).toLocaleLowerCase()) {
+                    if(String(order.status).toLocaleLowerCase() === 'booked') {
+                        totalPending += 1;
+                    }
                     totalWeight += Number(register.weight);
                     totalBill += Number(register.amount);
                 }
                 if (!cityFilter) {
+                    if(String(order.status).toLocaleLowerCase() === 'booked') {
+                        totalPending += 1;
+                    }
                     totalWeight += Number(register.weight);
                     totalBill += Number(register.amount);
                 }
@@ -106,7 +113,7 @@ const GridWithFilters = (props: Props) => {
                     <div>Weight</div>
                     <div>City</div>
                     <div>Bill</div>
-                    <div>Status</div>
+                    <div>Status {totalPending}</div>
                     <div>Courier#</div>
                 </div>
                 <ScrollArea className='w-full h-[550px]'>
