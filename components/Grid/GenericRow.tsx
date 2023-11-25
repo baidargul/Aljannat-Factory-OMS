@@ -6,6 +6,7 @@ import { Input } from "../ui/input";
 import axios from "axios";
 import ToolTipProvider from "../ToolTipProvider/ToolTipProvider";
 import PopoverProvider from "../Popover/PopoverProvider";
+import { Status } from "@prisma/client";
 
 type Props = {
   row: any;
@@ -64,7 +65,7 @@ const GenericRow = (props: Props) => {
         <ToolTipProvider content={row.orderNotes[0].note}>
           <div className="flex items-center gap-1">
             <div className={` ${rowStatusStyle(row.status)} p-1 text-center rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
-              {row.status}
+              {getStatusCasual(row.status)}
             </div>
             <p>
               {row.orderNotes.length > 1 ? (
@@ -233,7 +234,7 @@ function rowStatusStyle(status: string) {
       return "bg-slate-100 text-slate-800";
     case "cancelled":
       return "bg-red-100 text-red-500";
-    case "verified order":
+    case Status.VERIFIEDORDER:
       return "bg-cyan-100 text-cyan-700";
     default:
       return "bg-yellow-300";
@@ -326,7 +327,7 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     }
 
     setIsWorking(true)
-    const status = "VERIFIED ORDER"
+    const status = Status.VERIFIEDORDER
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -346,7 +347,7 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     }
 
     setIsWorking(true)
-    const status = "VERIFIED ORDER"
+    const status = Status.VERIFIEDORDER
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -366,7 +367,7 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     }
 
     setIsWorking(true)
-    const status = "VERIFIED ORDER"
+    const status = Status.VERIFIEDORDER
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -386,7 +387,7 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     }
 
     setIsWorking(true)
-    const status = "CANCELLED"
+    const status = Status.CANCELLED
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -406,17 +407,17 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     }
 
     setIsWorking(true)
-    let status = "BOOKED"
+    let status: any = Status.BOOKED
 
     switch (row.status) {
-      case "VERIFIED ORDER":
-        status = "BOOKED"
+      case Status.VERIFIEDORDER:
+        status = Status.BOOKED
         break;
-      case "PAYMENT VERIFIED":
-        status = "VERIFIED ORDER"
+      case Status.PAYMENTVERIFIED:
+        status = Status.VERIFIEDORDER
         break;
       default:
-        status = "BOOKED"
+        status = Status.BOOKED
         break;
     }
 
@@ -443,14 +444,14 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
       </div>
       <div className="flex gap-1 items-center">
         <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
-        <button disabled={row.status === "VERIFIED ORDER" ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "VERIFIED ORDER" ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Update"}</button>
+        <button disabled={row.status === "VERIFIED ORDER" ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.VERIFIEDORDER ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Update"}</button>
       </div>
       <div className="grid grid-cols-2 gap-1 mt-1">
-        <button disabled={isWorking} onClick={() => handleResetButton()} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== "BOOKED" ? "" : "hidden"}`}>Reset Status</button>
-        <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Order Verified</button>
-        <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Cancelled</button>
-        <button disabled={isWorking} onClick={() => handleCODVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>COD</button>
-        <button disabled={isWorking} onClick={() => handlePartialVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Partial COD</button>
+        <button disabled={isWorking} onClick={() => handleResetButton()} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== Status.BOOKED ? "" : "hidden"}`}>Reset Status</button>
+        <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.BOOKED ? "" : "hidden"}`}>Order Verified</button>
+        <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.BOOKED ? "" : "hidden"}`}>Cancelled</button>
+        <button disabled={isWorking} onClick={() => handleCODVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.BOOKED ? "" : "hidden"}`}>COD</button>
+        <button disabled={isWorking} onClick={() => handlePartialVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.BOOKED ? "" : "hidden"}`}>Partial COD</button>
       </div>
     </div>
   )
@@ -493,7 +494,7 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
     }
 
     setIsWorking(true)
-    const status = "PAYMENT VERIFIED"
+    const status = Status.PAYMENTVERIFIED
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -513,7 +514,7 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
     }
 
     setIsWorking(true)
-    const status = "PAYMENT VERIFIED"
+    const status = Status.PAYMENTVERIFIED
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -533,7 +534,7 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
     }
 
     setIsWorking(true)
-    const status = "PAYMENT VERIFIED"
+    const status = Status.PAYMENTVERIFIED
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -553,7 +554,7 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
     }
 
     setIsWorking(true)
-    const status = "CANCELLED"
+    const status = Status.CANCELLED
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -573,17 +574,17 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
     }
 
     setIsWorking(true)
-    let status = "BOOKED"
+    let status = Status.BOOKED
 
     switch (row.status) {
-      case "VERIFIED ORDER":
+      case Status.VERIFIEDORDER:
         status = "BOOKED"
         break;
-      case "PAYMENT VERIFIED":
-        status = "VERIFIED ORDER"
+      case Status.PAYMENTVERIFIED:
+        status = Status.VERIFIEDORDER
         break;
       default:
-        status = "BOOKED"
+        status = Status.BOOKED
         break;
     }
 
@@ -610,14 +611,14 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
       </div>
       <div className="flex gap-1 items-center">
         <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
-        <button disabled={row.status === "PAYMENT VERIFIED" ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "PAYMENT VERIFIED" ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Update"}</button>
+        <button disabled={row.status === Status.PAYMENTVERIFIED ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Update"}</button>
       </div>
       <div className="grid grid-cols-2 gap-1 mt-1">
-        <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== "VERIFIED ORDER" ? "" : "hidden"}`}>Reset Status</button>
-        <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "VERIFIED ORDER" ? "" : "hidden"}`}>Payment Verified</button>
-        <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "VERIFIED ORDER" ? "" : "hidden"}`}>Cancelled</button>
-        <button disabled={isWorking} onClick={() => handleCODVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "VERIFIED ORDER" ? "" : "hidden"}`}>COD</button>
-        <button disabled={isWorking} onClick={() => handlePartialVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "VERIFIED ORDER" ? "" : "hidden"}`}>Partial COD</button>
+        <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== Status.VERIFIEDORDER ? "" : "hidden"}`}>Reset Status</button>
+        <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.VERIFIEDORDER ? "" : "hidden"}`}>Payment Verified</button>
+        <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.VERIFIEDORDER ? "" : "hidden"}`}>Cancelled</button>
+        <button disabled={isWorking} onClick={() => handleCODVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.VERIFIEDORDER ? "" : "hidden"}`}>COD</button>
+        <button disabled={isWorking} onClick={() => handlePartialVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.VERIFIEDORDER ? "" : "hidden"}`}>Partial COD</button>
       </div>
     </div>
   )
@@ -686,4 +687,19 @@ function GetOrderNotes(row: any) {
       </ScrollArea>
     </div>
   )
+}
+
+function getStatusCasual(status: Status) {
+  switch (status) {
+    case Status.BOOKED:
+      return "BOOKED"
+    case Status.VERIFIEDORDER:
+      return "VERIFIED ORDER"
+    case Status.PAYMENTVERIFIED:
+      return "PAYMENT VERIFIED";
+    case Status.CANCELLED:
+      return "CANCELLED"
+    default:
+      return "BOOKED"
+  }
 }

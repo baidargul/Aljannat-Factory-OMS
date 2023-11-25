@@ -10,7 +10,7 @@ datasource db {
 model orders {
   id                                   String           @id @unique
   dateOfBooking                        DateTime         @default(now()) @db.Timestamptz(6)
-  status                               String?
+  status                               Status?
   userId                               String?
   courier                              String?
   trackingNo                           String?
@@ -118,4 +118,11 @@ enum Role {
   ORDERBOOKER
   ORDERVERIFIER
   PAYMENTVERIFIER
+}
+
+enum Status {
+  BOOKED
+  VERIFIEDORDER
+  PAYMENTVERIFIED
+  CANCELLED
 }

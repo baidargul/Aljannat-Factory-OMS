@@ -5,7 +5,7 @@ import { formalizeText } from '@/lib/my'
 import { ScrollArea } from '../ui/scroll-area'
 import GenericRow from './GenericRow'
 import { ComboBoxProvider } from '../ComboBox/ComboBoxProvider'
-import { Role } from '@prisma/client'
+import { Role, Status } from '@prisma/client'
 
 type Props = {
     orders: any
@@ -131,17 +131,17 @@ const GridWithFilters = (props: Props) => {
                                         break;
 
                                     case Role.ORDERBOOKER:
-                                        if (String(row.status).toLocaleUpperCase() === "BOOKED")
+                                        if (String(row.status).toLocaleUpperCase() === Status.BOOKED)
                                             return;
                                         break;
 
                                     case Role.ORDERVERIFIER:
-                                        if (String(row.status).toLocaleUpperCase() !== "BOOKED")
+                                        if (String(row.status).toLocaleUpperCase() !== Status.BOOKED)
                                             return;
                                         break;
 
                                     case Role.PAYMENTVERIFIER:
-                                        if (String(row.status).toLocaleUpperCase() !== "VERIFIED ORDER")
+                                        if (String(row.status).toLocaleUpperCase() !== Status.VERIFIEDORDER)
                                             return null;
                                     case Role.SUPERADMIN:
                                         break;
