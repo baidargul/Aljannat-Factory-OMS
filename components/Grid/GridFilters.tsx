@@ -149,8 +149,9 @@ const GridWithFilters = (props: Props) => {
                                         break;
 
                                     case Role.DISPATCHER:
-                                        if (String(row.status).toLocaleUpperCase() !== Status.PAYMENTVERIFIED)
+                                        if (String(row.status).toLocaleUpperCase() !== Status.PAYMENTVERIFIED) {
                                             return null;
+                                        }
                                         break;
 
                                     case Role.SUPERADMIN:
