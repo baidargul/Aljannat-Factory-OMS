@@ -10,7 +10,7 @@ import PopoverProvider from "../Popover/PopoverProvider";
 type Props = {
   row: any;
   index: number;
-  stage?: "orderVerification" | "paymentVerification" | "DispatchDivision" | "InventoryManager"
+  stage?: "orderVerification" | "paymentVerification" | "DispatchDivision" | "InventoryManager" | any;
   profile: any
 };
 

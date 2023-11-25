@@ -5,6 +5,7 @@ import { formalizeText } from '@/lib/my'
 import { ScrollArea } from '../ui/scroll-area'
 import GenericRow from './GenericRow'
 import { ComboBoxProvider } from '../ComboBox/ComboBoxProvider'
+import { Role } from '@prisma/client'
 
 type Props = {
     orders: any
@@ -43,6 +44,7 @@ const GridWithFilters = (props: Props) => {
     }
 
     props.orders.map((order: any) => {
+
         order.ordersRegister.map((register: any) => {
             const orderDate = new Date(order.dateOfBooking);
 
@@ -120,6 +122,35 @@ const GridWithFilters = (props: Props) => {
                     <div className='w-full'>
                         {
                             fromDate && toDate && props.orders.length > 0 && props.orders.map((row: any, index: number) => {
+                                let stage = getStage(props.profile.role) || 'orderVerification';
+                                switch (props.profile.role.toLocaleUpperCase()) {
+                                    case Role.ADMIN:
+                                        break;
+
+                                    case Role.MANAGER:
+                                        break;
+
+                                    case Role.ORDERBOOKER:
+                                        if (String(row.status).toLocaleUpperCase() === "BOOKED")
+                                            return;
+                                        break;
+
+                                    case Role.ORDERVERIFIER:
+                                        if (String(row.status).toLocaleUpperCase() !== "BOOKED")
+                                            return;
+                                        break;
+
+                                    case Role.PAYMENTVERIFIER:
+                                        if (String(row.status).toLocaleUpperCase() !== "VERIFIED ORDER")
+                                            return null;
+                                    case Role.SUPERADMIN:
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+
+
                                 const bookingDate = new Date(row.dateOfBooking);
                                 const startOfDayFromDate = new Date(fromDate);
                                 startOfDayFromDate.setHours(0, 0, 0, 0);
@@ -136,7 +167,7 @@ const GridWithFilters = (props: Props) => {
                                 }
                                 return (
                                     <div key={row.id} className=''>
-                                        <GenericRow stage='paymentVerification' row={row} index={index} profile={props.profile} />
+                                        <GenericRow stage={stage} row={row} index={index} profile={props.profile} />
                                     </div>
                                 )
                             })
@@ -160,3 +191,27 @@ const GridWithFilters = (props: Props) => {
 }
 
 export default GridWithFilters
+
+function getStage(role: Role){
+    switch (role) {
+        case Role.ADMIN:
+            break;
+
+        case Role.MANAGER:
+            break;
+
+        case Role.ORDERBOOKER:
+            break;
+
+        case Role.ORDERVERIFIER:
+            return 'orderVerification'
+
+        case Role.PAYMENTVERIFIER:
+            return 'paymentVerification'
+        case Role.SUPERADMIN:
+            break;
+
+        default:
+            break;
+    }
+}
