@@ -115,7 +115,7 @@ const GridWithFilters = (props: Props) => {
                     <div>Weight</div>
                     <div>City</div>
                     <div>Bill</div>
-                    <div>Status {totalPending}</div>
+                    <div>Status</div>
                     <div>Courier#</div>
                 </div>
                 <ScrollArea className='w-full h-[550px]'>

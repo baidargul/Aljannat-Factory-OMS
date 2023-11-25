@@ -99,7 +99,7 @@ const GenericRow = (props: Props) => {
             {orderDate}
           </p>
           <p className="text-red-900 p-1 border-b-2 border-red-900/30 border-double-2 font-semibold">
-            {row.status}
+            {formalizeText( getStatusCasual(row.status))}
           </p>
         </div>
         <div className="bg-red-900 p-1 font-semibold">
@@ -158,7 +158,7 @@ const GenericRow = (props: Props) => {
         <div className="grid grid-cols-3">
           <div>
             <p className="font-semibold">Status</p>
-            <p className="text-xs tracking-tight">{row.status}</p>
+            <p className="text-xs tracking-tight">{formalizeText( getStatusCasual(row.status))}</p>
           </div>
           <div>
             <p className="font-semibold">Service</p>
@@ -232,7 +232,7 @@ function rowStatusStyle(status: string) {
       return "bg-green-100 text-green-800";
     case "fake":
       return "bg-slate-100 text-slate-800";
-    case "cancelled":
+    case Status.CANCELLED:
       return "bg-red-100 text-red-500";
     case Status.VERIFIEDORDER:
       return "bg-cyan-100 text-cyan-700";
@@ -574,11 +574,11 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
     }
 
     setIsWorking(true)
-    let status = Status.BOOKED
+    let status = null
 
     switch (row.status) {
       case Status.VERIFIEDORDER:
-        status = "BOOKED"
+        status = Status.BOOKED
         break;
       case Status.PAYMENTVERIFIED:
         status = Status.VERIFIEDORDER
@@ -700,6 +700,6 @@ function getStatusCasual(status: Status) {
     case Status.CANCELLED:
       return "CANCELLED"
     default:
-      return "BOOKED"
+      return "Unknown"
   }
 }
