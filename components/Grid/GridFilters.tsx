@@ -47,17 +47,17 @@ const GridWithFilters = (props: Props) => {
             const orderDate = new Date(order.dateOfBooking);
 
             totalDays = Math.floor((toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24));
-            
+
             if (orderDate >= fromDate && orderDate <= toDate) {
                 if (cityFilter && String(cityFilter).toLocaleLowerCase() === String(order.customers.city).toLocaleLowerCase()) {
-                    if(String(order.status).toLocaleLowerCase() === 'booked') {
+                    if (String(order.status).toLocaleLowerCase() === 'booked') {
                         totalPending += 1;
                     }
                     totalWeight += Number(register.weight);
                     totalBill += Number(register.amount);
                 }
                 if (!cityFilter) {
-                    if(String(order.status).toLocaleLowerCase() === 'booked') {
+                    if (String(order.status).toLocaleLowerCase() === 'booked') {
                         totalPending += 1;
                     }
                     totalWeight += Number(register.weight);
@@ -107,7 +107,7 @@ const GridWithFilters = (props: Props) => {
             <div className='border border-red-800 w-full'>
                 <div className='grid grid-cols-9 w-full tracking-wide text-sm justify-items-start bg-red-800 text-white border-red-800 border p-2'>
                     <div>#</div>
-                    <div>Job Created {totalDays}</div>
+                    <div>Job Created</div>
                     <div>Customer</div>
                     <div>Product</div>
                     <div>Weight</div>
@@ -143,6 +143,17 @@ const GridWithFilters = (props: Props) => {
                         }
                     </div>
                 </ScrollArea>
+            </div>
+            <div className='text-xs grid grid-cols-2'>
+                <div className="flex gap-1 py-1 items-center">
+                    {/* <p className="">
+                        Pending orders:
+                    </p>
+                    <p>
+                        {totalPending}
+                    </p> */}
+                </div>
+
             </div>
         </div>
     )

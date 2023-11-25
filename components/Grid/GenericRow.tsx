@@ -336,6 +336,46 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     });
     setIsWorking(false)
   }
+  async function handleCODVerifiedButton() {
+    const userId = profile.userId;
+    const note = `'Order Verified as COD' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = "VERIFIED ORDER"
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handlePartialVerifiedButton() {
+    const userId = profile.userId;
+    const note = `'Order Verified as will be partial paid' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = "VERIFIED ORDER"
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
   async function handleCancelledButton() {
     const userId = profile.userId;
     const note = `'Order is cancelled' - ${formalizeText(profile.name)}`;
@@ -379,21 +419,24 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
   return (
     <div className="flex flex-col gap-1">
       <div className="grid grid-cols-3 gap-1">
-        <button onClick={() => handleNote("Calling")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Calling</button>
-        <button onClick={() => handleNote("On hold")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">On hold</button>
-        <button onClick={() => handleNote("No response")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">No response</button>
-        <button onClick={() => handleNote("Powered off")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Powered off</button>
-        <button onClick={() => handleNote("Fake order")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake order</button>
-        <button onClick={() => handleNote("Order verified")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order verified</button>
+        <button onClick={() => handleNote("Calling ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Calling</button>
+        <button onClick={() => handleNote("On hold ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">On hold</button>
+        <button onClick={() => handleNote("No response ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">No response</button>
+        <button onClick={() => handleNote("Powered off ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Powered off</button>
+        <button onClick={() => handleNote("Fake order ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake order</button>
+        <button onClick={() => handleNote("Order verified ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Order verified</button>
+        <button onClick={() => handleNote("Will be partial paid of amount Rs. ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Partial</button>
       </div>
       <div className="flex gap-1 items-center">
         <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
         <button onClick={() => handleUpdateNote()} className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">{isWorking ? "..." : "Update"}</button>
       </div>
-      <div className="grid grid-cols-2 gap-1 mt-5">
+      <div className="grid grid-cols-2 gap-1 mt-1">
         <button disabled={isWorking} onClick={() => handleResetButton()} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== "BOOKED" ? "" : "hidden"}`}>Reset Status</button>
         <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Order Verified</button>
         <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Cancelled</button>
+        <button disabled={isWorking} onClick={() => handlePartialVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Partial Paid</button>
+        <button disabled={isWorking} onClick={() => handleCODVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>COD</button>
       </div>
     </div>
   )

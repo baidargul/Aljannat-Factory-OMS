@@ -21,7 +21,7 @@ const SheetProvider = (props: Props) => {
         <Sheet>
             <SheetTrigger className="w-full">{props.trigger}</SheetTrigger>
             <SheetContent>
-                <ScrollArea className="w-full h-[700px] p-2" type="always">
+                <ScrollArea className="w-full h-[650px] p-2" type="always">
                 <SheetHeader>
                 </SheetHeader>
                 {
