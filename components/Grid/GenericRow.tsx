@@ -221,7 +221,7 @@ const GenericRow = (props: Props) => {
 export default GenericRow;
 
 function rowStatusStyle(status: string) {
-  switch (String(status).toLocaleLowerCase()) {
+  switch (String(status).toLocaleUpperCase()) {
     case "dispatched":
       return "bg-indigo-100 text-indigo-800";
     case "credit":
