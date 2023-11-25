@@ -211,6 +211,8 @@ function getStage(role: Role){
 
         case Role.PAYMENTVERIFIER:
             return 'paymentVerification'
+        case Role.DISPATCHER:
+            return 'dispatchDivision'
         case Role.SUPERADMIN:
             break;
 

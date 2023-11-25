@@ -280,7 +280,8 @@ function getStageControls(stage: string, profile: any, row: any, updateRow: any)
     case "paymentVerification":
       return _paymentVerificationStageControls(profile, row, updateRow);
       break;
-    case "DispatchDivision":
+    case "dispatchDivision":
+      return null
       break;
     case "InventoryManager":
       break;
