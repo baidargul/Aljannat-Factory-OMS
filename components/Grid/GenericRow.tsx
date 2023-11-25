@@ -7,6 +7,7 @@ import axios from "axios";
 import ToolTipProvider from "../ToolTipProvider/ToolTipProvider";
 import PopoverProvider from "../Popover/PopoverProvider";
 import { Status } from "@prisma/client";
+import { v4 } from "uuid";
 
 type Props = {
   row: any;
@@ -67,15 +68,15 @@ const GenericRow = (props: Props) => {
             <div className={` ${rowStatusStyle(row.status)} p-1 text-center rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
               {getStatusCasual(row.status)}
             </div>
-            <p>
+            <div>
               {row.orderNotes.length > 1 ? (
                 <div className="text-xs w-4 h-4 border-b border-zinc-500 text-zinc-800 justify-center items-center flex text-center">
-                  <p className="scale-75">
+                  <div className="scale-75">
                     {row.orderNotes.length - 1}
-                  </p>
+                  </div>
                 </div>
               ) : null}
-            </p>
+            </div>
           </div>
         </ToolTipProvider>
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
@@ -95,20 +96,20 @@ const GenericRow = (props: Props) => {
     <SheetProvider trigger={DataRow()}>
       <div className="select-none -mt-2 flex flex-col p-2  gap-2 ">
         <div className="flex justify-between text-xs items-center">
-          <p className="p-1 border-b-2 border-red-900/30 tracking-wide ">
+          <div className="p-1 border-b-2 border-red-900/30 tracking-wide ">
             {orderDate}
-          </p>
-          <p className="text-red-900 p-1 border-b-2 border-red-900/30 border-double-2 font-semibold">
+          </div>
+          <div className="text-red-900 p-1 border-b-2 border-red-900/30 border-double-2 font-semibold">
             {formalizeText( getStatusCasual(row.status))}
-          </p>
+          </div>
         </div>
         <div className="bg-red-900 p-1 font-semibold">
           <div className="bg-yellow-300 rounded flex p-2 gap-2 w-full items-center justify-between text-center">
-            <p className="text-red-900">
+            <div className="text-red-900">
               {getTotalWeight(row)}
-            </p>
-            <p className="">{formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)}</p>
-            <p className="text-red-900">{formalizeText(row.ordersRegister[0].productVariations.name)}</p>
+            </div>
+            <div className="">{formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)}</div>
+            <div className="text-red-900">{formalizeText(row.ordersRegister[0].productVariations.name)}</div>
           </div>
         </div>
         <div>
@@ -279,10 +280,8 @@ function getStageControls(stage: string, profile: any, row: any, updateRow: any)
       return _orderVerificationStageControls(profile, row, updateRow);
     case "paymentVerification":
       return _paymentVerificationStageControls(profile, row, updateRow);
-      break;
     case "dispatchDivision":
-      return null
-      break;
+      return _dispatcherStageControls(profile, row, updateRow);
     case "InventoryManager":
       break;
     default:
@@ -631,6 +630,177 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
     </div>
   )
 }
+function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
+  const [otherNote, setOtherNote] = useState<string>("");
+  const [isWorking, setIsWorking] = useState<boolean>(false);
+
+
+  function handleNote(text: string) {
+    setOtherNote(text);
+  }
+
+  async function handleUpdateNote() {
+    const userId = profile.userId;
+    if (!otherNote) {
+      return
+    }
+    const note = `'${formalizeText(otherNote)}' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+      setOtherNote("")
+    });
+    setIsWorking(false)
+  }
+
+  async function handleVerifiedButton() {
+    const userId = profile.userId;
+    const note = `'Payment is received and verified' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = Status.PAYMENTVERIFIED
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handleCODVerifiedButton() {
+    const userId = profile.userId;
+    const note = `'Payment on COD' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = Status.PAYMENTVERIFIED
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handlePartialVerifiedButton() {
+    const userId = profile.userId;
+    const note = `'Partial payment is received and rest will be on COD' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = Status.PAYMENTVERIFIED
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handleCancelledButton() {
+    const userId = profile.userId;
+    const note = `'Order is cancelled' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = Status.CANCELLED
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handleResetButton(row: any) {
+    const userId = profile.userId;
+    const note = `'Requested to reset order' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    let status = null
+
+    switch (row.status) {
+      case Status.VERIFIEDORDER:
+        status = Status.BOOKED
+        break;
+      case Status.PAYMENTVERIFIED:
+        status = Status.VERIFIEDORDER
+        break;
+      case Status.READYTODISPATCH:
+        status = Status.PAYMENTVERIFIED
+        break;
+      default:
+        status = Status.BOOKED
+        break;
+    }
+
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="grid grid-cols-3 gap-1">
+        <button onClick={() => handleNote("Calling ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Calling</button>
+        <button onClick={() => handleNote("On hold ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">On hold</button>
+        <button onClick={() => handleNote("No response ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">No response</button>
+        <button onClick={() => handleNote("Powered off ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Powered off</button>
+        <button onClick={() => handleNote("Fake order ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake order</button>
+        <button onClick={() => handleNote("Fake receipt ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake receipt</button>
+        <button onClick={() => handleNote("Offered ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Offered</button>
+        <button onClick={() => handleNote("Rs.  has been paid as partial, rest on COD.")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Partial</button>
+      </div>
+      <div className="flex gap-1 items-center">
+        <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
+        <button disabled={row.status === Status.READYTODISPATCH ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.READYTODISPATCH ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Update"}</button>
+      </div>
+      <div className="grid grid-cols-2 gap-1 mt-1">
+        <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Reset Status</button>
+        <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Payment Verified</button>
+        <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Cancelled</button>
+        <button disabled={isWorking} onClick={() => handleCODVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>COD</button>
+        <button disabled={isWorking} onClick={() => handlePartialVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Partial COD</button>
+      </div>
+    </div>
+  )
+}
 
 
 function GetOrderNotes(row: any) {
@@ -673,7 +843,7 @@ function GetOrderNotes(row: any) {
             const rowIndex = row.orderNotes.length - index - 1;
             return (
 
-              <div onKeyDown={keyPressEvent} onClick={() => handleRowClick(index)} className={`select-none cursor-default border-b scale-90 ${index === selectedRowIndex ? "bg-red-100" : "hover:bg-slate-50"} `} key={note.id}>
+              <div onKeyDown={keyPressEvent} onClick={() => handleRowClick(index)} className={`select-none cursor-default border-b scale-90 ${index === selectedRowIndex ? "bg-red-100" : "hover:bg-slate-50"} `} key={v4()}>
                 <div className="grid grid-cols-4 ">
                   <div className="text-xs text-slate-700 w-4 h-4 text-center font-semibold opacity-50">
                     {rowIndex === 0 ? "-" : rowIndex}
