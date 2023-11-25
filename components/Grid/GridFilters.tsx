@@ -88,22 +88,24 @@ const GridWithFilters = (props: Props) => {
                 </div>
                 <div>
                     <div className='text-xs text-slate-400 -my-1'>Range: {totalDays} {totalDays > 1 ? "days." : totalDays < 0 ? "Invalid date range." : "day."}</div>
-                    <DatePicker setValue={setFromDate} defaultValue={fromDate}>
-                        <button>
-                            <div className='text-sm text-right flex gap-1 w-40'>
-                                <div className='font-semibold'>From:</div>
-                                <div className='border-b border-red-800/40'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
+                    <div className='flex gap-1'>
+                        <DatePicker setValue={setFromDate} defaultValue={fromDate}>
+                            <div className='cursor-pointer'>
+                                <div className='text-sm text-right flex gap-1 w-40'>
+                                    <div className='font-semibold'>From:</div>
+                                    <div className='border-b border-red-800/40'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
+                                </div>
                             </div>
-                        </button>
-                    </DatePicker>
-                    <DatePicker setValue={setToDate} defaultValue={toDate}>
-                        <button>
-                            <div className='text-sm text-right flex gap-1 w-40'>
-                                <div className='font-semibold'>To:</div>
-                                <div className='border-b border-red-800/40'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
+                        </DatePicker>
+                        <DatePicker setValue={setToDate} defaultValue={toDate}>
+                            <div className='cursor-pointer'>
+                                <div className='text-sm text-right flex gap-1 w-40'>
+                                    <div className='font-semibold'>To:</div>
+                                    <div className='border-b border-red-800/40'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
+                                </div>
                             </div>
-                        </button>
-                    </DatePicker>
+                        </DatePicker>
+                    </div>
                 </div>
             </div>
             <div className='border border-red-800 w-full'>
@@ -141,11 +143,16 @@ const GridWithFilters = (props: Props) => {
                                         break;
 
                                     case Role.PAYMENTVERIFIER:
-                                        if (String(row.status).toLocaleUpperCase() !== Status.VERIFIEDORDER)
+                                        if (String(row.status).toLocaleUpperCase() !== Status.VERIFIEDORDER) {
                                             return null;
+                                        }
+                                        break;
+
                                     case Role.DISPATCHER:
                                         if (String(row.status).toLocaleUpperCase() !== Status.PAYMENTVERIFIED)
                                             return null;
+                                        break;
+
                                     case Role.SUPERADMIN:
                                         break;
 
@@ -195,7 +202,7 @@ const GridWithFilters = (props: Props) => {
 
 export default GridWithFilters
 
-function getStage(role: Role){
+function getStage(role: Role) {
     switch (role) {
         case Role.ADMIN:
             break;
@@ -204,6 +211,7 @@ function getStage(role: Role){
             break;
 
         case Role.ORDERBOOKER:
+            return 'orderBooker'
             break;
 
         case Role.ORDERVERIFIER:

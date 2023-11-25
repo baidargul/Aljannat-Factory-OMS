@@ -28,7 +28,6 @@ const GenericRow = (props: Props) => {
   function updateRow(newRow: any) {
     setRow(newRow);
   }
-
   function DataRow() {
     return (
       <div
@@ -100,7 +99,7 @@ const GenericRow = (props: Props) => {
             {orderDate}
           </div>
           <div className="text-red-900 p-1 border-b-2 border-red-900/30 border-double-2 font-semibold">
-            {formalizeText( getStatusCasual(row.status))}
+            {formalizeText(getStatusCasual(row.status))}
           </div>
         </div>
         <div className="bg-red-900 p-1 font-semibold">
@@ -159,7 +158,7 @@ const GenericRow = (props: Props) => {
         <div className="grid grid-cols-3">
           <div>
             <p className="font-semibold">Status</p>
-            <p className="text-xs tracking-tight">{formalizeText( getStatusCasual(row.status))}</p>
+            <p className="text-xs tracking-tight">{formalizeText(getStatusCasual(row.status))}</p>
           </div>
           <div>
             <p className="font-semibold">Service</p>
@@ -223,7 +222,7 @@ export default GenericRow;
 
 function rowStatusStyle(status: string) {
   switch (String(status).toLocaleUpperCase()) {
-    case "dispatched":
+    case Status.READYTODISPATCH:
       return "bg-indigo-100 text-indigo-800";
     case "credit":
       return "bg-green-100 text-green-800";
@@ -276,6 +275,8 @@ function getTotalWeight(row: any) {
 
 function getStageControls(stage: string, profile: any, row: any, updateRow: any) {
   switch (stage) {
+    case "orderBooker":
+      return null
     case "orderVerification":
       return _orderVerificationStageControls(profile, row, updateRow);
     case "paymentVerification":
@@ -659,16 +660,16 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
     setIsWorking(false)
   }
 
-  async function handleVerifiedButton() {
+  async function handleMnPButton() {
     const userId = profile.userId;
-    const note = `'Payment is received and verified' - ${formalizeText(profile.name)}`;
+    const note = `'Dispatch confirmed to: "M&P" ' - ${formalizeText(profile.name)}`;
     const orderId = row.id;
     if (!note) {
       return
     }
 
     setIsWorking(true)
-    const status = Status.PAYMENTVERIFIED
+    const status = Status.READYTODISPATCH
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -679,16 +680,16 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
     });
     setIsWorking(false)
   }
-  async function handleCODVerifiedButton() {
+  async function handleGopButton() {
     const userId = profile.userId;
-    const note = `'Payment on COD' - ${formalizeText(profile.name)}`;
+    const note = `'Dispatch confirmed to: "GOP" ' - ${formalizeText(profile.name)}`;
     const orderId = row.id;
     if (!note) {
       return
     }
 
     setIsWorking(true)
-    const status = Status.PAYMENTVERIFIED
+    const status = Status.READYTODISPATCH
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -699,16 +700,16 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
     });
     setIsWorking(false)
   }
-  async function handlePartialVerifiedButton() {
+  async function handleSpeedAfButton() {
     const userId = profile.userId;
-    const note = `'Partial payment is received and rest will be on COD' - ${formalizeText(profile.name)}`;
+    const note = `'Dispatch confirmed to: "SpeedAf" ' - ${formalizeText(profile.name)}`;
     const orderId = row.id;
     if (!note) {
       return
     }
 
     setIsWorking(true)
-    const status = Status.PAYMENTVERIFIED
+    const status = Status.READYTODISPATCH
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -719,16 +720,16 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
     });
     setIsWorking(false)
   }
-  async function handleCancelledButton() {
+  async function handleTcsButton() {
     const userId = profile.userId;
-    const note = `'Order is cancelled' - ${formalizeText(profile.name)}`;
+    const note = `'Dispatch confirmed to: "TCS" ' - ${formalizeText(profile.name)}`;
     const orderId = row.id;
     if (!note) {
       return
     }
 
     setIsWorking(true)
-    const status = Status.CANCELLED
+    const status = Status.READYTODISPATCH
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -741,7 +742,7 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
   }
   async function handleResetButton(row: any) {
     const userId = profile.userId;
-    const note = `'Requested to reset order' - ${formalizeText(profile.name)}`;
+    const note = `'Requested to reset order on dispatch' - ${formalizeText(profile.name)}`;
     const orderId = row.id;
     if (!note) {
       return
@@ -777,26 +778,19 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
   }
   return (
     <div className="flex flex-col gap-1">
-      <div className="grid grid-cols-3 gap-1">
-        <button onClick={() => handleNote("Calling ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Calling</button>
-        <button onClick={() => handleNote("On hold ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">On hold</button>
-        <button onClick={() => handleNote("No response ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">No response</button>
-        <button onClick={() => handleNote("Powered off ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Powered off</button>
-        <button onClick={() => handleNote("Fake order ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake order</button>
-        <button onClick={() => handleNote("Fake receipt ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake receipt</button>
-        <button onClick={() => handleNote("Offered ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Offered</button>
-        <button onClick={() => handleNote("Rs.  has been paid as partial, rest on COD.")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Partial</button>
-      </div>
       <div className="flex gap-1 items-center">
-        <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
-        <button disabled={row.status === Status.READYTODISPATCH ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.READYTODISPATCH ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Update"}</button>
+        <Input placeholder="Rider instructions" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
+        <button disabled={row.status === Status.READYTODISPATCH ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 px-4 text-xs ${row.status === Status.READYTODISPATCH ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Add"}</button>
       </div>
-      <div className="grid grid-cols-2 gap-1 mt-1">
-        <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Reset Status</button>
-        <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Payment Verified</button>
-        <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Cancelled</button>
-        <button disabled={isWorking} onClick={() => handleCODVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>COD</button>
-        <button disabled={isWorking} onClick={() => handlePartialVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Partial COD</button>
+      <div className="border border-green-300 rounded p-2">
+        <div className="widest font-semibold text-slate-700 text-sm mt-1">Forward to:</div>
+        <div className="grid grid-cols-2 gap-1 mt-1">
+          <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Reset Status</button>
+          <button disabled={isWorking} onClick={() => handleMnPButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>M&P</button>
+          <button disabled={isWorking} onClick={() => handleTcsButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>TCS</button>
+          <button disabled={isWorking} onClick={() => handleGopButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>GPO</button>
+          <button disabled={isWorking} onClick={() => handleSpeedAfButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>SpeedAf</button>
+        </div>
       </div>
     </div>
   )
