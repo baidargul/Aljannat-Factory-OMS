@@ -136,7 +136,7 @@ const GridWithFilters = (props: Props) => {
                                 }
                                 return (
                                     <div key={row.id} className=''>
-                                        <GenericRow stage='orderVerification' row={row} index={index} profile={props.profile} />
+                                        <GenericRow stage='paymentVerification' row={row} index={index} profile={props.profile} />
                                     </div>
                                 )
                             })

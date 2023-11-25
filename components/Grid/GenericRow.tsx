@@ -277,7 +277,7 @@ function getStageControls(stage: string, profile: any, row: any, updateRow: any)
     case "orderVerification":
       return _orderVerificationStageControls(profile, row, updateRow);
     case "paymentVerification":
-      return _paymentVerification();
+      return _paymentVerificationStageControls(profile, row, updateRow);
       break;
     case "DispatchDivision":
       break;
@@ -312,6 +312,7 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
+      setOtherNote("")
     });
     setIsWorking(false)
   }
@@ -405,7 +406,20 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     }
 
     setIsWorking(true)
-    const status = "BOOKED"
+    let status = "BOOKED"
+
+    switch (row.status) {
+      case "VERIFIED ORDER":
+        status = "BOOKED"
+        break;
+      case "PAYMENT VERIFIED":
+        status = "VERIFIED ORDER"
+        break;
+      default:
+        status = "BOOKED"
+        break;
+    }
+
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -429,42 +443,186 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
       </div>
       <div className="flex gap-1 items-center">
         <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
-        <button onClick={() => handleUpdateNote()} className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">{isWorking ? "..." : "Update"}</button>
+        <button disabled={row.status === "VERIFIED ORDER" ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "VERIFIED ORDER" ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Update"}</button>
       </div>
       <div className="grid grid-cols-2 gap-1 mt-1">
         <button disabled={isWorking} onClick={() => handleResetButton()} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== "BOOKED" ? "" : "hidden"}`}>Reset Status</button>
         <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Order Verified</button>
         <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Cancelled</button>
-        <button disabled={isWorking} onClick={() => handlePartialVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Partial Paid</button>
         <button disabled={isWorking} onClick={() => handleCODVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>COD</button>
+        <button disabled={isWorking} onClick={() => handlePartialVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "BOOKED" ? "" : "hidden"}`}>Partial COD</button>
+      </div>
+    </div>
+  )
+}
+function _paymentVerificationStageControls(profile: any, row: any, updateRow: any) {
+  const [otherNote, setOtherNote] = useState<string>("");
+  const [isWorking, setIsWorking] = useState<boolean>(false);
+
+
+  function handleNote(text: string) {
+    setOtherNote(text);
+  }
+
+  async function handleUpdateNote() {
+    const userId = profile.userId;
+    if (!otherNote) {
+      return
+    }
+    const note = `'${formalizeText(otherNote)}' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+      setOtherNote("")
+    });
+    setIsWorking(false)
+  }
+
+  async function handleVerifiedButton() {
+    const userId = profile.userId;
+    const note = `'Payment is received and verified' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = "PAYMENT VERIFIED"
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handleCODVerifiedButton() {
+    const userId = profile.userId;
+    const note = `'Payment on COD' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = "PAYMENT VERIFIED"
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handlePartialVerifiedButton() {
+    const userId = profile.userId;
+    const note = `'Partial payment is received and rest will be on COD' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = "PAYMENT VERIFIED"
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handleCancelledButton() {
+    const userId = profile.userId;
+    const note = `'Order is cancelled' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = "CANCELLED"
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handleResetButton(row: any) {
+    const userId = profile.userId;
+    const note = `'Requested to reset order' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    let status = "BOOKED"
+
+    switch (row.status) {
+      case "VERIFIED ORDER":
+        status = "BOOKED"
+        break;
+      case "PAYMENT VERIFIED":
+        status = "VERIFIED ORDER"
+        break;
+      default:
+        status = "BOOKED"
+        break;
+    }
+
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="grid grid-cols-3 gap-1">
+        <button onClick={() => handleNote("Calling ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Calling</button>
+        <button onClick={() => handleNote("On hold ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">On hold</button>
+        <button onClick={() => handleNote("No response ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">No response</button>
+        <button onClick={() => handleNote("Powered off ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Powered off</button>
+        <button onClick={() => handleNote("Fake order ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake order</button>
+        <button onClick={() => handleNote("Fake receipt ")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake receipt</button>
+        <button onClick={() => handleNote("Rs.  has been paid as partial, rest on COD.")} className="bg-slate-100 hover:bg-slate-50 active:scale-90 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Partial</button>
+      </div>
+      <div className="flex gap-1 items-center">
+        <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
+        <button disabled={row.status === "PAYMENT VERIFIED" ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "PAYMENT VERIFIED" ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Update"}</button>
+      </div>
+      <div className="grid grid-cols-2 gap-1 mt-1">
+        <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== "VERIFIED ORDER" ? "" : "hidden"}`}>Reset Status</button>
+        <button disabled={isWorking} onClick={() => handleVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "VERIFIED ORDER" ? "" : "hidden"}`}>Payment Verified</button>
+        <button disabled={isWorking} onClick={() => handleCancelledButton()} className={`bg-orange-100 hover:bg-orange-50 active:scale-90 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "VERIFIED ORDER" ? "" : "hidden"}`}>Cancelled</button>
+        <button disabled={isWorking} onClick={() => handleCODVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "VERIFIED ORDER" ? "" : "hidden"}`}>COD</button>
+        <button disabled={isWorking} onClick={() => handlePartialVerifiedButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === "VERIFIED ORDER" ? "" : "hidden"}`}>Partial COD</button>
       </div>
     </div>
   )
 }
 
-function _paymentVerification() {
-  const [otherNote, setOtherNote] = useState<string>("");
-  return (
-    <div className="flex flex-col gap-1">
-      <div className="grid grid-cols-3 gap-1">
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Sending</button>
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Delay</button>
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Not received</button>
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Fake receipt</button>
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">COD</button>
-        <button className="bg-slate-100 hover:bg-slate-50 border border-slate-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Received</button>
-      </div>
-      <div className="flex gap-1 items-center">
-        <Input placeholder="Other" className="text-xs" value={otherNote} onChange={(e: any) => setOtherNote(e.target.value)} />
-        <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Update</button>
-      </div>
-      <div className="grid grid-cols-2 gap-1 mt-5">
-        <button className="bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Payment Verified</button>
-        <button className="bg-orange-100 hover:bg-orange-50 border border-orange-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs">Cancelled</button>
-      </div>
-    </div>
-  )
-}
 
 function GetOrderNotes(row: any) {
   const [selectedRowIndex, setSelectedRowIndex] = useState<number>(-1);
@@ -477,18 +635,16 @@ function GetOrderNotes(row: any) {
     }
   }
 
-  const  keyPressEvent= (e: any)=> {
+  const keyPressEvent = (e: any) => {
     if (e.key === "Escape") {
       setSelectedRowIndex(-1);
     }
 
-    if (e.key === "ArrowUp")
-    {
+    if (e.key === "ArrowUp") {
       const current = selectedRowIndex;
       setSelectedRowIndex(current - 1);
     }
-    if (e.key === "ArrowDown")
-    {
+    if (e.key === "ArrowDown") {
       const current = selectedRowIndex;
       setSelectedRowIndex(current + 1);
     }
