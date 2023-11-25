@@ -78,8 +78,8 @@ const GenericRow = (props: Props) => {
             </div>
           </div>
         </ToolTipProvider>
-        <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.trackingNo ? row.trackingNo : "N/A"}
+        <div className=" overflow-hidden whitespace-nowrap text-ellipsis ml-auto">
+            {row.trackingNo ? row.trackingNo : "N/A"}
         </div>
       </div>
     );
