@@ -226,8 +226,8 @@ function rowStatusStyle(status: string) {
       return "bg-indigo-100 text-indigo-800";
     case "credit":
       return "bg-green-100 text-green-800";
-    case "completed":
-      return "bg-green-100 text-green-800";
+    case Status.PAYMENTVERIFIED:
+      return "bg-green-100 text-green-800 border border-green-300";
     case "delivered":
       return "bg-green-100 text-green-800";
     case "fake":
@@ -416,6 +416,9 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
       case Status.PAYMENTVERIFIED:
         status = Status.VERIFIEDORDER
         break;
+      case Status.READYTODISPATCH:
+        status = Status.PAYMENTVERIFIED
+        break;
       default:
         status = Status.BOOKED
         break;
@@ -583,6 +586,9 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
       case Status.PAYMENTVERIFIED:
         status = Status.VERIFIEDORDER
         break;
+      case Status.READYTODISPATCH:
+        status = Status.PAYMENTVERIFIED
+        break;
       default:
         status = Status.BOOKED
         break;
@@ -698,6 +704,8 @@ function getStatusCasual(status: Status) {
       return "VERIFIED ORDER"
     case Status.PAYMENTVERIFIED:
       return "PAYMENT VERIFIED";
+    case Status.READYTODISPATCH:
+      return "READY FOR DISPATCH";
     case Status.CANCELLED:
       return "CANCELLED"
     default:
