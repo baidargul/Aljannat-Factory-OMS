@@ -1,7 +1,7 @@
-import { NextApiRequest } from "next";
 import prisma from "@/lib/prisma"
+import { NextRequest } from "next/server";
 
-export async function GET(req: NextApiRequest, props: any) {
+export async function GET(req: NextRequest, props: any) {
     const response = {
         status: 400,
         message: "Bad Request",

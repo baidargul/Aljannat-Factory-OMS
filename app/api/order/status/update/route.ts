@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { Status } from "@prisma/client";
 import { NextRequest } from "next/server";
 import { v4 } from "uuid";
 
@@ -20,7 +21,8 @@ export async function PATCH(req: NextRequest) {
             return new Response(JSON.stringify(response))
         }
 
-        const { orderId, status, userId } = data
+        const { orderId, userId } = data
+        const status: Status = data.status
 
         if (!orderId) {
             response.status = 400
@@ -55,7 +57,7 @@ export async function PATCH(req: NextRequest) {
             }
         })
 
-        if(!profileUser) {
+        if (!profileUser) {
             response.status = 400
             response.message = "User not found in the database"
             response.data = null
@@ -67,7 +69,7 @@ export async function PATCH(req: NextRequest) {
                 id: orderId
             },
             data: {
-                status: String(status).toLocaleUpperCase(),
+                status: status,
                 userId: userId
             }
         })

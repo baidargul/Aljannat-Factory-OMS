@@ -1,60 +1,79 @@
+import { v4 } from 'uuid';
+import { create, SetState } from 'zustand';
 
-import { v4 } from 'uuid'
-import { create } from 'zustand'
+type Product = {
+  id: string;
+  productName: string;
+  variantName: string;
+  weight: number;
+  amount: number;
+  unit: string;
+};
 
-export const usePOS = create((set) => ({
-    products: [],
-    customer: null as any,
+type StoreState = {
+  products: Product[];
+  customer: any;
+  addProduct: (id: string, productName: string, variantName: string, weight: number, amount: number, unit: string) => void;
+  removeProduct: (id: string) => void;
+  changeWeight: (id: string, weight: number) => void;
+  changeAmount: (id: string, amount: number) => void;
+  getTotalAmount: () => number;
+  getTotalWeight: () => number;
+};
 
-    addProduct(id: string, productName: string, variantName: string, weight: number, amount: number, unit: string) {
-        set((state: any) => {
-            const updatedProducts = [...state.products, { id, productName, variantName, weight, amount, unit }];
-            return {
-                products: updatedProducts,
-            };
-        });
-    },
+export const usePOS = create<StoreState>((set: SetState<StoreState>) => ({
+  products: [],
+  customer: null,
 
-    removeProduct(id: string) {
-        set((state: any) => {
-            const updatedProducts = state.products.filter((item: any) => item.id !== id);
-            return {
-                products: updatedProducts,
-            };
-        });
-    },
+  addProduct(id, productName, variantName, weight, amount, unit) {
+    set((state) => {
+      const updatedProducts = [...state.products, { id, productName, variantName, weight, amount, unit }];
+      return {
+        products: updatedProducts,
+      };
+    });
+  },
 
-    changeWeight(id: string, weight: number) {
-        set((state: any) => {
-            const updatedProducts = state.products.map((item: any) => item.id === id ? { ...item, weight } : item);
-            return {
-                products: updatedProducts,
-            };
-        });
-    },
+  removeProduct(id) {
+    set((state) => {
+      const updatedProducts = state.products.filter((item) => item.id !== id);
+      return {
+        products: updatedProducts,
+      };
+    });
+  },
 
-    changeAmount(id: string, amount: number) {
-        set((state: any) => {
-            const updatedProducts = state.products.map((item: any) => item.id === id ? { ...item, amount } : item);
-            return {
-                products: updatedProducts,
-            };
-        });
-    },
+  changeWeight(id, weight) {
+    set((state) => {
+      const updatedProducts = state.products.map((item) => (item.id === id ? { ...item, weight } : item));
+      return {
+        products: updatedProducts,
+      };
+    });
+  },
 
-    getTotalAmount(){
-        let total = 0;
-        this?.products.forEach((item: any) => {
-            total += Number(item.amount);
-        });
-        return total;
-    },
+  changeAmount(id, amount) {
+    set((state) => {
+      const updatedProducts = state.products.map((item) => (item.id === id ? { ...item, amount } : item));
+      return {
+        products: updatedProducts,
+      };
+    });
+  },
 
-    getTotalWeight(){
-        let total = 0;
-        this?.products.forEach((item: any) => {
-            total += Number(item.weight);
-        });
-        return total;
-    }
-}))
+  getTotalAmount() {
+    let total = 0;
+    this?.products.forEach((item) => {
+      total += Number(item.amount);
+    });
+    return total;
+  },
+
+  getTotalWeight() {
+    let total = 0;
+    this?.products.forEach((item) => {
+      total += Number(item.weight);
+    });
+    return total;
+  },
+}));

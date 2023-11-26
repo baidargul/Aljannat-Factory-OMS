@@ -65,7 +65,7 @@ const UploadButton = (props: Props) => {
                 </div>
             </div>
             {isUploaded && (<div className={`text-xs my-2 text-center border-b-2 rounded-lg p-2 transition-all translate`}>
-                Please wait now you're being redirected to the file processing page.
+                {`Please wait now you're being redirected to the file processing page.`}
             </div>)}
         </div>
     )

@@ -67,7 +67,7 @@ export function ComboBoxProvider(props: ComboBoxProviderProps) {
                     <CommandInput placeholder={props.placeholder ? props.placeholder : "Search..."} />
                     <CommandEmpty>{props.emptyString ? props.emptyString : "Nothing found."}</CommandEmpty>
                     <CommandGroup>
-                        {frameworks.map((framework) => (
+                        {frameworks.map((framework: any) => (
                             <CommandItem
                                 key={framework.name}
                                 value={framework.name}

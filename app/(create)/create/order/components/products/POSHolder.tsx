@@ -142,7 +142,7 @@ const POSHolder = (props: Props) => {
                 <div className='flex gap-2 p-4 justify-between bg-slate-200 items-center drop-shadow-md'>
                     <div className='opacity-80 border p-2 rounded-md h-24'>
                         <div className=''>
-                            <DatePicker >
+                            <DatePicker defaultValue={new Date()} >
                                 <section>
                                     <p className='font-semibold text-sm tracking-wider'>Booking Date:</p>
                                     <button className='text-sm border-b border-spacing-2'>
