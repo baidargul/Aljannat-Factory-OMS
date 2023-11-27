@@ -93,7 +93,7 @@ const GridWithFilters = (props: Props) => {
                             <div className='cursor-pointer'>
                                 <div className='text-sm text-right flex gap-1 w-40'>
                                     <div className='font-semibold'>From:</div>
-                                    <div className='border-b border-red-800/40'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
+                                    <div className='border-b border-slate-400'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
                                 </div>
                             </div>
                         </DatePicker>
@@ -101,15 +101,15 @@ const GridWithFilters = (props: Props) => {
                             <div className='cursor-pointer'>
                                 <div className='text-sm text-right flex gap-1 w-40'>
                                     <div className='font-semibold'>To:</div>
-                                    <div className='border-b border-red-800/40'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
+                                    <div className='border-b border-slate-400'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
                                 </div>
                             </div>
                         </DatePicker>
                     </div>
                 </div>
             </div>
-            <div className='border border-red-800 w-full'>
-                <div className='grid grid-cols-9 w-full tracking-wide text-sm justify-items-start bg-red-800 text-white border-red-800 border p-2'>
+            <div className='border border-slate-400 w-full'>
+                <div className='grid grid-cols-9 w-full tracking-wide text-sm justify-items-start bg-slate-400 text-zinc-800 border-slate-400 border p-2'>
                     <div>#</div>
                     <div>Job Created</div>
                     <div>Customer</div>

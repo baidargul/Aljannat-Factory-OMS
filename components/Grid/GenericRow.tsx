@@ -697,6 +697,7 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
       console.log(res.data)
     })
 
+    toast.success("Order ready to be dispatch towards M&P")
     setIsWorking(false)
   }
   async function handleGopButton() {

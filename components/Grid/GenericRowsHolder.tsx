@@ -2,6 +2,8 @@ import React from 'react'
 import GridWithFilters from './GridFilters'
 import currentProfile from '@/lib/current-profile'
 import { redirectToSignIn } from '@clerk/nextjs'
+import Image from 'next/image'
+import { v4 } from 'uuid'
 
 type Props = {
     orders: any
@@ -31,12 +33,53 @@ const GenericRowsHolder = async (props: Props) => {
             availableCities.push({ name: order.customers.city, label: order.customers.city });
         }
     });
-    
+
 
     return (
         <>
             <div className='w-full'>
-                <GridWithFilters orders={props.orders} profile={profile} availableCities={availableCities} />
+                <div>
+                    <div className='p-2 border-b-4 border-slate-800 bg-slate-800 text-white'>
+                        <div className='p-2 flex justify-between items-center'>
+                            <div className='flex flex-col items-center gap-2'>
+                                <div className='text-4xl font-semibold text-white'>
+                                    Aljannat Sweets
+                                </div>
+                                <div className='font-normal tracking-widest opacity-50 p-1 border border-dashed border-opacity-50 rounded'>
+                                    Order Management Portal
+                                </div>
+                            </div>
+                            <div>
+                                <div className='flex gap-2 items-center'>
+                                    <div className=''>
+                                        {profile && (
+                                            <Image className='rounded border-b border-white' src={String(profile.imageURL)} width={50} height={50} alt={profile ? profile.name : v4()} />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div className='font-semibold tracking-wide'>
+                                                {profile?.name}
+                                            </div>
+                                            <div className='text-xs scale-90 -ml-1 -mt-1 opacity-50'>
+                                                {profile?.role}
+                                            </div>
+                                            <div className='text-xs scale-90 -ml-1 border-b border-slate-400/30 border-spacing-1 w-fit cursor-pointer hover:tracking-widest transition-all'>
+                                                Logout
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    user stats
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='mt-5'>
+                        <GridWithFilters orders={props.orders} profile={profile} availableCities={availableCities} />
+                    </div>
+                </div>
             </div>
         </>
     )
