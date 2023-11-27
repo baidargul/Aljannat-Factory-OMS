@@ -79,7 +79,7 @@ const GenericRow = (props: Props) => {
           </div>
         </ToolTipProvider>
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis ml-auto">
-            {row.trackingNo ? row.trackingNo : "N/A"}
+          {row.trackingNo ? row.trackingNo : "N/A"}
         </div>
       </div>
     );
@@ -91,9 +91,24 @@ const GenericRow = (props: Props) => {
     setRowTotalAmount(calculateRowTotal(row));
   }, [row]);
 
+  function orderIdClicked(orderId: string) {
+    // Copy orderId to clipboard
+    navigator.clipboard.writeText(orderId)
+      .then(() => {
+        console.log('OrderId copied to clipboard');
+        // Optionally, you can provide user feedback here
+      })
+      .catch((err) => {
+        console.error('Unable to copy orderId to clipboard', err);
+        // Handle the error, e.g., show an error message to the user
+      });
+  }
   return (
     <SheetProvider trigger={DataRow()}>
       <div className="select-none -mt-2 flex flex-col p-2  gap-2 ">
+
+        <div onClick={() => orderIdClicked(row.id)} className="text-xs uppercase text-center bg-slate-300 text-white py-1 border-y border-slate-400 hover:bg-slate-700 transition-all duration-1000 cursor-pointer">{row.id}</div>
+
         <div className="flex justify-between text-xs items-center">
           <div className="p-1 border-b-2 border-red-900/30 tracking-wide ">
             {orderDate}
@@ -660,7 +675,7 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
     setIsWorking(false)
   }
 
-  async function handleMnPButton() {
+  async function handleMnPButton(row: any) {
     const userId = profile.userId;
     const note = `'Dispatch confirmed to: "M&P" ' - ${formalizeText(profile.name)}`;
     const orderId = row.id;
@@ -678,6 +693,12 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
       const data = res.data.data
       updateRow(data)
     });
+
+    await axios.post("/api/order/dispatch/MnP/book", { userId, row }).then((res) => {
+      const data = res.data.data
+      console.log(res.data)
+    })
+
     setIsWorking(false)
   }
   async function handleGopButton() {
@@ -786,7 +807,7 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
         <div className="widest font-semibold text-slate-700 text-sm mt-1">Forward to:</div>
         <div className="grid grid-cols-2 gap-1 mt-1">
           <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Reset Status</button>
-          <button disabled={isWorking} onClick={() => handleMnPButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>M&P</button>
+          <button disabled={isWorking} onClick={() => handleMnPButton(row)} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>M&P</button>
           <button disabled={isWorking} onClick={() => handleTcsButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>TCS</button>
           <button disabled={isWorking} onClick={() => handleGopButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>GPO</button>
           <button disabled={isWorking} onClick={() => handleSpeedAfButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>SpeedAf</button>
