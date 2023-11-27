@@ -8,6 +8,7 @@ import ToolTipProvider from "../ToolTipProvider/ToolTipProvider";
 import PopoverProvider from "../Popover/PopoverProvider";
 import { Status } from "@prisma/client";
 import { v4 } from "uuid";
+import { toast } from "sonner";
 
 type Props = {
   row: any;
@@ -92,15 +93,12 @@ const GenericRow = (props: Props) => {
   }, [row]);
 
   function orderIdClicked(orderId: string) {
-    // Copy orderId to clipboard
     navigator.clipboard.writeText(orderId)
       .then(() => {
-        console.log('OrderId copied to clipboard');
-        // Optionally, you can provide user feedback here
+       toast.success("Order reference number copied to clipboard")
       })
       .catch((err) => {
-        console.error('Unable to copy orderId to clipboard', err);
-        // Handle the error, e.g., show an error message to the user
+        toast.error("Unable to copy order reference to clipboard")
       });
   }
   return (
