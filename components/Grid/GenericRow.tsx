@@ -83,9 +83,9 @@ const GenericRow = (props: Props) => {
                     </div>
                   </div>
                 </div>
-              ) : null}
+              ) : (<div className="scale-75 flex gap-1 opacity-60 items-center font-semibold">New</div>)}
             </div>
-            <div className={` ${rowStatusStyle(row.status)} p-1 text-center text-xs rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
+            <div className={` ${rowStatusStyle(row.status)} p-1 text-center w-28 text-xs rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
               {getStatusCasual(row.status)}
             </div>
           </div>
@@ -102,7 +102,7 @@ const GenericRow = (props: Props) => {
                 </div>
               </div>
             </ToolTipProvider>
-          ) : "N/A"}
+          ) : null}
         </div>
       </div>
     );
