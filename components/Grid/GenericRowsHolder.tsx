@@ -4,6 +4,9 @@ import currentProfile from '@/lib/current-profile'
 import { redirectToSignIn } from '@clerk/nextjs'
 import Image from 'next/image'
 import { v4 } from 'uuid'
+import LogoutComponent from './GenericRowsHolder/Logout'
+import { Role } from '@prisma/client'
+
 
 type Props = {
     orders: any
@@ -62,16 +65,16 @@ const GenericRowsHolder = async (props: Props) => {
                                                 {profile?.name}
                                             </div>
                                             <div className='text-xs scale-90 -ml-1 -mt-1 opacity-50'>
-                                                {profile?.role}
+                                                {profile && getStage(profile?.role)}
                                             </div>
-                                            <div className='text-xs scale-90 -ml-1 border-b border-slate-400/30 border-spacing-1 w-fit cursor-pointer hover:tracking-widest transition-all'>
-                                                Logout
+                                            <div>
+                                                <LogoutComponent />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
-                                    user stats
+
                                 </div>
                             </div>
                         </div>
@@ -86,3 +89,30 @@ const GenericRowsHolder = async (props: Props) => {
 }
 
 export default GenericRowsHolder
+
+function getStage(role: Role) {
+    switch (role) {
+        case Role.ADMIN:
+            break;
+
+        case Role.MANAGER:
+            break;
+
+        case Role.ORDERBOOKER:
+            return 'Order Booker'
+            break;
+
+        case Role.ORDERVERIFIER:
+            return 'Order Verifier'
+
+        case Role.PAYMENTVERIFIER:
+            return 'Payment Verifier'
+        case Role.DISPATCHER:
+            return 'Dispatcher'
+        case Role.SUPERADMIN:
+            break;
+
+        default:
+            break;
+    }
+}

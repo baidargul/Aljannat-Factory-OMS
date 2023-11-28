@@ -9,6 +9,7 @@ import PopoverProvider from "../Popover/PopoverProvider";
 import { Status } from "@prisma/client";
 import { v4 } from "uuid";
 import { toast } from "sonner";
+import { CaseLower, MousePointerClick } from "lucide-react";
 
 type Props = {
   row: any;
@@ -32,14 +33,19 @@ const GenericRow = (props: Props) => {
   function DataRow() {
     return (
       <div
-        className={`p-2 w-full hover:bg-yellow-50 justify-items-start grid grid-cols-9 text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
+        className={`p-2 w-full hover:bg-yellow-50 justify-items-start grid grid-cols-10 items-center text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
         onClick={handleRowClick}
       >
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis opacity-40">
           {props.index + 1}
         </div>
-        <div className="overflow-hidden whitespace-nowrap text-ellipsis ">
+        <div className="overflow-hidden whitespace-nowrap text-ellipsis">
           {new Date(row.createdAt).toDateString()}
+        </div>
+        <div>
+          {
+            getTimeLapsed(row.createdAt)
+          }
         </div>
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
           {row.customers.name.charAt(0).toUpperCase() +
@@ -63,24 +69,40 @@ const GenericRow = (props: Props) => {
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
           Rs {rowTotalAmount}
         </div>
-        <ToolTipProvider content={row.orderNotes[0].note}>
-          <div className="flex items-center gap-1">
-            <div className={` ${rowStatusStyle(row.status)} p-1 text-center rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
-              {getStatusCasual(row.status)}
-            </div>
+        <ToolTipProvider content={String(row.orderNotes[0].note)}>
+          <div className="flex flex-col items-center ">
             <div>
               {row.orderNotes.length > 1 ? (
-                <div className="text-xs w-4 h-4 border-b border-zinc-500 text-zinc-800 justify-center items-center flex text-center">
-                  <div className="scale-75">
-                    {row.orderNotes.length - 1}
+                <div className="text-xs w-4 h-4 border-zinc-500 text-zinc-800 justify-center items-center flex text-center">
+                  <div className="scale-75 flex gap-1 opacity-60 items-center font-semibold">
+                    <div>
+                      Interactions:
+                    </div>
+                    <div>
+                      {row.orderNotes.length - 1}
+                    </div>
                   </div>
                 </div>
               ) : null}
             </div>
+            <div className={` ${rowStatusStyle(row.status)} p-1 text-center text-xs rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
+              {getStatusCasual(row.status)}
+            </div>
           </div>
         </ToolTipProvider>
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis ml-auto">
-          {row.trackingNo ? row.trackingNo : "N/A"}
+          {row.trackingNo ? (
+            <ToolTipProvider content={row.trackingNo}>
+              <div className="flex flex-col items-center">
+                <div className="font-semibold">
+                  {row.courier}
+                </div>
+                <div className="text-black/60 p-1 bg-slate-100 rounded border border-slate-200">
+                  {row.trackingNo}
+                </div>
+              </div>
+            </ToolTipProvider>
+          ) : "N/A"}
         </div>
       </div>
     );
@@ -95,7 +117,7 @@ const GenericRow = (props: Props) => {
   function orderIdClicked(orderId: string) {
     navigator.clipboard.writeText(orderId)
       .then(() => {
-       toast.success("Order reference number copied to clipboard")
+        toast.success("Order reference number copied to clipboard")
       })
       .catch((err) => {
         toast.error("Unable to copy order reference to clipboard")
@@ -694,7 +716,7 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
 
     await axios.post("/api/order/dispatch/MnP/book", { userId, row }).then((res) => {
       const data = res.data.data
-      console.log(res.data)
+      updateRow(data)
     })
 
     toast.success("Order ready to be dispatch towards M&P")
@@ -895,5 +917,23 @@ function getStatusCasual(status: Status) {
       return "CANCELLED"
     default:
       return "Unknown"
+  }
+}
+
+function getTimeLapsed(targetDateTime: any) {
+  const target = new Date(targetDateTime)
+  const now = new Date()
+  const diff = now.getTime() - target.getTime();
+  const diffInHours = diff / (1000 * 3600);
+  const diffInMinutes = diff / (1000 * 60);
+  const diffInSeconds = diff / (1000);
+  if (diffInHours > 24) {
+    return `${Math.floor(diffInHours / 24)}d`
+  } else if (diffInHours > 1) {
+    return `${Math.floor(diffInHours)}h`
+  } else if (diffInMinutes > 1) {
+    return `${Math.floor(diffInMinutes)}m`
+  } else {
+    return `${Math.floor(diffInSeconds)}s`
   }
 }

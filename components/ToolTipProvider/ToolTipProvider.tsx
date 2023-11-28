@@ -16,11 +16,17 @@ const ToolTipProvider = (props: Props) => {
     return (
         <TooltipProvider>
             <Tooltip>
-                <TooltipTrigger>{props.children}</TooltipTrigger>
+                <TooltipTrigger>
+                    <div>
+                        {props.children}
+                    </div>
+                </TooltipTrigger>
                 <TooltipContent>
-                    {
-                        typeof props.content === 'string' ? (<div>{props.content}</div>) : props.content
-                    }
+                    <div>
+                        {
+                            typeof props.content === 'string' ? (<div>{props.content}</div>) : props.content
+                        }
+                    </div>
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>

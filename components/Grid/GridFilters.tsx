@@ -6,6 +6,9 @@ import { ScrollArea } from '../ui/scroll-area'
 import GenericRow from './GenericRow'
 import { ComboBoxProvider } from '../ComboBox/ComboBoxProvider'
 import { Role, Status } from '@prisma/client'
+import { v4 } from 'uuid'
+import { CalendarDays, Clock12, Clock2, Dot, Tally5, Truck, User } from 'lucide-react'
+import ToolTipProvider from '../ToolTipProvider/ToolTipProvider'
 
 type Props = {
     orders: any
@@ -109,16 +112,37 @@ const GridWithFilters = (props: Props) => {
                 </div>
             </div>
             <div className='border border-slate-400 w-full'>
-                <div className='grid grid-cols-9 w-full tracking-wide text-sm justify-items-start bg-slate-400 text-zinc-800 border-slate-400 border p-2'>
-                    <div>#</div>
-                    <div>Job Created</div>
-                    <div>Customer</div>
+                <div className='grid grid-cols-10 w-full tracking-wide text-sm items-center justify-items-start bg-slate-400 text-zinc-800 border-slate-400 border p-2'>
+                    <div>
+                        <ToolTipProvider content='Order#'>
+                            <Tally5 className='text-sm' />
+                        </ToolTipProvider>
+                    </div>
+                    <div>
+                        <ToolTipProvider content='Date of booking'>
+                            <CalendarDays className='text-sm' />
+                        </ToolTipProvider>
+                    </div>
+                    <div>
+                        <ToolTipProvider content='Time Lapsed'>
+                            <Clock2 className='text-sm' />
+                        </ToolTipProvider>
+                    </div>
+                    <div>
+                        <ToolTipProvider content='Customer'>
+                            <User className='text-sm' />
+                        </ToolTipProvider>
+                    </div>
                     <div>Product</div>
                     <div>Weight</div>
                     <div>City</div>
                     <div>Bill</div>
-                    <div>Status</div>
-                    <div>Courier#</div>
+                    <div className='ml-auto mr-auto'>Status</div>
+                    <div className='ml-auto mr-auto'>
+                        <ToolTipProvider content='Courier'>
+                            <Truck />
+                        </ToolTipProvider>
+                    </div>
                 </div>
                 <ScrollArea className='w-full h-[550px]'>
                     <div className='w-full'>
@@ -177,7 +201,7 @@ const GridWithFilters = (props: Props) => {
                                     return null
                                 }
                                 return (
-                                    <div key={row.id} className=''>
+                                    <div key={v4()} className=''>
                                         <GenericRow stage={stage} row={row} index={index} profile={props.profile} />
                                     </div>
                                 )
