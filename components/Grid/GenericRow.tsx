@@ -935,19 +935,27 @@ function getStatusCasual(status: Status) {
 }
 
 function getTimeLapsed(targetDateTime: any) {
-  const target = new Date(targetDateTime)
-  const now = new Date()
+  const target = new Date(targetDateTime);
+  const now = new Date();
   const diff = now.getTime() - target.getTime();
-  const diffInHours = diff / (1000 * 3600);
-  const diffInMinutes = diff / (1000 * 60);
-  const diffInSeconds = diff / (1000);
-  if (diffInHours > 24) {
-    return `${Math.floor(diffInHours / 24)}d`
-  } else if (diffInHours > 1) {
-    return `${Math.floor(diffInHours)}h`
-  } else if (diffInMinutes > 1) {
-    return `${Math.floor(diffInMinutes)}m`
+  const diffInSeconds = diff / 1000;
+  const diffInMinutes = diffInSeconds / 60;
+  const diffInHours = diffInMinutes / 60;
+  const diffInDays = diffInHours / 24;
+  const diffInMonths = diffInDays / 30; // Assuming an average month length of 30 days
+  const diffInYears = diffInDays / 365; // Assuming a year has 365 days
+
+  if (diffInYears >= 1) {
+    return `${Math.floor(diffInYears)}y`;
+  } else if (diffInMonths >= 1) {
+    return `${Math.floor(diffInMonths)}mo`;
+  } else if (diffInDays >= 1) {
+    return `${Math.floor(diffInDays)}d`;
+  } else if (diffInHours >= 1) {
+    return `${Math.floor(diffInHours)}h`;
+  } else if (diffInMinutes >= 1) {
+    return `${Math.floor(diffInMinutes)}m`;
   } else {
-    return `${Math.floor(diffInSeconds)}s`
+    return `${Math.floor(diffInSeconds)}s`;
   }
 }
