@@ -22,6 +22,7 @@ const GenericRow = (props: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [row, setRow] = useState<any>(props.row);
   const [rowTotalAmount, setRowTotalAmount] = useState<any>(0);
+  const [timeLapsed, setTimeLapsed] = useState<any>();
 
   const handleRowClick = () => {
     setSelectedOrder(row);
@@ -30,6 +31,19 @@ const GenericRow = (props: Props) => {
   function updateRow(newRow: any) {
     setRow(newRow);
   }
+
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const time = getTimeLapsed(row.createdAt);
+      setTimeLapsed(time);
+    }, 1000); // run every second
+  
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [row.createdAt]);
+
+
   function DataRow() {
     return (
       <div
@@ -44,7 +58,7 @@ const GenericRow = (props: Props) => {
         </div>
         <div>
           {
-            getTimeLapsed(row.createdAt)
+            timeLapsed
           }
         </div>
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
