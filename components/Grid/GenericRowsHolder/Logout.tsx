@@ -12,7 +12,7 @@ const LogoutComponent = (props: Props) => {
         signOut()
     }
     return (
-        <div onClick={() => handleLogout()} className='text-xs scale-90 -ml-1 border-b border-slate-400/30 border-spacing-1 w-fit cursor-pointer hover:tracking-widest transition-all'>
+        <div onClick={() => handleLogout()} className='text-xs scale-90 -ml-1 border-b border-slate-400/30 border-spacing-1 w-fit cursor-pointer tracking-widest transition-all'>
             Logout
         </div>
     )

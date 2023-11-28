@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { v4 } from 'uuid'
 import LogoutComponent from './GenericRowsHolder/Logout'
 import { Role } from '@prisma/client'
+import ProfileRedirector from './GenericRowsHolder/ProfileRedirector'
 
 
 type Props = {
@@ -56,14 +57,18 @@ const GenericRowsHolder = async (props: Props) => {
                                 <div className='flex gap-2 items-center'>
                                     <div className=''>
                                         {profile && (
-                                            <Image className='rounded border-b border-white' src={String(profile.imageURL)} width={50} height={50} alt={profile ? profile.name : v4()} />
+                                            <ProfileRedirector>
+                                            <Image className='rounded border-b border-white cursor-pointer' src={String(profile.imageURL)} width={50} height={50} alt={profile ? profile.name : v4()} />
+                                            </ProfileRedirector>
                                         )}
                                     </div>
                                     <div>
                                         <div>
-                                            <div className='font-semibold tracking-wide'>
-                                                {profile?.name}
-                                            </div>
+                                            <ProfileRedirector>
+                                                <div className='font-semibold tracking-wide hover:border-b-2 border-slate-400 cursor-pointer hover:border-spacing-1 transition-all hover:mb-2'>
+                                                    {profile?.name}
+                                                </div>
+                                            </ProfileRedirector>
                                             <div className='text-xs scale-90 -ml-1 -mt-1 opacity-50'>
                                                 {profile && getStage(profile?.role)}
                                             </div>
