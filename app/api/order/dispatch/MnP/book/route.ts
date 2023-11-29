@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
             consigneeAddress: row.customers.address,
             consigneeMobNo: row.customers.phone,
             destinationCityName: row.customers.city,
-            pieces: totalPcs,
+            pieces: 1,
             weight: totalWeight,
             codAmount: totalAmount,
             custRefNo: row.id,

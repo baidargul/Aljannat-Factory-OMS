@@ -10,6 +10,7 @@ import { Loader } from 'lucide-react'
 import Image from 'next/image'
 import { useClerk } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 type Props = {
     products: any
@@ -59,17 +60,26 @@ const POSHolder = (props: Props) => {
         if (phone === "00000000001") {
             return
         }
-        const res = await axios.get("../api/customer/find/phone/" + phone).then((res: any) => {
-            if (res.status == 200) {
-                setCustomer(res.data)
-                setCustomer(res?.data?.data)
-            } else {
-                setCustomer(null)
-                setCustomer(null)
-            }
-        }).catch((err: any) => {
-            console.log(`Customer: `, err)
-        })
+
+        try {
+            const res = await axios.get("../api/customer/find/phone/" + phone).then(async (res: any) => {
+                if (res.status == 200) {
+                    setCustomer(res.data)
+                    toast.success(res.data.message)
+                    setCustomer(res?.data?.data)
+                } else {
+                    setCustomer(null)
+                    setCustomer(null)
+                }
+                console.log(res)
+            }).catch((err: any) => {
+                toast.error(err)
+            })
+
+        } catch (error:any) {
+            toast.error(error)
+        }
+
         setIsLoading(false)
     }
 
@@ -85,42 +95,38 @@ const POSHolder = (props: Props) => {
             userId: currentUser.userId,
         }
 
-        if(POS.products.length<1)
-        {
+        if (POS.products.length < 1) {
             console.log(`No products selected`)
             return
         }
 
-        if(!customer){
+        if (!customer) {
             console.log(`Please enter customer information`)
             return
         }
 
-        if(!customer.name)
-        {
+        if (!customer.name) {
             console.log(`Please enter customer name`)
             return
         }
 
-        if(!customer.phone)
-        {
+        if (!customer.phone) {
             console.log(`Please enter customer first phone number`)
             return
         }
 
-       if(!customer.city)
-       {
-        console.log(`Please enter delivery city`)
-        return
-       }
+        if (!customer.city) {
+            console.log(`Please enter delivery city`)
+            return
+        }
 
-       if(!customer.address){
-        console.log(`Please enter delivery address`)
-        return
-       }
+        if (!customer.address) {
+            console.log(`Please enter delivery address`)
+            return
+        }
 
-       setIsLoading(true)
-        const res = await axios.post("/api/order/create", data).then((res:any)=>{
+        setIsLoading(true)
+        const res = await axios.post("/api/order/create", data).then((res: any) => {
             console.log(res.data)
         })
         setIsLoading(false)
