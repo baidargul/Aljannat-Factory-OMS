@@ -59,10 +59,15 @@ const POSHolder = (props: Props) => {
 
         try {
             const res = await axios.get("../api/customer/find/phone/" + phone).then(async (res: any) => {
-                if (res.status == 200) {
-                    setCustomer(res.data)
-                    toast.success(res.data.message)
-                    setCustomer(res?.data?.data)
+                const response = res.data
+                if (response.status == 404) {
+                    toast.error(res.data.message)
+                    return
+                }
+                if (response.status == 200) {
+                    setCustomer(response.data)
+                    toast.success(response.message)
+                    setCustomer(response?.data)
                 } else {
                     setCustomer(null)
                     setCustomer(null)
@@ -71,7 +76,7 @@ const POSHolder = (props: Props) => {
                 toast.error(err)
             })
 
-        } catch (error:any) {
+        } catch (error: any) {
             toast.error(error)
         }
 

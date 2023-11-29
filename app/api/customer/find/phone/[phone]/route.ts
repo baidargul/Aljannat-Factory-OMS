@@ -16,6 +16,7 @@ export async function GET(req: NextRequest, props: any) {
         response.status = 404
         response.message = `Customer with phone ${phone} not found`
         response.data = null
+        return new Response(JSON.stringify(response))
     }
 
     let customer = await prisma.customers.findFirst({
@@ -42,6 +43,7 @@ export async function GET(req: NextRequest, props: any) {
         response.status = 404
         response.message = `Customer with phone ${phone} not found`
         response.data = null
+        return new Response(JSON.stringify(response))
     }
 
     if(customer?.phone==="00000000001")
