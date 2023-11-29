@@ -8,21 +8,22 @@ datasource db {
 }
 
 model orders {
-  id                                   String           @id @unique
-  dateOfBooking                        DateTime         @default(now()) @db.Timestamptz(6)
-  status                               Status?
-  userId                               String?
-  courier                              String?
-  trackingNo                           String?
-  customerId                           String?
-  index                                Int              @default(autoincrement())
-  createdAt                            DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt                            DateTime         @default(now()) @db.Timestamptz(6)
-  noteId                               String?
-  orderNotes                           orderNotes[]
-  customers                            customers?       @relation(fields: [customerId], references: [id])
-  profile                              profile?         @relation(fields: [userId], references: [userId], onDelete: Cascade, map: "userId")
-  ordersRegister                       ordersRegister[]
+  id             String           @id @unique
+  dateOfBooking  DateTime         @default(now()) @db.Timestamptz(6)
+  dateOfDelivery DateTime         @default(now()) @db.Timestamptz(6)
+  status         Status?
+  userId         String?
+  courier        String?
+  trackingNo     String?
+  customerId     String?
+  index          Int              @default(autoincrement())
+  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime         @default(now()) @db.Timestamptz(6)
+  noteId         String?
+  orderNotes     orderNotes[]
+  customers      customers?       @relation(fields: [customerId], references: [id])
+  profile        profile?         @relation(fields: [userId], references: [userId], onDelete: Cascade, map: "userId")
+  ordersRegister ordersRegister[]
 }
 
 model customers {
@@ -102,13 +103,13 @@ model profile {
 }
 
 model orderNotes {
-  id                               String    @id @default(uuid())
-  orderId                          String
-  userId                           String
-  note                             String
-  createdAt                        DateTime? @default(now()) @db.Timestamptz(6)
-  orders                           orders    @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "orderId")
-  profile                          profile   @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "userId")
+  id        String    @id @default(uuid())
+  orderId   String
+  userId    String
+  note      String
+  createdAt DateTime? @default(now()) @db.Timestamptz(6)
+  orders    orders    @relation(fields: [orderId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "orderId")
+  profile   profile   @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "userId")
 }
 
 enum Role {

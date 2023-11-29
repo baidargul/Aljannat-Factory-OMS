@@ -1,163 +1,137 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import { usePOS } from '@/hooks/usePOS'
-import POSItemsHolder from './POSHolder/POSItemsHolder'
-import POSOrderRowHolder from './POSHolder/POSOrderRowHolder'
-import { Input } from '@/components/ui/input'
-import { DatePicker } from '@/components/DatePicker/DatePicker'
-import axios from 'axios'
-import { Loader } from 'lucide-react'
-import Image from 'next/image'
-import { useClerk } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
+import React, { useEffect, useState } from 'react';
+import { usePOS } from '@/hooks/usePOS';
+import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/DatePicker/DatePicker';
+import axios from 'axios';
+import { Loader } from 'lucide-react';
+import { useClerk } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import POSItemsHolder from './POSHolder/POSItemsHolder';
+import POSOrderRowHolder from './POSHolder/POSOrderRowHolder';
+import Image from 'next/image';
 
 type Props = {
-    products: any
-    currentUser: any
-}
-
-type productSpecifications = {
-    id: string,
-    weight: number,
-    amount: number
-}
+    products: any;
+    currentUser: any;
+};
 
 const POSHolder = (props: Props) => {
-    const [selectedProduct, setSelectedProduct] = useState<any>(null)
-    const [totalAmount, setTotalAmount] = useState<number>(0)
-    const [customer, setCustomer] = useState<any>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [currentUser, setCurrentUser] = useState<any>(props.currentUser)
-    const [dateOfBooking, setDateOfBooking] = useState<Date>(new Date())
-    const [dateOfDelivery, setDateOfDelivery] = useState<Date>(new Date())
-    const POS: any = usePOS()
-    const { signOut } = useClerk()
-    const router = useRouter()
+    const [selectedProduct, setSelectedProduct] = useState<any>(null);
+    const [customer, setCustomer] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [currentUser, setCurrentUser] = useState<any>(props.currentUser);
+    const [dateOfBooking, setDateOfBooking] = useState<Date>(new Date());
+    const [dateOfDelivery, setDateOfDelivery] = useState<Date>(new Date());
+    const POS: any = usePOS();
+    const { signOut } = useClerk();
+    const router = useRouter();
 
     useEffect(() => {
-        console.log(currentUser)
-    }, [currentUser])
-
+        console.log(currentUser);
+    }, [currentUser]);
 
     useEffect(() => {
-        POS.customer = customer
-    }, [customer, POS])
+        POS.customer = customer;
+    }, [customer, POS]);
 
-    function handleNewOrder() {
-        setIsLoading(true)
-        setCustomer(null)
-        setSelectedProduct(null)
-        POS.products = []
-        POS.customer = null
-        setIsLoading(false)
-    }
+    const handleNewOrder = () => {
+        setIsLoading(true);
+        setCustomer(null);
+        setSelectedProduct(null);
+        POS.products = [];
+        POS.customer = null;
+        setIsLoading(false);
+    };
 
-    async function handleSearch(phone: string) {
-        setIsLoading(true)
-        if (phone === "00000000001") {
-            return
+    const handleSearch = async (phone: string) => {
+        setIsLoading(true);
+        if (phone === '00000000001') {
+            return;
         }
 
         try {
-            const res = await axios.get("../api/customer/find/phone/" + phone).then(async (res: any) => {
-                const response = res.data
-                if (response.status == 404) {
-                    toast.error(res.data.message)
-                    return
-                }
-                if (response.status == 200) {
-                    setCustomer(response.data)
-                    toast.success(response.message)
-                    setCustomer(response?.data)
-                } else {
-                    setCustomer(null)
-                    setCustomer(null)
-                }
-            }).catch((err: any) => {
-                toast.error(err)
-            })
+            const { data: response } = await axios.get(`../api/customer/find/phone/${phone}`);
 
+            if (response.status === 404) {
+                toast.error(response.message);
+                return;
+            }
+
+            if (response.status === 200) {
+                setCustomer(response.data);
+                toast.success(response.message);
+            } else {
+                setCustomer(null);
+            }
         } catch (error: any) {
-            toast.error(error)
+            toast.error(error.message);
         }
 
-        setIsLoading(false)
-    }
+        setIsLoading(false);
+    };
 
     const handleLogout = () => {
-        signOut()
-        router.push('/')
-    }
+        signOut();
+        router.push('/');
+    };
 
     const handleSaveOrder = async () => {
         const data = {
             customer: { ...customer },
             products: [...POS.products],
             userId: currentUser.userId,
-        }
+            dateOfBooking,
+            dateOfDelivery,
+        };
 
         if (POS.products.length < 1) {
-            toast.error(`No products selected`)
-            return
+            toast.error(`No products selected`);
+            return;
         }
 
-        if (!customer) {
-            toast.error(`Please enter customer information`)
-            return
+        if (!customer || !customer.name || !customer.phone || !customer.city || !customer.address) {
+            toast.error(`Please fill in all required fields`);
+            return;
         }
 
-        if (!customer.name) {
-            toast.error(`Please enter customer name`)
-            return
-        }
+        setIsLoading(true);
 
-        if (!customer.phone) {
-            toast.error(`Please enter customer first phone number`)
-            return
-        }
+        try {
+            const { data: res } = await axios.post('/api/order/create', data);
 
-        if (!customer.city) {
-            toast.error(`Please enter delivery city`)
-            return
-        }
-
-        if (!customer.address) {
-            toast.error(`Please enter delivery address`)
-            return
-        }
-
-        setIsLoading(true)
-        const res = await axios.post("/api/order/create", data).then((res: any) => {
-            if (res.status == 200) {
-                toast.success(res.data.message)
-                handleNewOrder()
+            if (res.status === 200) {
+                toast.success(res.message);
+                handleNewOrder();
             } else {
-                toast.error(res.data.message)
+                toast.error(res.message);
             }
-        })
-        setIsLoading(false)
-    }
+        } catch (error: any) {
+            toast.error(error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-    function setDate(date: Date) {
-        setDateOfBooking(date)
-        setDateOfDelivery(date)
-    }
+    const setDate = (date: Date) => {
+        setDateOfBooking(date);
+        setDateOfDelivery(date);
+    };
 
     return (
-        <>
+        <div>
             {isLoading && (
                 <label className='absolute z-50 text-black left-[45%] top-[45%]'>
                     <div className='p-2 flex justify-center items-center gap-2 bg-red-800 text-white rounded-md'>
                         <Loader className='animate-spin' />
-                        <p>
-                            Please wait...
-                        </p>
+                        <p>Please wait...</p>
                     </div>
-                </label>)
-            }
-            <div className={`${isLoading && "bg-red-500/40 blur-lg"}`}>
+                </label>
+            )}
+            <div className={`${isLoading && 'bg-red-500/40 blur-lg'}`}>
                 <div className='flex gap-2 p-4 justify-between bg-slate-200 items-center drop-shadow-md'>
+
                     <div className='opacity-80 border p-2 rounded-md h-24 flex gap-2 -mt-4'>
                         <div className=''>
                             <DatePicker defaultValue={dateOfBooking} setValue={setDate} >
@@ -183,14 +157,12 @@ const POSHolder = (props: Props) => {
                         </div>
                     </div>
                     <div>
-                        {/* <HoverCardProvider content={<CustomerInput setCustomer={setCustomer} />}> */}
                         <div className='flex flex-col'>
                             <p className='font-semibold text-sm tracking-wider'>Name:</p>
                             <Input autoComplete='off' disabled={isLoading} name='customername' placeholder='Customer' className='text-black' value={customer ? customer?.name : ""} onChange={(e: any) => {
                                 setCustomer({ ...customer, name: e.target.value })
                             }} />
                         </div>
-                        {/* </HoverCardProvider> */}
                         <div className='flex gap-2'>
                             <div className='flex flex-col'>
                                 <p className='font-semibold text-sm tracking-wider'>Phone 01:</p>
@@ -231,8 +203,8 @@ const POSHolder = (props: Props) => {
                             </p>
                         </div>
                     </div>
-
                 </div>
+
                 <div className="flex gap-2 min-h-screen mt-2 drop-shadow-md">
                     <div className={`w-[40%] text-ellipsis overflow-hidden whitespace-nowrap p-2 bg-slate-200`}>
                         <POSItemsHolder products={props.products} selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
@@ -260,7 +232,8 @@ const POSHolder = (props: Props) => {
                     </div>
                 </div>
             </div>
-        </>
+
+        </div>
     )
 }
 

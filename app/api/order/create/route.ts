@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
             return new Response(JSON.stringify(response))
         }
 
-        const { customer, products, userId } = data
+        const { customer, products, userId, dateOfBooking, dateOfDelivery } = data
 
         console.log(products)
 
@@ -160,7 +160,9 @@ export async function POST(req: NextRequest) {
                 id: v4(),
                 status: "BOOKED",
                 userId: userId,
-                customerId: dbCustomer.id
+                customerId: dbCustomer.id,
+                dateOfBooking: dateOfBooking,
+                dateOfDelivery: dateOfDelivery
             }
         })
 
