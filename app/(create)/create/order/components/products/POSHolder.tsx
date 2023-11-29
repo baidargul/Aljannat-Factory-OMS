@@ -42,10 +42,6 @@ const POSHolder = (props: Props) => {
         POS.customer = customer
     }, [customer, POS])
 
-    // useEffect(() => {
-    //     console.log(`POS Products: `, POS.products)
-    // }, [POS.products])
-
     function handleNewOrder() {
         setIsLoading(true)
         setCustomer(null)
@@ -71,7 +67,6 @@ const POSHolder = (props: Props) => {
                     setCustomer(null)
                     setCustomer(null)
                 }
-                console.log(res)
             }).catch((err: any) => {
                 toast.error(err)
             })
@@ -96,38 +91,43 @@ const POSHolder = (props: Props) => {
         }
 
         if (POS.products.length < 1) {
-            console.log(`No products selected`)
+            toast.error(`No products selected`)
             return
         }
 
         if (!customer) {
-            console.log(`Please enter customer information`)
+            toast.error(`Please enter customer information`)
             return
         }
 
         if (!customer.name) {
-            console.log(`Please enter customer name`)
+            toast.error(`Please enter customer name`)
             return
         }
 
         if (!customer.phone) {
-            console.log(`Please enter customer first phone number`)
+            toast.error(`Please enter customer first phone number`)
             return
         }
 
         if (!customer.city) {
-            console.log(`Please enter delivery city`)
+            toast.error(`Please enter delivery city`)
             return
         }
 
         if (!customer.address) {
-            console.log(`Please enter delivery address`)
+            toast.error(`Please enter delivery address`)
             return
         }
 
         setIsLoading(true)
         const res = await axios.post("/api/order/create", data).then((res: any) => {
-            console.log(res.data)
+            if (res.status == 200) {
+                toast.success(res.data.message)
+                handleNewOrder()
+            } else {
+                toast.error(res.data.message)
+            }
         })
         setIsLoading(false)
     }
