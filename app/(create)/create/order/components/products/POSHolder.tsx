@@ -29,6 +29,8 @@ const POSHolder = (props: Props) => {
     const [customer, setCustomer] = useState<any>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [currentUser, setCurrentUser] = useState<any>(props.currentUser)
+    const [dateOfBooking, setDateOfBooking] = useState<Date>(new Date())
+    const [dateOfDelivery, setDateOfDelivery] = useState<Date>(new Date())
     const POS: any = usePOS()
     const { signOut } = useClerk()
     const router = useRouter()
@@ -137,6 +139,11 @@ const POSHolder = (props: Props) => {
         setIsLoading(false)
     }
 
+    function setDate(date: Date) {
+        setDateOfBooking(date)
+        setDateOfDelivery(date)
+    }
+
     return (
         <>
             {isLoading && (
@@ -151,17 +158,28 @@ const POSHolder = (props: Props) => {
             }
             <div className={`${isLoading && "bg-red-500/40 blur-lg"}`}>
                 <div className='flex gap-2 p-4 justify-between bg-slate-200 items-center drop-shadow-md'>
-                    <div className='opacity-80 border p-2 rounded-md h-24'>
+                    <div className='opacity-80 border p-2 rounded-md h-24 flex gap-2 -mt-4'>
                         <div className=''>
-                            <DatePicker defaultValue={new Date()} >
+                            <DatePicker defaultValue={dateOfBooking} setValue={setDate} >
                                 <section>
-                                    <p className='font-semibold text-sm tracking-wider'>Booking Date:</p>
-                                    <button className='text-sm border-b border-spacing-2'>
-                                        {new Date().toDateString()}
+                                    <p className='font-semibold text-sm tracking-wider'>Booking:</p>
+                                    <button className='text-xs text-start '>
+                                        {new Date(dateOfBooking).toDateString()}
                                     </button>
                                 </section>
                             </DatePicker>
-                            <p className='text-center mt-2 text-sm font-semibold border-b-2 border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>TODAY</p>
+                            <div onClick={() => setDateOfBooking(new Date())} className='text-center mt-2 text-xs font-semibold border-b-2 border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-1 cursor-pointer rounded-md h-fit'>TODAY</div>
+                        </div>
+                        <div className=''>
+                            <DatePicker defaultValue={dateOfDelivery} setValue={setDateOfDelivery} >
+                                <section>
+                                    <p className='font-semibold text-sm tracking-wider'>Delivery:</p>
+                                    <button className='text-xs text-start '>
+                                        {new Date(dateOfDelivery).toDateString()}
+                                    </button>
+                                </section>
+                            </DatePicker>
+                            <div onClick={() => setDateOfDelivery(new Date())} className='text-center mt-2 text-xs font-semibold border-b-2 border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-1 cursor-pointer rounded-md h-fit'>TODAY</div>
                         </div>
                     </div>
                     <div>
