@@ -38,7 +38,7 @@ const GenericRow = (props: Props) => {
       const time = getTimeLapsed(row.createdAt);
       setTimeLapsed(time);
     }, 1000); // run every second
-  
+
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
   }, [row.createdAt]);
@@ -53,15 +53,29 @@ const GenericRow = (props: Props) => {
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis opacity-40">
           {props.index + 1}
         </div>
-        <div className="overflow-hidden whitespace-nowrap text-ellipsis">
-          {new Date(row.createdAt).toDateString()}
+        <div>
+          <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+            {new Date(row.createdAt).toDateString()}
+          </div>
+          <div className="flex gap-1 text-slate-400 text-xs scale-90 -ml-1">
+           <div>{timeLapsed && "Created" }</div>
+            <div>
+              {
+                timeLapsed && `${timeLapsed} ago`
+              }
+            </div>
+          </div>
         </div>
         <div>
-          {
-            timeLapsed
-          }
+          <ToolTipProvider content={String(new Date(row.dateOfDelivery).toDateString())}>
+            <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+              {
+                getDeliveryDateDifference(row.dateOfDelivery)
+              }
+            </div>
+          </ToolTipProvider>
         </div>
-        <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
+        <div className="w-24 overflow-hidden whitespace-nowrap text-ellipsis">
           {row.customers.name.charAt(0).toUpperCase() +
             row.customers.name.slice(1).toLowerCase()}
         </div>
@@ -118,7 +132,7 @@ const GenericRow = (props: Props) => {
             </ToolTipProvider>
           ) : null}
         </div>
-      </div>
+      </div >
     );
   }
 
@@ -938,6 +952,39 @@ function getTimeLapsed(targetDateTime: any) {
   const target = new Date(targetDateTime);
   const now = new Date();
   const diff = now.getTime() - target.getTime();
+  const diffInSeconds = diff / 1000;
+  const diffInMinutes = diffInSeconds / 60;
+  const diffInHours = diffInMinutes / 60;
+  const diffInDays = diffInHours / 24;
+  const diffInMonths = diffInDays / 30; // Assuming an average month length of 30 days
+  const diffInYears = diffInDays / 365; // Assuming a year has 365 days
+
+  if (diffInYears >= 1) {
+    return `${Math.floor(diffInYears)}y`;
+  } else if (diffInMonths >= 1) {
+    return `${Math.floor(diffInMonths)}mo`;
+  } else if (diffInDays >= 1) {
+    return `${Math.floor(diffInDays)}d`;
+  } else if (diffInHours >= 1) {
+    return `${Math.floor(diffInHours)}h`;
+  } else if (diffInMinutes >= 1) {
+    return `${Math.floor(diffInMinutes)}m`;
+  } else {
+    return `${Math.floor(diffInSeconds)}s`;
+  }
+}
+
+function getDeliveryDateDifference(targetDateTime: any) {
+  const target = new Date(targetDateTime);
+  const now = new Date();
+  const diff = target.getTime() - now.getTime();
+  if (diff < 0) {
+    const diffInDays = diff / (1000 * 3600 * 24);
+    if (Math.floor(diffInDays) * -1 === 1) {
+      return "Yesterday"
+    }
+    return `${Math.floor(diffInDays) * -1}d ago`;
+  }
   const diffInSeconds = diff / 1000;
   const diffInMinutes = diffInSeconds / 60;
   const diffInHours = diffInMinutes / 60;

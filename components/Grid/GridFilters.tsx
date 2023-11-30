@@ -7,7 +7,7 @@ import GenericRow from './GenericRow'
 import { ComboBoxProvider } from '../ComboBox/ComboBoxProvider'
 import { Role, Status } from '@prisma/client'
 import { v4 } from 'uuid'
-import { CalendarDays, Clock12, Clock2, Dot, Tally5, Truck, User } from 'lucide-react'
+import { CalendarCheck, CalendarDays, Clock12, Clock2, Dot, Tally5, Truck, User } from 'lucide-react'
 import ToolTipProvider from '../ToolTipProvider/ToolTipProvider'
 
 type Props = {
@@ -124,8 +124,8 @@ const GridWithFilters = (props: Props) => {
                         </ToolTipProvider>
                     </div>
                     <div>
-                        <ToolTipProvider content='Time Lapsed'>
-                            <Clock2 className='text-sm' />
+                        <ToolTipProvider content='To be delivered'>
+                            <CalendarCheck className='text-sm' />
                         </ToolTipProvider>
                     </div>
                     <div>
