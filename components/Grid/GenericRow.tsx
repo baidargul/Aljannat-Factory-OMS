@@ -68,7 +68,7 @@ const GenericRow = (props: Props) => {
         </div>
         <div className="ml-auto mr-auto">
           <ToolTipProvider content={String(new Date(row.dateOfDelivery).toDateString())}>
-            <div className={`overflow-hidden whitespace-nowrap text-ellipsis ${getDeliveryDateDifference(row.dateOfDelivery)==="Yesterday" || Number(getDeliveryDateDifference(row.dateOfDelivery)) <1 ? "text-red-800 opacity-40": ""}`}>
+            <div className={`overflow-hidden whitespace-nowrap text-ellipsis ${getDeliveryDateDifference(row.dateOfDelivery)==="Yesterday" || Number(getDeliveryDateDifference(row.dateOfDelivery)) <1 ? "text-red-800 opacity-40 font-semibold tracking-tight": ""}`}>
               {
                 getDeliveryDateDifference(row.dateOfDelivery)
               }
