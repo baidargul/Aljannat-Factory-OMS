@@ -118,12 +118,12 @@ const GridWithFilters = (props: Props) => {
                             <Tally5 className='text-sm' />
                         </ToolTipProvider>
                     </div>
-                    <div>
+                    <div className='ml-auto mr-auto'>
                         <ToolTipProvider content='Date of booking'>
                             <CalendarDays className='text-sm' />
                         </ToolTipProvider>
                     </div>
-                    <div>
+                    <div className='ml-auto mr-auto'>
                         <ToolTipProvider content='To be delivered'>
                             <CalendarCheck className='text-sm' />
                         </ToolTipProvider>

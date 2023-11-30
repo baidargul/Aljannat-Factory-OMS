@@ -54,7 +54,7 @@ const GenericRow = (props: Props) => {
           {props.index + 1}
         </div>
         <div>
-          <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+          <div className="overflow-hidden whitespace-nowrap text-ellipsis ml-auto mr-auto">
             {new Date(row.createdAt).toDateString()}
           </div>
           <div className="flex gap-1 text-slate-400 text-xs scale-90 -ml-1">
@@ -66,9 +66,9 @@ const GenericRow = (props: Props) => {
             </div>
           </div>
         </div>
-        <div>
+        <div className="ml-auto mr-auto">
           <ToolTipProvider content={String(new Date(row.dateOfDelivery).toDateString())}>
-            <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+            <div className={`overflow-hidden whitespace-nowrap text-ellipsis ${getDeliveryDateDifference(row.dateOfDelivery)==="Yesterday" || Number(getDeliveryDateDifference(row.dateOfDelivery)) <1 ? "text-red-800 opacity-40": ""}`}>
               {
                 getDeliveryDateDifference(row.dateOfDelivery)
               }
