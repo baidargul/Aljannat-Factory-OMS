@@ -9,7 +9,7 @@ const page = (props: Props) => {
     return (
         <div className=''>
             <div className='grid grid-cols-3 w-full border rounded-md bg-white p-2 min-h-screen drop-shadow-sm'>
-                <div>
+                <div className='border'>
                     <div>
                         <div className='text-2xl font-bold'>
                             Products
@@ -19,7 +19,7 @@ const page = (props: Props) => {
                         </div>
                     </div>
                 </div>
-                <div>
+                <div className='border'>
                     <div className='text-2xl font-bold'>
                         <SelectedProduct />
                     </div>
@@ -29,6 +29,7 @@ const page = (props: Props) => {
                         </div>
                     </div>
                 </div>
+                <div className='border'></div>
             </div>
         </div>
     )
