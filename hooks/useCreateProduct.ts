@@ -10,7 +10,6 @@ type productWithVariations = {
 
 type createProduct = {
   selectedProduct: productWithVariations | null;
-
 };
 
 export const useCreateProduct = create<createProduct>((set: SetState<createProduct>) => ({
