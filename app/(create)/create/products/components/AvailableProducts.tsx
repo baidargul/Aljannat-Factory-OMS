@@ -17,7 +17,7 @@ const AvailableProducts = async (props: Props) => {
 
     return (
         <div>
-            <div className='grid grid-cols-3 justify-items-center gap-1'>
+            <div className='grid grid-cols-3 gap-2'>
                 {
                     availableProducts.map((product: product) => {
                         return (
