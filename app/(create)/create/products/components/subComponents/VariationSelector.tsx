@@ -8,13 +8,15 @@ type Props = {
 const VariationSelector = (props: Props) => {
 
 
-    function onClick(){
+    function onClick() {
 
     }
 
     return (
-        <button onClick={onClick}>
-            {props.children}
+        <button onClick={onClick} className='hover:bg-yellow-50 transition-all duration-1000 group'>
+            <div>
+                {props.children}
+            </div>
         </button>
     )
 }

@@ -27,7 +27,7 @@ const AvailableVariations = (props: Props) => {
 
     return (
         <div>
-            <div className='grid grid-cols-2'>
+            <div className='grid grid-cols-2 gap-4 px-2'>
                 {
                     selectedProduct?.productVariations.map((variation: productVariations) => {
 
@@ -40,19 +40,19 @@ const AvailableVariations = (props: Props) => {
                                             <Image src={`https://getpcsofts.info/wp-content/uploads/2023/09/JetBrains-DataGrip-Crack-300x202.png`} width={65} height={65} className='w-24 h-24' alt='image' />
                                         </div>
                                         <div>
-                                            <div className='font-semibold tracking-wide flex gap-1 items-center'>
+                                            <div className='font-semibold tracking-wide flex gap-1 items-center  group-hover:-mt-2 transition-all'>
                                                 <div>
                                                     <div onClick={() => onClearClick()} className='bg-red-500 text-xs w-4 h-4 hover:scale-105 hover:drop-shadow-md transition-all cursor-pointer text-center rounded-full flex justify-center items-center text-white'>
                                                         -
                                                     </div>
                                                 </div>
-                                                <div>
+                                                <div className='group-hover:tracking-widest transition-all duration-1000'>
                                                     {
                                                         variation.name
                                                     }
                                                 </div>
                                             </div>
-                                            <div className='flex gap-1 items-center text-xs'>
+                                            <div className='flex gap-1 items-center text-xs group-hover:mt-2 transition-all'>
                                                 <table>
                                                     <thead>
                                                         <tr>

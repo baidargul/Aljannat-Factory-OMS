@@ -19,7 +19,7 @@ const page = (props: Props) => {
                         </div>
                     </div>
                 </div>
-                <div className='border'>
+                <div className='border flex flex-col items-center'>
                     <div className='text-2xl font-bold'>
                         <SelectedProduct />
                     </div>
