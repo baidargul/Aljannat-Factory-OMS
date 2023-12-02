@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://LAiba@localhost:5431/exceltodb"
+  url      = "postgresql://baidargul:iamacracker@localhost:5432/exceltodb"
 }
 
 model orders {
@@ -97,7 +97,7 @@ model profile {
   email      String
   createdAt  DateTime?    @default(now()) @db.Timestamptz(6)
   updatedAt  DateTime?    @default(now()) @db.Timestamptz(6)
-  role       Role         @default(SUPERADMIN)
+  role       Role         @default(UNVERIFIED)
   orderNotes orderNotes[]
   orders     orders[]
 }
@@ -120,6 +120,7 @@ enum Role {
   ORDERVERIFIER
   PAYMENTVERIFIER
   DISPATCHER
+  UNVERIFIED
 }
 
 enum Status {
