@@ -3,6 +3,7 @@ import AvailableProducts from './components/AvailableProducts'
 import SelectedProduct from './components/SelectedProduct'
 import AvailableVariations from './components/subComponents/AvailableVariations'
 import { Input } from '@/components/ui/input'
+import CreateProductForm from './components/CreateProductForm'
 
 type Props = {}
 
@@ -30,19 +31,7 @@ const page = (props: Props) => {
                     Editor
                 </div>
                 <div className='p-4'>
-                    <section className='w-full'>
-                        <div className='font-semibold'>
-                            Enter product name:
-                        </div>
-                        <div className='flex gap-2 items-center'>
-                            <div>
-                                <Input placeholder='New Product Name' className='h-10' />
-                            </div>
-                            <div>
-                                <button className='text-sm bg-slate-100 active:bg-green-50 hover:bg-slate-100/30 p-2 rounded drop-shadow-sm border'>Add Product</button>
-                            </div>
-                        </div>
-                    </section>
+                    <CreateProductForm />
 
                 </div>
             </div>
