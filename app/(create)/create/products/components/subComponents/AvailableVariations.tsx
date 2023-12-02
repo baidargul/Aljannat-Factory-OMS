@@ -4,6 +4,7 @@ import { product, productVariations } from '@prisma/client'
 import Image from 'next/image'
 import React, { use, useEffect, useState } from 'react'
 import VariationSelector from './VariationSelector'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 type Props = {}
 
@@ -26,8 +27,8 @@ const AvailableVariations = (props: Props) => {
     }
 
     return (
-        <div>
-            <div className='grid grid-cols-2 gap-4 px-2'>
+        <ScrollArea type='always' className='h-[300px] w-full border border-red-800 p-2'>
+            <div className='grid grid-cols-3 gap-1 justify-items-center justify-between w-full'>
                 {
                     selectedProduct?.productVariations.map((variation: productVariations) => {
 
@@ -80,7 +81,7 @@ const AvailableVariations = (props: Props) => {
                     })
                 }
             </div>
-        </div>
+        </ScrollArea>
     )
 }
 

@@ -26,16 +26,16 @@ const SelectedProduct = (props: Props) => {
     }
 
     return (
-        <div className='flex gap-1 items-center'>
-            {
+        <div className='flex gap-1 items-center justify-center'>
+            {/* {
                 productObj.selectedProduct && (
                     <div onClick={() => onClearClick()} className='bg-cyan-500 text-xs w-4 h-4 hover:scale-105 hover:drop-shadow-md transition-all cursor-pointer text-center rounded-full flex justify-center items-center text-white'>
                         -
                     </div>
                 )
-            }
+            } */}
 
-            <div>
+            <div className='font-semibold text-2xl bg-red-800 text-center text-white w-full'>
                 {selectedProduct ? selectedProduct.product.name : 'No Product Selected'}
             </div>
         </div>

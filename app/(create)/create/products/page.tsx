@@ -2,34 +2,49 @@ import React from 'react'
 import AvailableProducts from './components/AvailableProducts'
 import SelectedProduct from './components/SelectedProduct'
 import AvailableVariations from './components/subComponents/AvailableVariations'
+import { Input } from '@/components/ui/input'
 
 type Props = {}
 
 const page = (props: Props) => {
     return (
-        <div className=''>
-            <div className='grid grid-cols-3 w-full border rounded-md bg-white p-2 min-h-screen drop-shadow-sm'>
-                <div className='border'>
-                    <div>
-                        <div className='text-2xl font-bold'>
-                            Products
-                        </div>
-                        <div className='text-sm'>
-                            <AvailableProducts />
-                        </div>
+        <div className='w-full grid grid-cols-2 border rounded-md bg-white p-2 min-h-screen drop-shadow-sm'>
+            <div className=''>
+                <div className='flex flex-col items-center'>
+                    <div className='font-semibold tracking-wider text-2xl bg-red-800 text-white w-full text-center'>
+                        Products
+                    </div>
+                    <div className='border border-red-800 w-full p-2'>
+                        <AvailableProducts />
                     </div>
                 </div>
-                <div className='border flex flex-col items-center'>
-                    <div className='text-2xl font-bold'>
-                        <SelectedProduct />
-                    </div>
-                    <div className=''>
-                        <div>
-                            <AvailableVariations/>
-                        </div>
-                    </div>
+                <div className=''>
+                    <SelectedProduct />
                 </div>
-                <div className='border'></div>
+                <div className=''>
+                    <AvailableVariations />
+                </div>
+            </div>
+            <div>
+                <div className='bg-red-800 border border-red-800 w-full text-2xl font-semibold text-white pl-5'>
+                    Editor
+                </div>
+                <div className='p-4'>
+                    <section className='w-full'>
+                        <div className='font-semibold'>
+                            Enter product name:
+                        </div>
+                        <div className='flex gap-2 items-center'>
+                            <div>
+                                <Input placeholder='New Product Name' className='h-10' />
+                            </div>
+                            <div>
+                                <button className='text-sm bg-slate-100 active:bg-green-50 hover:bg-slate-100/30 p-2 rounded drop-shadow-sm border'>Add Product</button>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
             </div>
         </div>
     )

@@ -17,15 +17,15 @@ const AvailableProducts = async (props: Props) => {
 
     return (
         <div>
-            <div>
+            <div className='grid grid-cols-3 justify-items-center gap-1'>
                 {
                     availableProducts.map((product: product) => {
                         return (
                             <div key={product.id}>
                                 <AvailableProductSelector product={product}>
-                                    <div className='flex gap-1'>
+                                    <div className='flex gap-1 items-center'>
                                         <div>
-                                            <Image src={`https://getpcsofts.info/wp-content/uploads/2023/09/JetBrains-DataGrip-Crack-300x202.png`} width={32} height={32} alt='image' />
+                                            <Image src={`https://getpcsofts.info/wp-content/uploads/2023/09/JetBrains-DataGrip-Crack-300x202.png`} className='w-16 h-16' width={32} height={32} alt='image' />
                                         </div>
                                         <div>
                                             {product.name}

@@ -37,9 +37,9 @@ const AvailableProductSelector = (props: Props) => {
     return (
         <div className='flex gap-1 items-center'>
             <div>
-                <div onClick={() => onClearClick()} className='bg-red-500 text-xs w-4 h-4 hover:scale-105 hover:drop-shadow-md transition-all cursor-pointer text-center rounded-full flex justify-center items-center text-white'>
+                {/* <div onClick={() => onClearClick()} className='bg-red-500 text-xs w-4 h-4 hover:scale-105 hover:drop-shadow-md transition-all cursor-pointer text-center rounded-full flex justify-center items-center text-white'>
                     -
-                </div>
+                </div> */}
             </div>
             <button onClick={() => onClickFunction()}>
                 {props.children}
