@@ -32,7 +32,6 @@ const page = (props: Props) => {
                 </div>
                 <div className='p-4'>
                     <CreateProductForm />
-
                 </div>
             </div>
         </div>

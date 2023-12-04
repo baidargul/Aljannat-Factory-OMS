@@ -73,7 +73,7 @@ const CreateProductForm = (props: Props) => {
             <div className={`relative flex justify-center items-center p-2 ${imageUrl !== '/none' ? "bg-gradient-to-b from-orange-50 to-amber-100" : "bg-gradient-to-b from-zinc-100 to-slate-300"}  border-slate-300 border drop-shadow-sm rounded-md`}>
                 {
                     imageUrl !== '/none' && (
-                        <button onClick={clearImage} className='bg-gradient-to-r from-red-500 to-orange-500 hover:tracking-wide active:tracking-tighter transition-all z-10 right-2 top-2 absolute text-white rounded-full w-fit px-3 p-1'>
+                        <button onClick={clearImage} className='bg-gradient-to-r from-red-500 to-orange-500 hover:tracking-wide active:tracking-tighter transition-all z-10 right-2 top-2 absolute text-white rounded-full w-fit px-3 p-1 scale-75'>
                             -
                         </button>
                     )

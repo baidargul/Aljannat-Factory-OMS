@@ -53,6 +53,7 @@ model product {
   id                String              @id @default(uuid())
   name              String              @unique
   index             Int                 @default(autoincrement())
+  imageUrl          String?
   ordersRegister    ordersRegister[]
   productVariations productVariations[]
 }
