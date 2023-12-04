@@ -30,7 +30,7 @@ const AvailableVariations = (props: Props) => {
 
 
     return (
-        <ScrollArea type='always' className='h-[300px] w-full border border-red-800 p-2'>
+        <ScrollArea type='always' className='h-[300px] w-full border-y border-zinc-800 p-2'>
             <div className='grid grid-cols-3 gap-1 justify-items-center justify-between w-full'>
                 {
                     selectedProduct?.productVariations.map((variation: productVariations) => {

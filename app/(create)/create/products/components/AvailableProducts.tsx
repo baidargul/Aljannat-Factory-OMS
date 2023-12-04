@@ -23,7 +23,7 @@ const AvailableProducts = async (props: Props) => {
     return (
         <div>
             <ScrollArea className='h-[200px]' type='always'>
-                <div className='grid grid-cols-3 gap-2'>
+                <div className='grid grid-cols-4 gap-1'>
                     {
                         availableProducts.map((product: any) => {
                             const productVariations: productVariations[] = product.productVariations

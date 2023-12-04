@@ -35,7 +35,7 @@ const SelectedProduct = (props: Props) => {
                 )
             } */}
 
-            <div className='font-semibold text-2xl bg-red-800 text-center text-white w-full'>
+            <div className='font-semibold text-2xl bg-gradient-to-t from-slate-600 to-slate-500 text-center text-white w-full'>
                 {selectedProduct ? selectedProduct.product.name : 'No Product Selected'}
             </div>
         </div>
