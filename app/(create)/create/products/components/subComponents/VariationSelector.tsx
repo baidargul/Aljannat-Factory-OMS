@@ -13,7 +13,7 @@ const VariationSelector = (props: Props) => {
     }
 
     return (
-        <button onClick={onClick} className='hover:bg-yellow-50 transition-all duration-1000 group'>
+        <button onClick={onClick} className='drop-shadow-md bg-gradient-to-r from-slate-50 to-slate-200 transition-all duration-1000 group'>
             <div>
                 {props.children}
             </div>

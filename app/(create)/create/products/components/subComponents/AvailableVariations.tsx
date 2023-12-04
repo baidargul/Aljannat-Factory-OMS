@@ -38,34 +38,34 @@ const AvailableVariations = (props: Props) => {
                         return (
                             <div>
                                 <VariationSelector>
-                                    <div key={variation.id} className='flex gap-1 items-center border p-1 rounded w-60'>
+                                    <div key={variation.id} className='flex justify-center gap-2 items-center border p-2 rounded w-60'>
 
-                                        <div>
-                                            <Image src={`https://getpcsofts.info/wp-content/uploads/2023/09/JetBrains-DataGrip-Crack-300x202.png`} width={65} height={65} className='w-24 h-24' alt='image' />
+                                        <div className='border border-white drop-shadow-sm group-hover:-rotate-1 transition-all'>
+                                            <Image src={`/Placeholders/question.png`} width={100} height={100} className='w-16 h-16 bg-background drop-shadow-none border-none' alt='image' />
                                         </div>
                                         <div>
-                                            <div className='font-semibold tracking-wide flex gap-1 items-center  group-hover:-mt-2 transition-all'>
+                                            <div className='font-semibold tracking-wide flex gap-1 items-center transition-all'>
                                                 <div>
-                                                    <div onClick={() => onClearClick()} className='bg-red-500 text-xs w-4 h-4 hover:scale-105 hover:drop-shadow-md transition-all cursor-pointer text-center rounded-full flex justify-center items-center text-white'>
+                                                    <div onClick={() => onClearClick()} className='bg-gradient-to-t from-red-700 to-red-500 text-xs w-4 h-4 hover:scale-105 hover:drop-shadow-md transition-all cursor-pointer text-center rounded-full flex justify-center items-center text-white'>
                                                         -
                                                     </div>
                                                 </div>
-                                                <div className='group-hover:tracking-widest transition-all duration-1000'>
+                                                <div className='transition-all duration-1000'>
                                                     {
                                                         variation.name
                                                     }
                                                 </div>
                                             </div>
-                                            <div className='flex gap-1 items-center text-xs group-hover:mt-2 transition-all'>
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <th className='border p-1 bg-slate-300'>Price</th>
-                                                            <th className='border p-1 bg-slate-300'>Weight</th>
-                                                            <th className='border p-1 bg-slate-300'>Unit</th>
+                                            <div className='flex gap-1 items-center text-xs transition-all'>
+                                                <table className='bg-gradient-to-t from-slate-100 to-gray-400'>
+                                                    <thead className='border border-slate-400'>
+                                                        <tr className=''>
+                                                            <th className='border p-1 bg-gradient-to-b from-slate-100 to-gray-400'>Price</th>
+                                                            <th className='border p-1 bg-gradient-to-b from-slate-100 to-gray-400'>Weight</th>
+                                                            <th className='border p-1 bg-gradient-to-b from-slate-100 to-gray-400'>Unit</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
+                                                    <tbody className='border border-slate-400'>
                                                         <tr className='w-44'>
                                                             <td className='border text-center justify-center'>{variation.defaultAmount}</td>
                                                             <td className='border text-center justify-center'>{Number(variation.defaultWeight)}</td>
