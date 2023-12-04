@@ -11,6 +11,7 @@ type Props = {}
 
 const CreateProductForm = (props: Props) => {
     const [productName, setProductName] = useState('')
+    const [fileName, setFileName] = useState('' as any)
     const [imageUrl, setImageUrl] = useState('/none')
     const [isDoing, setIsDoing] = useState(false)
     const router = useRouter()
@@ -31,13 +32,16 @@ const CreateProductForm = (props: Props) => {
 
             const data = {
                 name: productName,
-                image: imageUrl
+                image: imageUrl,
+                fileName: fileName
             }
             await axios.post(`/api/product/create/`, data).then(async (res) => {
                 const data = res.data
                 if (data.status === 200) {
                     toast.success(data.message)
                     setProductName('')
+                    setFileName('')
+                    setImageUrl('/none')
                     router.refresh()
                 } else {
                     toast.error(data.message)
@@ -65,6 +69,7 @@ const CreateProductForm = (props: Props) => {
     function setImage(imageEncoded: any, file: any) {
         setImageUrl(imageEncoded)
         setProductName(removeFileExtension(file.name))
+        setFileName(file.name)
     }
 
     return (

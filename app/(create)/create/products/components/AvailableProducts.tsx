@@ -32,7 +32,7 @@ const AvailableProducts = async (props: Props) => {
                                     <AvailableProductSelector product={product}>
                                         <div className='flex gap-1 items-center'>
                                             <div>
-                                                <Image src={`https://getpcsofts.info/wp-content/uploads/2023/09/JetBrains-DataGrip-Crack-300x202.png`} className='w-16 h-16' width={32} height={32} alt='image' />
+                                                <Image src={ product.imageUrl? product.imageUrl :  `/Placeholders/question.png`} className='w-16 h-16' width={32} height={32} alt='image' />
                                             </div>
                                             <div className='flex gap-1 items-center'>
                                                 <div>

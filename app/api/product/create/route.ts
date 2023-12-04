@@ -20,8 +20,7 @@ export async function POST(req: NextRequest) {
     try {
 
         const requested = await req.json()
-        const { name, image } = requested
-
+        const { name, image, fileName } = requested
         if (!name) {
             response.status = 400
             response.message = "Product name is required."
@@ -34,49 +33,6 @@ export async function POST(req: NextRequest) {
             response.message = "Image is required."
             response.data = null
             return new Response(JSON.stringify(response))
-        }
-
-        const bytes = await image.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-
-        // AWS configuration
-        const s3 = new AWS.S3({
-            accessKeyId: "AKIATIQPEIGEHWZIEOP3",
-            secretAccessKey: "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",
-            region: "ap-south-1",
-        });
-
-        // S3 parameters
-        const fileContent = buffer;
-        const params = {
-            Bucket: "aljannat/orderPortal/products",
-            Key: name,
-            Body: fileContent,
-        };
-
-        // Upload to S3
-        const result = await s3.upload(params).promise();
-        // Save to database
-        let fileUrl
-        fileUrl = result.Location;
-        const base64FileContent = fileContent.toString("base64");
-
-        const check = await prisma.product.findFirst({
-            where: {
-                name: name,
-            },
-        });
-
-        if (check) {
-            await prisma.product.update({
-                where: {
-                    id: check.id
-                },
-                data: {
-                    name: name,
-                    imageUrl: fileUrl
-                }
-            })
         }
 
         const isAlreadyExists = await prisma.product.findUnique({
@@ -92,9 +48,36 @@ export async function POST(req: NextRequest) {
             return new Response(JSON.stringify(response))
         }
 
+        // Decode base64 image data
+        const decodedImageData = Buffer.from(image.split(",")[1], "base64");
+
+        // AWS configuration
+        const s3 = new AWS.S3({
+            accessKeyId: "AKIATIQPEIGEHWZIEOP3",
+            secretAccessKey: "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",
+            region: "ap-south-1",
+        });
+
+        // S3 parameters
+        const fileContent = decodedImageData;
+        const fileType = name + `.` + fileExtension(fileName);
+        const params = {
+            Bucket: "aljannat/orderPortal/products",
+            Key: fileType,
+            Body: fileContent,
+        };
+
+        // Upload to S3
+        const result = await s3.upload(params).promise();
+        // Save to database
+        let fileUrl
+        fileUrl = result.Location;
+        const base64FileContent = fileContent.toString("base64");
+
         const newProduct = await prisma.product.create({
             data: {
-                name: name
+                name: name,
+                imageUrl: fileUrl
             }
         })
 
@@ -117,4 +100,8 @@ export async function POST(req: NextRequest) {
     response.status = 200
     response.message = "Product created!"
     return new Response(JSON.stringify(response))
+}
+
+function fileExtension(fileName: string) {
+    return String(fileName.split('.').pop());
 }
