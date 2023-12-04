@@ -31,14 +31,14 @@ const AvailableVariations = (props: Props) => {
 
     return (
         <ScrollArea type='always' className='h-[300px] w-full border-y border-zinc-800 p-2'>
-            <div className='grid grid-cols-3 gap-1 justify-items-center justify-between w-full'>
+            <div className='grid grid-cols-4 gap-1 justify-items-center justify-between w-full'>
                 {
                     selectedProduct?.productVariations.map((variation: productVariations) => {
 
                         return (
                             <div>
                                 <VariationSelector>
-                                    <div key={variation.id} className='flex gap-1 items-center border p-1 w-fit rounded'>
+                                    <div key={variation.id} className='flex gap-1 items-center border p-1 rounded w-60'>
 
                                         <div>
                                             <Image src={`https://getpcsofts.info/wp-content/uploads/2023/09/JetBrains-DataGrip-Crack-300x202.png`} width={65} height={65} className='w-24 h-24' alt='image' />
