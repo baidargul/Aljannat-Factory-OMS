@@ -38,7 +38,7 @@ const AvailableVariations = (props: Props) => {
                         return (
                             <div>
                                 <VariationSelector>
-                                    <div key={variation.id} className='flex justify-center gap-2 items-center border p-2 rounded w-60'>
+                                    <div key={variation.id} className='flex justify-center gap-2 items-center border border-slate-300 p-2 rounded w-60'>
 
                                         <div className='border border-white drop-shadow-sm group-hover:-rotate-1 transition-all'>
                                             <Image src={`/Placeholders/question.png`} width={100} height={100} className='w-16 h-16 bg-background drop-shadow-none border-none' alt='image' />

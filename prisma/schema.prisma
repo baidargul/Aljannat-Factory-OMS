@@ -81,7 +81,8 @@ model ordersRegister {
 model productVariations {
   id             String           @id @default(uuid())
   productId      String
-  name           String           @unique
+  name           String           
+  imageUrl       String?
   index          Int              @default(autoincrement())
   defaultWeight  String?          @default("1")
   defaultAmount  String?          @default("750")

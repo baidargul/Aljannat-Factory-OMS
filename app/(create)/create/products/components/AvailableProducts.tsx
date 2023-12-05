@@ -30,8 +30,8 @@ const AvailableProducts = async (props: Props) => {
                             return (
                                 <div key={product.id}>
                                     <AvailableProductSelector product={product}>
-                                        <div className='flex gap-1 items-center group bg-gradient-to-r from-slate-50 to-slate-200 drop-shadow-sm border border-slate-200 hover:border-slate-300 p-2 rounded w-60'>
-                                            <div className='border border-white drop-shadow-sm group-hover:-rotate-2 group-hover:scale-105 transition-all'>
+                                        <div className='flex gap-1 items-center group hover:drop-shadow-lg transition-all duration-1000 bg-gradient-to-r from-slate-50 to-slate-200 drop-shadow-sm border border-slate-200 hover:border-slate-300 p-2 rounded w-60'>
+                                            <div className='border border-white drop-shadow-sm group-hover: transition-all'>
                                                 <Image src={product.imageUrl ? product.imageUrl : `/Placeholders/question.png`} className='w-16 h-16 rounded' width={100} height={100} alt='image' />
                                             </div>
                                             <div className='flex flex-col items-start text-start'>
@@ -47,7 +47,6 @@ const AvailableProducts = async (props: Props) => {
                                                             {productVariations.length > 1 ? 'variations' : productVariations.length<1 ? "No variant" : 'variation'}
                                                         </div>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
