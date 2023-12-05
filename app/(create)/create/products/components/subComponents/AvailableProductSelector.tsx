@@ -3,7 +3,7 @@ import { useCreateProduct } from '@/hooks/useCreateProduct'
 import { product, productVariations } from '@prisma/client'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { toast } from 'sonner'
 
 type Props = {
@@ -12,6 +12,8 @@ type Props = {
 }
 
 const AvailableProductSelector = (props: Props) => {
+    const [isHovered, setIsHovered] = useState<boolean>(false)
+
     const router = useRouter()
     const productObj = useCreateProduct()
 
@@ -35,16 +37,9 @@ const AvailableProductSelector = (props: Props) => {
     }
 
     return (
-        <div className='flex gap-1 items-center'>
-            <div>
-                {/* <div onClick={() => onClearClick()} className='bg-red-500 text-xs w-4 h-4 hover:scale-105 hover:drop-shadow-md transition-all cursor-pointer text-center rounded-full flex justify-center items-center text-white'>
-                    -
-                </div> */}
-            </div>
-            <button onClick={() => onClickFunction()}>
-                {props.children}
-            </button>
-        </div>
+        <button onMouseOver={() => setIsHovered(true)} onMouseOut={() => setIsHovered(false)} className={`flex gap-1 items-center ${isHovered && "bg-gradient-to-br from-amber-50/30 to-orange-200/30"}`} onClick={() => onClickFunction()}>
+            {props.children}
+        </button>
     )
 }
 

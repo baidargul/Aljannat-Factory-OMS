@@ -31,7 +31,7 @@ const AvailableVariations = (props: Props) => {
 
     return (
         <ScrollArea type='always' className='h-[300px] w-full border-y border-zinc-800 p-2'>
-            <div className='grid grid-cols-4 gap-1 justify-items-center justify-between w-full'>
+            <div  className='grid grid-cols-4 gap-1 justify-items-center justify-between w-full'>
                 {
                     selectedProduct?.productVariations.map((variation: productVariations) => {
 
@@ -40,7 +40,7 @@ const AvailableVariations = (props: Props) => {
                                 <VariationSelector>
                                     <div key={variation.id} className='flex justify-center gap-2 items-center border border-slate-300 p-2 rounded w-60'>
 
-                                        <div className='border border-white drop-shadow-sm group-hover:-rotate-1 transition-all'>
+                                        <div className='border border-white drop-shadow-sm transition-all'>
                                             <Image src={`/Placeholders/question.png`} width={100} height={100} className='w-16 h-16 bg-background drop-shadow-none border-none' alt='image' />
                                         </div>
                                         <div>
@@ -65,7 +65,7 @@ const AvailableVariations = (props: Props) => {
                                                             <th className='border p-1 bg-gradient-to-b from-slate-100 to-gray-400'>Unit</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody className='border border-slate-400'>
+                                                    <tbody className={`border border-slate-400 transition-all duration-1000`}>
                                                         <tr className='w-44'>
                                                             <td className='border text-center justify-center'>{variation.defaultAmount}</td>
                                                             <td className='border text-center justify-center'>{Number(variation.defaultWeight)}</td>
