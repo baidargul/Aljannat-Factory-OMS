@@ -42,7 +42,9 @@ export async function POST(req: NextRequest) {
             return new Response(JSON.stringify(response))
         }
 
-        if (!weight) weight = 0
+        if (!weight) {
+            weight = 0
+        }
 
         if (!price) {
             price = 0

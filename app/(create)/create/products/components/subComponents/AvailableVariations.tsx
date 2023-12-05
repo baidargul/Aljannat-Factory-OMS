@@ -2,7 +2,7 @@
 import { useCreateProduct } from '@/hooks/useCreateProduct'
 import { product, productVariations } from '@prisma/client'
 import Image from 'next/image'
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import VariationSelector from './VariationSelector'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { PlusCircleIcon } from 'lucide-react'
