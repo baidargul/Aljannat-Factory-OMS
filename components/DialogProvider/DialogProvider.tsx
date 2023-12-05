@@ -9,19 +9,26 @@ import {
 
 import React from 'react'
 
-type Props = {}
+type Props = {
+    title?: string
+    description?: string
+    content?: React.ReactNode
+    children: React.ReactNode
+}
 
 const DialogProvider = (props: Props) => {
     return (
         <Dialog>
-            <DialogTrigger>Open</DialogTrigger>
+            <DialogTrigger>{props.children}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Are you sure absolutely sure?</DialogTitle>
+                    <DialogTitle>{props.title ? props.title : "Dialog title"}</DialogTitle>
                     <DialogDescription>
-                        This action cannot be undone. This will permanently delete your account
-                        and remove your data from our servers.
+                        {props.description && props.description}
                     </DialogDescription>
+                    <div>
+                        {props.content && props.content}
+                    </div>
                 </DialogHeader>
             </DialogContent>
         </Dialog>

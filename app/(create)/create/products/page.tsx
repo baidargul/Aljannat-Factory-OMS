@@ -3,6 +3,7 @@ import AvailableProducts from './components/AvailableProducts'
 import SelectedProduct from './components/SelectedProduct'
 import AvailableVariations from './components/subComponents/AvailableVariations'
 import CreateProductForm from './components/CreateProductForm'
+import DialogProvider from '@/components/DialogProvider/DialogProvider'
 
 type Props = {}
 
