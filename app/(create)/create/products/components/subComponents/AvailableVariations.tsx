@@ -7,7 +7,7 @@ import VariationSelector from './VariationSelector'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { PlusCircleIcon } from 'lucide-react'
 import DialogProvider from '@/components/DialogProvider/DialogProvider'
-import CreateProductForm from '../CreateProductForm'
+import CreateVariationForm from '../CreateVariationForm'
 
 type Props = {}
 
@@ -33,18 +33,19 @@ const AvailableVariations = (props: Props) => {
 
 
     return (
+        selectedProduct &&
         <ScrollArea type='always' className='h-[400px] w-full border-y border-zinc-800 p-2'>
             <div className='grid grid-cols-6 gap-1 justify-items-center justify-between w-full'>
                 {
                     selectedProduct?.productVariations.map((variation: productVariations) => {
 
                         return (
-                            <div>
+                            <div key={variation.id}>
                                 <VariationSelector>
                                     <div key={variation.id} className='flex justify-center gap-2 items-center border border-slate-300 p-2 rounded w-60'>
 
                                         <div className='border border-white drop-shadow-sm transition-all'>
-                                            <Image src={`/Placeholders/question.png`} width={100} height={100} className='w-16 h-16 bg-background drop-shadow-none border-none' alt='image' />
+                                            <Image src={variation.imageUrl ? variation.imageUrl : `/Placeholders/question.png`} width={100} height={100} className='w-16 h-16 bg-background drop-shadow-none border-none' alt='image' />
                                         </div>
                                         <div>
                                             <div className='font-semibold tracking-wide flex gap-1 items-center transition-all'>
@@ -53,7 +54,7 @@ const AvailableVariations = (props: Props) => {
                                                         -
                                                     </div>
                                                 </div>
-                                                <div className='transition-all duration-1000'>
+                                                <div className='transition-all duration-1000 w-24 text-ellipsis overflow-hidden whitespace-nowrap'>
                                                     {
                                                         variation.name
                                                     }
@@ -89,7 +90,7 @@ const AvailableVariations = (props: Props) => {
                 <div>
                     {selectedProduct &&
                         <div className='mt-[2px]'>
-                            <DialogProvider title='Create product' description='Specify product name and image.' content={<CreateProductForm />}>
+                            <DialogProvider title='Add new variation' description={`to ` + selectedProduct.product.name} content={<CreateVariationForm selectedProduct={selectedProduct.product.id} setSelectedProduct={setSelectedProduct} />}>
                                 {handleLastAddButton()}
                             </DialogProvider>
                         </div>
