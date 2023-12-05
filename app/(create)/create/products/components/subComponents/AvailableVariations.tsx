@@ -5,6 +5,9 @@ import Image from 'next/image'
 import React, { use, useEffect, useState } from 'react'
 import VariationSelector from './VariationSelector'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { PlusCircleIcon } from 'lucide-react'
+import DialogProvider from '@/components/DialogProvider/DialogProvider'
+import CreateProductForm from '../CreateProductForm'
 
 type Props = {}
 
@@ -30,8 +33,8 @@ const AvailableVariations = (props: Props) => {
 
 
     return (
-        <ScrollArea type='always' className='h-[300px] w-full border-y border-zinc-800 p-2'>
-            <div  className='grid grid-cols-4 gap-1 justify-items-center justify-between w-full'>
+        <ScrollArea type='always' className='h-[400px] w-full border-y border-zinc-800 p-2'>
+            <div className='grid grid-cols-6 gap-1 justify-items-center justify-between w-full'>
                 {
                     selectedProduct?.productVariations.map((variation: productVariations) => {
 
@@ -83,6 +86,15 @@ const AvailableVariations = (props: Props) => {
 
                     })
                 }
+                <div>
+                    {selectedProduct &&
+                        <div className='mt-[2px]'>
+                            <DialogProvider title='Create product' description='Specify product name and image.' content={<CreateProductForm />}>
+                                {handleLastAddButton()}
+                            </DialogProvider>
+                        </div>
+                    }
+                </div>
             </div>
         </ScrollArea>
     )
@@ -124,5 +136,14 @@ function LoadingSkeleton(variation: productVariations) {
             </div>
         </div>
 
+    )
+}
+
+function handleLastAddButton() {
+    return (
+        <div className='w-60 h-20 group hover: active:scale-90 transition-all bg-gradient-to-br from-amber-50 to-emerald-50 flex gap-1 justify-center items-center rounded-md border border-slate-300 hover:drop-shadow-sm'>
+            <PlusCircleIcon className='w-6 h-6 text-green-800 group-active:text-orange-400 transition-all duration-200' />
+            <p className='text-green-800 group-hover:tracking-wide group-active:text-orange-400 transition-all duration-200' >Add</p>
+        </div>
     )
 }

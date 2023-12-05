@@ -9,7 +9,7 @@ type Props = {}
 
 const page = (props: Props) => {
     return (
-        <div className='w-full flex gap-2 border rounded-md bg-white p-2 min-h-screen drop-shadow-sm'>
+        <div className='w-full grid grid-cols-1 border rounded-md bg-white p-2 min-h-screen drop-shadow-sm'>
             <div className='border border-zinc-800'>
                 <div className='flex flex-col items-center '>
                     <div className='font-semibold tracking-wider text-2xl bg-gradient-to-t from-slate-600 to-slate-500 text-white w-full text-center'>
@@ -26,14 +26,14 @@ const page = (props: Props) => {
                     <AvailableVariations />
                 </div>
             </div>
-            <div className='border border-zinc-800'>
+            {/* <div className='border border-zinc-800'>
                 <div className='bg-gradient-to-t from-slate-600 to-slate-500 w-full text-2xl font-semibold text-white pl-5'>
                     Editor
                 </div>
                 <div className='p-4'>
                     <CreateProductForm />
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

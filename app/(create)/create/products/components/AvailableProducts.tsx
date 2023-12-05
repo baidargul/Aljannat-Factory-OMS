@@ -4,6 +4,9 @@ import { product, productVariations } from '@prisma/client'
 import AvailableProductSelector from './subComponents/AvailableProductSelector'
 import Image from 'next/image'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { PlusCircleIcon } from 'lucide-react'
+import DialogProvider from '@/components/DialogProvider/DialogProvider'
+import CreateProductForm from './CreateProductForm'
 type Props = {}
 
 
@@ -22,10 +25,10 @@ const AvailableProducts = async (props: Props) => {
 
     return (
         <div>
-            <ScrollArea className='h-[200px]' type='always'>
+            <ScrollArea className='h-[300px]' type='always'>
                 <div className='grid grid-cols-4 gap-1'>
                     {
-                        availableProducts.map((product: any) => {
+                        availableProducts.map((product: any, index: number) => {
                             const productVariations: productVariations[] = product.productVariations
                             return (
                                 <div key={product.id}>
@@ -44,7 +47,7 @@ const AvailableProducts = async (props: Props) => {
                                                             {productVariations.length ? productVariations.length : 0}
                                                         </div>
                                                         <div>
-                                                            {productVariations.length > 1 ? 'variations' : productVariations.length<1 ? "No variant" : 'variation'}
+                                                            {productVariations.length > 1 ? 'variations' : productVariations.length < 1 ? "No variant" : 'variation'}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -55,6 +58,16 @@ const AvailableProducts = async (props: Props) => {
                             )
                         })
                     }
+                    <div>
+                        {
+                            <div className='mt-[1px]'>
+                                <DialogProvider title='Create product' description='Specify product name and image.' content={<CreateProductForm />}>
+                                    {handleLastAddButton()}
+                                </DialogProvider>
+                            </div>
+                        }
+                    </div>
+
                 </div>
             </ScrollArea>
         </div>
@@ -62,3 +75,12 @@ const AvailableProducts = async (props: Props) => {
 }
 
 export default AvailableProducts
+
+function handleLastAddButton() {
+    return (
+        <div className='w-60 h-20 group hover: active:scale-90 transition-all bg-gradient-to-br from-amber-50 to-emerald-50 flex gap-1 justify-center items-center rounded-md border border-slate-300 hover:drop-shadow-sm'>
+            <PlusCircleIcon className='w-6 h-6 text-green-800 group-active:text-orange-400 transition-all duration-200' />
+            <p className='text-green-800 group-hover:tracking-wide group-active:text-orange-400 transition-all duration-200' >Add</p>
+        </div>
+    )
+}
