@@ -41,11 +41,14 @@ const VariationSelector = (props: Props) => {
 
         setIsDoing(true)
         await axios.delete("/api/product/variations/remove", { data }).then(async (res) => {
-            if (res.status === 200) {
+            const result = await res.data
+            if (result.status === 200) {
                 toast.success('Successfully deleted', { duration: 3000 })
-                const newData = await res.data.data
+                const newData = await result.data.data
                 props.setSelectedProduct(newData)
                 router.refresh()
+            } else {
+                toast.error(result.message, { duration: 3000 })
             }
         }).catch((error) => {
             toast.error(`${error.message}, ${error}`, { duration: 3000 })

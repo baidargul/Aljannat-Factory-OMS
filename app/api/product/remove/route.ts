@@ -49,7 +49,7 @@ export async function DELETE(req: NextRequest) {
 
         if (isExists.length > 0) {
             response.status = 400,
-                response.message = "Product has variations. Please remove variations first."
+            response.message = "Product has variations. Please remove variations first."
             response.data = null
             return new Response(JSON.stringify(response))
         }
