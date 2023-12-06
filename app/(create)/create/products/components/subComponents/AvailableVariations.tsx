@@ -75,7 +75,7 @@ const AvailableVariations = (props: Props) => {
                     })
                 }
                 <div>
-                    {selectedProduct &&
+                    {selectedProduct && 
                         <div className=''>
                             <DialogProvider title='Add new variation' description={`to ` + selectedProduct.product.name} content={<CreateVariationForm selectedProduct={selectedProduct.product.id} setSelectedProduct={setSelectedProduct} />}>
                                 {handleLastAddButton()}
