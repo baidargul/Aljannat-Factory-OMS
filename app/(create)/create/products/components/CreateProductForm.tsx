@@ -87,23 +87,23 @@ const CreateProductForm = (props: Props) => {
                     <Image key={imageUrl} src={imageUrl !== '/none' ? imageUrl : "/Placeholders/question.png"} width={800} height={800} className={`w-36 h-36 rounded border border-white drop-shadow-lg ${!imageUrl && "hidden"}`} alt='image' />
                 </div>
             </div>
-
-            <div>
-                <div className='font-semibold'>
-                    Enter product name:
-                </div>
-                <div>
-                    <Input placeholder='New Product Name' className='h-10' value={productName} onChange={(e: any) => { setProductName(e.target.value) }} />
-                </div>
-            </div>
             <div className='flex gap-2'>
                 <div>
                     <UploadImageButton setImageUrl={setImage} />
                 </div>
                 <div>
-                    <button onClick={() => createProduct()} className={`text-sm w-32 bg-slate-100 active:bg-green-50 hover:bg-slate-100/30 p-2 rounded drop-shadow-sm border transition-all ${isDoing && "bg-gradient-to-r from-teal-400 to-yellow-200 cursor-not-allowed text-red-500"}`}>{isDoing ? "Please wait..." : "Add Product"}</button>
+                    <button disabled={isDoing} onClick={() => createProduct()} className={`text-sm w-32 bg-slate-100 active:bg-green-50 hover:bg-slate-100/30 p-2 rounded drop-shadow-sm border transition-all ${isDoing && "bg-gradient-to-r from-teal-400 to-yellow-200 cursor-not-allowed text-red-500"}`}>{isDoing ? "Please wait..." : "Add Product"}</button>
                 </div>
             </div>
+            <div>
+                <div className='font-semibold'>
+                    Enter product name:
+                </div>
+                <div>
+                    <Input disabled={isDoing} placeholder='New Product Name' className='h-10' value={productName} onChange={(e: any) => { setProductName(e.target.value) }} />
+                </div>
+            </div>
+            
         </section>
     )
 }
