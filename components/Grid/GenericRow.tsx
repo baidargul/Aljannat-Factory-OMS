@@ -50,7 +50,7 @@ const GenericRow = (props: Props) => {
   function DataRow() {
     return (
       <div
-        className={`p-2 w-full hover:bg-yellow-50 justify-items-start grid grid-cols-10 items-center text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
+        className={`p-2 w-full ${!props.disabled && "hover:bg-yellow-50 cursor-pointer"} cursor-default justify-items-start grid grid-cols-10 items-center text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
         onClick={handleRowClick}
       >
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis opacity-40">
