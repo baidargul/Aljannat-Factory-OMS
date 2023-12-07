@@ -40,6 +40,9 @@ const POSItem = (props: Props) => {
                             })
                         }
                     </div>
+                    <div className='text-xs opacity-70'>
+                        {props.product.productVariations.length>1 ? props.product.productVariations.length + ' variants.' : props.product.productVariations.length + ' variant.'}
+                    </div>
                 </div>
             </div>
         </div>
