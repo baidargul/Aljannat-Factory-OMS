@@ -22,7 +22,7 @@ const POSItem = (props: Props) => {
     return (
         <div onClick={handleItemClick} className='p-2 bg-slate-200 border-slate-300 hover:bg-slate-100 hover:border-slate-300 active:bg-slate-300 border'>
             <div className='flex gap-2'>
-                <Image className='rounded-md' src={props.product.imageUrl? props.product.imageUrl : '/Placeholders/question.png'} alt={props.product.name} width={80} height={80} />
+                <Image className='rounded-md w-16 h-16' src={props.product.imageUrl? props.product.imageUrl : '/Placeholders/question.png'} alt={props.product.name} width={80} height={80} />
                 <div>
                     <div className='text-md uppercase tracking-wide font-semibold w-32 text-ellipsis overflow-hidden whitespace-nowrap'>
                         {formalizeText(props.product.name)}

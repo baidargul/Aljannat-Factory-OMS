@@ -18,7 +18,7 @@ const POSItemsHolder = ({ products, selectedProduct, setSelectedProduct }: Props
 
   return (
     <>
-      <div className='bg-red-800 text-white p-2'>Products</div>
+      <div className='bg-zinc-800 text-white p-2'>Products</div>
       <ScrollArea className={`${selectedProduct ? 'hidden' : 'h-[600px]'}  p-2 pr-4`} type='always'>
         <div className={`grid grid-cols-2 ${selectedProduct && 'hidden'}`}>
           {products.map((product: any) => (

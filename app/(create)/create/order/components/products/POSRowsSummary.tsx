@@ -19,7 +19,7 @@ const POSRowsSummary = (props: Props) => {
     },[props.isChanged, POS, props])
 
     return (
-        <div className='flex justify-between items-center p-2 bg-red-800 text-white text-sm'>
+        <div className='flex justify-between items-center p-2 bg-zinc-800 text-white text-sm'>
             <div>
                 Items: {POS.products.length} ({POS.getTotalWeight()} kg)
             </div>

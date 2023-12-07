@@ -24,14 +24,14 @@ const POSOrderRowHolder = (props: Props) => {
             {
                 POS.products && (
                     <div className=' bg-slate-200 p-2 min-h-screen flex flex-col'>
-                        <div className='grid grid-cols-5 items-center gap-2 bg-red-800 text-white p-2 font-semibold'>
+                        <div className='grid grid-cols-5 items-center gap-2 bg-zinc-800 text-white p-2 font-semibold'>
                             <p>#</p>
                             <p>Product</p>
                             <p>Variation</p>
                             <p>Weight (KG)</p>
                             <p>Amount</p>
                         </div>
-                        <div className='border border-red-800/40'>
+                        <div className='border border-zinc-800/40'>
                             <ScrollArea className='h-[500px]'>
                                 {
                                     POS.products.map((item: any, index: number) => {
