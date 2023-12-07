@@ -30,6 +30,10 @@ const GenericRow = (props: Props) => {
     setRow(newRow);
   }
 
+  // useEffect(() => {
+  //   console.log(`Row:`, row)
+  // }, [row])
+
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -56,7 +60,7 @@ const GenericRow = (props: Props) => {
             {new Date(row.createdAt).toDateString()}
           </div>
           <div className="flex gap-1 text-slate-400 text-xs scale-90 -ml-1">
-           <div>{timeLapsed && "Created" }</div>
+            <div>{timeLapsed && "Created"}</div>
             <div>
               {
                 timeLapsed && `${timeLapsed} ago`
@@ -66,7 +70,7 @@ const GenericRow = (props: Props) => {
         </div>
         <div className="ml-auto mr-auto">
           <ToolTipProvider content={String(new Date(row.dateOfDelivery).toDateString())}>
-            <div className={`overflow-hidden whitespace-nowrap text-ellipsis ${getDeliveryDateDifference(row.dateOfDelivery)==="Yesterday" || Number(getDeliveryDateDifference(row.dateOfDelivery)) <1 ? "text-red-800 opacity-40 font-semibold tracking-tight": ""}`}>
+            <div className={`overflow-hidden whitespace-nowrap text-ellipsis ${getDeliveryDateDifference(row.dateOfDelivery) === "Yesterday" || Number(getDeliveryDateDifference(row.dateOfDelivery)) < 1 ? "text-red-800 opacity-40 font-semibold tracking-tight" : ""}`}>
               {
                 getDeliveryDateDifference(row.dateOfDelivery)
               }
@@ -372,10 +376,16 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
     }
 
     setIsWorking(true)
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
-      setOtherNote("")
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
     setIsWorking(false)
   }
@@ -390,13 +400,27 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
 
     setIsWorking(true)
     const status = Status.VERIFIEDORDER
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
     setIsWorking(false)
   }
@@ -410,13 +434,27 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
 
     setIsWorking(true)
     const status = Status.VERIFIEDORDER
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
     setIsWorking(false)
   }
@@ -430,13 +468,27 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
 
     setIsWorking(true)
     const status = Status.VERIFIEDORDER
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
     setIsWorking(false)
   }
@@ -450,13 +502,27 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
 
     setIsWorking(true)
     const status = Status.CANCELLED
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
     setIsWorking(false)
   }
@@ -486,13 +552,27 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
         break;
     }
 
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
     setIsWorking(false)
   }
@@ -713,10 +793,17 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
     }
 
     setIsWorking(true)
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
-      setOtherNote("")
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      console.log(response)
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
     setIsWorking(false)
   }
@@ -735,14 +822,26 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
       const data = res.data.data
       updateRow(data)
     });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
 
-    await axios.post("/api/order/dispatch/MnP/book", { userId, row }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.post("/api/order/dispatch/MnP/book", { userId, row }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     })
 
     toast.success("Order ready to be dispatch towards M&P")
@@ -778,13 +877,25 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
 
     setIsWorking(true)
     const status = Status.READYTODISPATCH
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
     setIsWorking(false)
   }
@@ -798,13 +909,26 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
 
     setIsWorking(true)
     const status = Status.READYTODISPATCH
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
       const data = res.data.data
-      updateRow(data)
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
     setIsWorking(false)
   }
@@ -834,13 +958,26 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
         break;
     }
 
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
+
     });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
     });
     setIsWorking(false)
   }

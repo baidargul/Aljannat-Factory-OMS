@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { Role } from "@prisma/client";
 import { NextRequest } from "next/server";
 import { v4 } from "uuid";
 
@@ -22,6 +23,13 @@ export async function PATCH(req: NextRequest) {
 
         const { orderId, note, userId } = data
 
+        if (!userId) {
+            response.status = 400
+            response.message = "User ID is required"
+            response.data = null
+            return new Response(JSON.stringify(response))
+        }
+
         if (!orderId) {
             response.status = 400
             response.message = "Order ID is required"
@@ -32,6 +40,69 @@ export async function PATCH(req: NextRequest) {
         if (!note) {
             response.status = 400
             response.message = "Notes are required"
+            response.data = null
+            return new Response(JSON.stringify(response))
+        }
+
+        const user = await prisma.profile.findUnique({
+            where: {
+                userId: userId
+            }
+        })
+
+        if (!user) {
+            response.status = 400
+            response.message = "Session not verified, please login again."
+            response.data = null
+            return new Response(JSON.stringify(response))
+        }
+
+        const previousOrderUser = await prisma.orders.findUnique({
+            where: {
+                id: orderId
+            },
+            include: {
+                profile: true
+            }
+        })
+
+        if (!previousOrderUser) {
+            response.status = 400
+            response.message = "Order not found in the database"
+            response.data = null
+            return new Response(JSON.stringify(response))
+        }
+
+        if (previousOrderUser.profile) {
+            if (previousOrderUser.profile.userId !== userId) {
+                const previousRole = previousOrderUser.profile.role
+                const currentRole = user.role
+
+                const roleStatus = getRoleStatus(currentRole, previousRole)
+
+                if (roleStatus === "down") {
+                    response.status = 400
+                    response.message = "Order has been processed and forwarded to the next department, you cannot edit this order"
+                    response.data = null
+                    return new Response(JSON.stringify(response))
+                    
+                } else if (roleStatus === "up") {
+                    response.status = 400
+                    response.message = "Order is being processed by a higher department, you cannot edit this order"
+                    response.data = null
+                    return new Response(JSON.stringify(response))
+                } else {
+                    // same
+                    response.status = 400
+                    response.message = "Order is under your department, but assigned to another user, you cannot edit this order"
+                    response.data = null
+                    return new Response(JSON.stringify(response))
+                }
+
+            }
+        } else {
+            response.status = 400
+            response.message = "No previous author found for this order, please contact support"
             response.data = null
             return new Response(JSON.stringify(response))
         }
@@ -70,7 +141,8 @@ export async function PATCH(req: NextRequest) {
                 id: orderId
             },
             data: {
-                noteId: newNote.id
+                noteId: newNote.id,
+                userId: userId
             }
         })
 
@@ -106,7 +178,7 @@ export async function PATCH(req: NextRequest) {
         });
 
         response.status = 200
-        response.message = "Success, order note created"
+        response.message = "Success, order updated"
         response.data = freshOrder
 
     } catch (error) {
@@ -116,4 +188,30 @@ export async function PATCH(req: NextRequest) {
         response.data = null
     }
     return new Response(JSON.stringify(response))
+}
+
+function getRoleStatus(currentRole: Role, previousRole: Role) {
+    let reply = ""
+    const ranks = {
+        [Role.SUPERADMIN]: 1,
+        [Role.ADMIN]: 2,
+        [Role.MANAGER]: 3,
+        [Role.ORDERBOOKER]: 4,
+        [Role.ORDERVERIFIER]: 5,
+        [Role.PAYMENTVERIFIER]: 6,
+        [Role.DISPATCHER]: 7,
+        [Role.UNVERIFIED]: 8,
+    }
+
+    const currentUserRank = ranks[currentRole]
+    const previousUserRank = ranks[previousRole]
+
+    if (currentUserRank < previousUserRank) {
+        reply = "down"
+    } else if (currentUserRank > previousUserRank) {
+        reply = "up"
+    } else {
+        reply = "same"
+    }
+    return reply
 }
