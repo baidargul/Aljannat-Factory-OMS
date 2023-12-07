@@ -21,7 +21,6 @@ const page = async (props: Props) => {
     return (
         <div className={`flex flex-col gap-2 justify-center items-center p-4 cursor-default`}>
             <div className="w-full">
-
                 <div>
                     <GenericGrid orders={orders} />
                 </div>

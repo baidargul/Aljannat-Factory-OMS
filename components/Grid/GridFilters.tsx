@@ -9,6 +9,9 @@ import { Role, Status } from '@prisma/client'
 import { v4 } from 'uuid'
 import { CalendarCheck, CalendarDays, Clock12, Clock2, Dot, Tally5, Truck, User } from 'lucide-react'
 import ToolTipProvider from '../ToolTipProvider/ToolTipProvider'
+import axios from 'axios'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 type Props = {
     orders: any
@@ -26,7 +29,28 @@ const GridWithFilters = (props: Props) => {
     const [fromDate, setFromDate] = React.useState(new Date())
     const [toDate, setToDate] = React.useState(new Date())
     const [cityFilter, setCityFilter] = React.useState(null)
+    const [orders, setOrders] = React.useState(props.orders)
+    const router = useRouter()
 
+    async function getOrders(setOrders: any, router: any) {
+        let response = null;
+
+        await axios.get('/api/order/all').then(async (res) => {
+            response = await res.data;
+            if (response.status === 200) {
+                setOrders(response.data)
+            } else {
+                toast.error(response.message)
+                router.push('/')
+            }
+        })
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            getOrders(setOrders, router)
+        }, 15000);
+    }, [getOrders, router])
 
     useEffect(() => {
         setIsMounted(true)
@@ -46,7 +70,7 @@ const GridWithFilters = (props: Props) => {
         totalDays = Math.floor((toDate.getTime() - fromDate.getTime()) / (1000 * 3600 * 24));
     }
 
-    props.orders.map((order: any) => {
+    orders.map((order: any) => {
 
         order.ordersRegister.map((register: any) => {
             const orderDate = new Date(order.dateOfBooking);
@@ -147,7 +171,7 @@ const GridWithFilters = (props: Props) => {
                 <ScrollArea className='w-full h-[550px]'>
                     <div className='w-full'>
                         {
-                            fromDate && toDate && props.orders.length > 0 && props.orders.map((row: any, index: number) => {
+                            fromDate && toDate && orders.length > 0 && orders.map((row: any, index: number) => {
                                 let stage = getStage(props.profile.role) || 'orderVerification';
                                 switch (props.profile.role.toLocaleUpperCase()) {
                                     case Role.ADMIN:
@@ -200,9 +224,11 @@ const GridWithFilters = (props: Props) => {
                                 if (String(row.customers.city).toLocaleLowerCase() !== String(cityFilter).toLocaleLowerCase() && cityFilter !== null) {
                                     return null
                                 }
+
+                                const forNotThisUser = props.profile.userId !== row.userId;
                                 return (
-                                    <div key={v4()} className=''>
-                                        <GenericRow stage={stage} row={row} index={index} profile={props.profile} />
+                                    <div key={v4()} className={forNotThisUser ? "line-through opacity-30" : ""}>
+                                        <GenericRow stage={stage} row={row} index={index} profile={props.profile} disabled={forNotThisUser} />
                                     </div>
                                 )
                             })
@@ -253,3 +279,5 @@ function getStage(role: Role) {
             break;
     }
 }
+
+

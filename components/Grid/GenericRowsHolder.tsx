@@ -105,7 +105,6 @@ function getStage(role: Role) {
 
         case Role.ORDERBOOKER:
             return 'Order Booker'
-            break;
 
         case Role.ORDERVERIFIER:
             return 'Order Verifier'
@@ -115,7 +114,9 @@ function getStage(role: Role) {
         case Role.DISPATCHER:
             return 'Dispatcher'
         case Role.SUPERADMIN:
-            break;
+            return 'Super Admin'
+        case Role.UNVERIFIED:
+            return 'Unverified'
 
         default:
             break;
