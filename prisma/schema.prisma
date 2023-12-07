@@ -82,11 +82,11 @@ model productVariations {
   id             String           @id @default(uuid())
   productId      String
   name           String
-  imageUrl       String?
   index          Int              @default(autoincrement())
-  defaultWeight  Int?             @default(1)
-  defaultAmount  Int?             @default(750)
   defaultUnit    String?          @default("kg")
+  imageUrl       String?
+  defaultWeight  Float?           @default(1) @db.Real
+  defaultAmount  Int?             @default(750)
   ordersRegister ordersRegister[]
   product        product          @relation(fields: [productId], references: [id], onDelete: Cascade, map: "productId")
 }

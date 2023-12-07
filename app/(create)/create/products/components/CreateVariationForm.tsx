@@ -110,6 +110,18 @@ const CreateVariationForm = (props: Props) => {
         setFileName(file.name)
     }
 
+    function increaseWeight() {
+        setWeight(weight + 0.25)
+    }
+
+    function decreaseWeight() {
+        if (weight > 0.25) {
+            setWeight(weight - 0.25)
+        } else{
+            setWeight(0.25)
+        }
+    }
+
     return (
         <section className='w-fit flex flex-col gap-2'>
 
@@ -145,8 +157,10 @@ const CreateVariationForm = (props: Props) => {
                 <div className='font-semibold'>
                     Default weight
                 </div>
-                <div>
+                <div className='flex gap-1'>
                     <Input disabled={isDoing} placeholder='0.5' type='number' className='h-10' value={weight} onChange={(e: any) => { setWeight(e.target.value) }} />
+                    <button disabled={isDoing} onClick={() => increaseWeight()} className={`text-sm w-32 bg-slate-100 active:bg-green-50 hover:bg-slate-100/30 p-2 rounded drop-shadow-sm border transition-all ${isDoing && "animate-ping cursor-not-allowed text-red-500"}`}>{isDoing ? "x" : "+"}</button>
+                    <button disabled={isDoing} onClick={() => decreaseWeight()} className={`text-sm w-32 bg-slate-100 active:bg-green-50 hover:bg-slate-100/30 p-2 rounded drop-shadow-sm border transition-all ${isDoing && "animate-ping cursor-not-allowed text-red-500"}`}>{isDoing ? "x" : "-"}</button>
                 </div>
             </div>
             <div>
@@ -162,7 +176,7 @@ const CreateVariationForm = (props: Props) => {
                     Unit
                 </div>
                 <div>
-                    <Input disabled={isDoing}  placeholder='kg' className='h-10' value={unit} onChange={(e: any) => { setUnit(e.target.value) }} />
+                    <Input disabled={isDoing} placeholder='kg' className='h-10' value={unit} onChange={(e: any) => { setUnit(e.target.value) }} />
                 </div>
             </div>
 
