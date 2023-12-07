@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
         const isAlreadyExists = await prisma.product.findUnique({
             where: {
-                name
+                name: String(name).toLocaleLowerCase()
             }
         })
 
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
 
         // S3 parameters
         const fileContent = decodedImageData;
-        const fileType = name + `.` + fileExtension(fileName);
+        const fileType = String(name).toLocaleLowerCase() + `.` + fileExtension(fileName);
         const params = {
             Bucket: "aljannat/orderPortal/products",
             Key: fileType,
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
 
         const newProduct = await prisma.product.create({
             data: {
-                name: name,
+                name: String(name).toLocaleLowerCase(),
                 imageUrl: fileUrl
             }
         })

@@ -49,7 +49,7 @@ export async function DELETE(req: NextRequest) {
         const variant = await prisma.productVariations.findFirst({
             where: {
                 productId: product.id,
-                name: name
+                name: String(name).toLocaleLowerCase()
             }
         })
 

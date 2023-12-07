@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
 
         isExists = await prisma.productVariations.findFirst({
             where: {
-                name: name,
+                name: String(name).toLocaleLowerCase(),
                 productId: productId
             }
         })
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
 
         // S3 parameters
         const fileContent = decodedImageData;
-        const fileType = name + `.` + fileExtension(fileName);
+        const fileType = String(name).toLocaleLowerCase() + `.` + fileExtension(fileName);
         const params = {
             Bucket: "aljannat/orderPortal/products/variants",
             Key: fileType,
@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
 
         const newVariant = await prisma.productVariations.create({
             data: {
-                name: name,
+                name: String(name).toLocaleLowerCase(),
                 imageUrl: fileUrl,
                 defaultWeight: Number(weight),
                 defaultAmount: Number(price),
