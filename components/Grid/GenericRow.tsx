@@ -9,7 +9,6 @@ import PopoverProvider from "../Popover/PopoverProvider";
 import { Status } from "@prisma/client";
 import { v4 } from "uuid";
 import { toast } from "sonner";
-import { CaseLower, MousePointerClick } from "lucide-react";
 
 type Props = {
   row: any;
@@ -27,7 +26,6 @@ const GenericRow = (props: Props) => {
   const handleRowClick = () => {
     setSelectedOrder(row);
   };
-
   function updateRow(newRow: any) {
     setRow(newRow);
   }
@@ -97,7 +95,7 @@ const GenericRow = (props: Props) => {
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
           Rs {rowTotalAmount}
         </div>
-        <ToolTipProvider content={String(row.orderNotes[0].note)}>
+        <ToolTipProvider content={String(row.orderNotes ? row.orderNotes[0].note : "")}>
           <div className="flex flex-col items-center ">
             <div>
               {row.orderNotes.length > 1 ? (
@@ -977,32 +975,28 @@ function getTimeLapsed(targetDateTime: any) {
 function getDeliveryDateDifference(targetDateTime: any) {
   const target = new Date(targetDateTime);
   const now = new Date();
-  const diff = target.getTime() - now.getTime();
-  if (diff < 0) {
-    const diffInDays = diff / (1000 * 3600 * 24);
-    if (Math.floor(diffInDays) * -1 === 1) {
-      return "Yesterday"
-    }
-    return `${Math.floor(diffInDays) * -1}d ago`;
-  }
-  const diffInSeconds = diff / 1000;
-  const diffInMinutes = diffInSeconds / 60;
-  const diffInHours = diffInMinutes / 60;
-  const diffInDays = diffInHours / 24;
-  const diffInMonths = diffInDays / 30; // Assuming an average month length of 30 days
-  const diffInYears = diffInDays / 365; // Assuming a year has 365 days
+  const diff = now.getTime() - target.getTime();
 
-  if (diffInYears >= 1) {
-    return `${Math.floor(diffInYears)}y`;
-  } else if (diffInMonths >= 1) {
-    return `${Math.floor(diffInMonths)}mo`;
-  } else if (diffInDays >= 1) {
-    return `${Math.floor(diffInDays)}d`;
-  } else if (diffInHours >= 1) {
-    return `${Math.floor(diffInHours)}h`;
-  } else if (diffInMinutes >= 1) {
-    return `${Math.floor(diffInMinutes)}m`;
+  const diffInSeconds = Math.floor(diff / 1000);
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  const diffInDays = Math.floor(diffInHours / 24);
+
+  if (diffInDays === 0) {
+    return "Today";
+  } else if (diffInDays === 1) {
+    return "Yesterday";
+  } else if (diffInDays < 7) {
+    return `${diffInDays} days ago`;
+  } else if (diffInDays < 30) {
+    const weeks = Math.floor(diffInDays / 7);
+    return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
+  } else if (diffInDays < 365) {
+    const months = Math.floor(diffInDays / 30);
+    return months === 1 ? "1 month ago" : `${months} months ago`;
   } else {
-    return `${Math.floor(diffInSeconds)}s`;
+    const years = Math.floor(diffInDays / 365);
+    return years === 1 ? "1 year ago" : `${years} years ago`;
   }
 }
+
