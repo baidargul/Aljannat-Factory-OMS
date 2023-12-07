@@ -48,6 +48,7 @@ const POSHolder = (props: Props) => {
     const handleSearch = async (phone: string) => {
         setIsLoading(true);
         if (phone === '00000000001') {
+            setIsLoading(false);
             return;
         }
 
@@ -56,6 +57,7 @@ const POSHolder = (props: Props) => {
 
             if (response.status === 404) {
                 toast.error(response.message);
+                setIsLoading(false);
                 return;
             }
 
@@ -63,6 +65,7 @@ const POSHolder = (props: Props) => {
                 setCustomer(response.data);
                 toast.success(response.message);
             } else {
+                toast.warning(response.message);
                 setCustomer(null);
             }
         } catch (error: any) {
