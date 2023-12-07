@@ -49,7 +49,7 @@ const GridWithFilters = (props: Props) => {
     useEffect(() => {
         setTimeout(() => {
             getOrders(setOrders, router)
-        }, 15000);
+        }, 30000);
     }, [getOrders, router])
 
     useEffect(() => {
@@ -224,10 +224,12 @@ const GridWithFilters = (props: Props) => {
                                 if (String(row.customers.city).toLocaleLowerCase() !== String(cityFilter).toLocaleLowerCase() && cityFilter !== null) {
                                     return null
                                 }
-
                                 const forNotThisUser = props.profile.userId !== row.userId;
+
+
+
                                 return (
-                                    <div key={v4()} className={forNotThisUser ? "line-through opacity-30" : ""}>
+                                    <div key={v4()} className={`${forNotThisUser && "opacity-30"}`}>
                                         <GenericRow stage={stage} row={row} index={index} profile={props.profile} disabled={forNotThisUser} />
                                     </div>
                                 )
