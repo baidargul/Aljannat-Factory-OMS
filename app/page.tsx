@@ -1,54 +1,18 @@
-import UploadButton from "@/components/File/UploadButton"
-import GenericGrid from "@/components/Grid/GenericGrid";
-import prisma from "@/lib/prisma"
 import { initialProfile } from "@/lib/initial-profile"
+import { redirectToSignIn } from "@clerk/nextjs";
+import { Role, profile } from "@prisma/client";
+import { redirect } from "next/navigation";
 export default async function Home() {
-
-  const orders = await getOrders()
-  const profile = await initialProfile();
-
+  const profile: profile = await initialProfile();
+  if (!profile) redirectToSignIn();
+  if(profile.role === Role.UNVERIFIED) redirect(`/home/unverified/${profile.userId}`)
 
 
   return (
-    <div className={`flex flex-col gap-2 justify-center items-center p-4 cursor-default`}>
-      <div className="w-full">
-
-        <div>
-          <GenericGrid orders={orders} />
-        </div>
-
+    <div className={`flex select-none gap-2 justify-center items-center min-h-screen p-4 cursor-default`}>
+      <div className="">
+        HomePage
       </div>
     </div>
   );
-}
-
-
-async function getOrders() {
-
-  const orders = await prisma.orders.findMany({
-    include: {
-      customers: true,
-      profile: true,
-      ordersRegister: {
-        include: {
-          productVariations: {
-            select: {
-              name: true,
-              defaultUnit: true,
-            }
-          },
-          product: {
-            select: {
-              id: true,
-              name: true,
-            }
-          },
-        }
-      }
-    },
-    orderBy: {
-      dateOfBooking: "desc"
-    }
-  });
-  return orders
 }

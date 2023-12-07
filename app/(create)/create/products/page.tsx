@@ -4,10 +4,21 @@ import SelectedProduct from './components/SelectedProduct'
 import AvailableVariations from './components/subComponents/AvailableVariations'
 import CreateProductForm from './components/CreateProductForm'
 import DialogProvider from '@/components/DialogProvider/DialogProvider'
+import currentProfile from '@/lib/current-profile'
+import { redirectToSignIn } from '@clerk/nextjs'
+import { Role } from '@prisma/client'
+import { redirect } from 'next/navigation'
 
 type Props = {}
 
-const page = (props: Props) => {
+const page = async (props: Props) => {
+    const profile = await currentProfile()
+    if (!profile) {
+        redirectToSignIn()
+    } else {
+        if (profile.role === Role.UNVERIFIED) redirect(`/home/unverified/${profile.userId}`)
+    }
+
     return (
         <div className='w-full grid grid-cols-1 border rounded-md bg-white p-2 min-h-screen drop-shadow-sm'>
             <div className='border border-zinc-800'>

@@ -3,6 +3,7 @@ import { redirectToSignIn } from '@clerk/nextjs'
 import { Role } from '@prisma/client'
 import { Scan } from 'lucide-react'
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 import React from 'react'
 import { v4 } from 'uuid'
 
@@ -12,6 +13,8 @@ const UserAccount = async (props: Props) => {
     const profile = await currentProfile()
     if (!profile) {
         redirectToSignIn()
+    } else {
+        if (profile.role === Role.UNVERIFIED) redirect(`/home/unverified/${profile.userId}`)
     }
 
 
