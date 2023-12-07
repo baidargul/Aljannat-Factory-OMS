@@ -54,6 +54,19 @@ export async function DELETE(req: NextRequest) {
             return new Response(JSON.stringify(response))
         }
 
+        const orders = await prisma.ordersRegister.findMany({
+            where: {
+                productId: product.id
+            },
+        })
+
+        if (orders) {
+            response.status = 400,
+            response.message = "Product is being used in" + orders.length + "orders. Please remove the product from the orders first."
+            response.data = null
+            return new Response(JSON.stringify(response))
+        }
+
         await prisma.product.delete({
             where: {
                 id: product.id

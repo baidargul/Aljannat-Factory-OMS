@@ -60,6 +60,19 @@ export async function DELETE(req: NextRequest) {
             return new Response(JSON.stringify(response))
         }
 
+        const orders = await prisma.ordersRegister.findMany({
+            where: {
+                variantId: variant.id
+            },
+        })
+
+        if (orders) {
+            response.status = 400,
+            response.message = "Variant is being used in" + orders.length + "orders. Please remove the variant from the orders first."
+            response.data = null
+            return new Response(JSON.stringify(response))
+        }
+
         await prisma.productVariations.delete({
             where: {
                 id: variant.id
@@ -102,9 +115,4 @@ export async function DELETE(req: NextRequest) {
             response.data = null
         return new Response(JSON.stringify(response))
     }
-
-    response.status = 400,
-        response.message = "Product id is required"
-    response.data = null
-    return new Response(JSON.stringify(response))
 }
