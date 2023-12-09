@@ -113,6 +113,8 @@ function getStage(role: Role) {
             return 'Payment Verifier'
         case Role.DISPATCHER:
             return 'Dispatcher'
+            case Role.INVENTORYMANAGER:
+                return 'Inventory Handler'
         case Role.SUPERADMIN:
             return 'Super Admin'
         case Role.UNVERIFIED:

@@ -12,6 +12,7 @@ import ToolTipProvider from '../ToolTipProvider/ToolTipProvider'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import { Setting_FETCH } from '@/lib/settings'
 
 type Props = {
     orders: any
@@ -30,6 +31,7 @@ const GridWithFilters = (props: Props) => {
     const [toDate, setToDate] = React.useState(new Date())
     const [cityFilter, setCityFilter] = React.useState(null)
     const [orders, setOrders] = React.useState(props.orders)
+    const [refreshRate, setRefreshRate] = React.useState(30000)
     const router = useRouter()
 
     async function getOrders(setOrders: any, router: any) {
@@ -49,11 +51,44 @@ const GridWithFilters = (props: Props) => {
     useEffect(() => {
         setTimeout(() => {
             getOrders(setOrders, router)
-        }, 30000);
+        }, refreshRate);
     }, [getOrders, router])
 
     useEffect(() => {
         setIsMounted(true)
+    }, [])
+
+    async function getRefreshRate() {
+        let response: any = null;
+
+        const data = {
+            name: "refreshgrid",
+            method: "READ"
+        }
+
+        try {
+            await axios.post(`/api/settings/get/`, data).then(async (res) => {
+                response = await res.data
+                response.status = response.status
+                response.message = response.message
+                response.data = response.data
+            }).catch((err) => {
+                response.status = 500
+                response.message = err.message
+                response.data = null
+            }).finally(() => {
+                if (response.status === 200) {
+                    setRefreshRate(response.data.value1 * 1000)
+                }
+            })
+        } catch (error: any) {
+            toast.error(error.message)
+        }
+
+    }
+
+    useEffect(() => {
+        getRefreshRate()
     }, [])
 
     useEffect(() => {
@@ -202,6 +237,12 @@ const GridWithFilters = (props: Props) => {
                                         }
                                         break;
 
+                                    case Role.INVENTORYMANAGER:
+                                        if (String(row.status).toLocaleUpperCase() !== Status.READYTODISPATCH) {
+                                            return null;
+                                        }
+                                        break;
+
                                     case Role.SUPERADMIN:
                                         break;
 
@@ -270,10 +311,15 @@ function getStage(role: Role) {
         case Role.ORDERVERIFIER:
             return 'orderVerification'
 
+
         case Role.PAYMENTVERIFIER:
             return 'paymentVerification'
         case Role.DISPATCHER:
             return 'dispatchDivision'
+
+        case Role.INVENTORYMANAGER:
+            return 'inventoryManager'
+
         case Role.SUPERADMIN:
             break;
 

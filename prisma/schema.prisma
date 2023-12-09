@@ -102,6 +102,7 @@ model profile {
   role       Role         @default(UNVERIFIED)
   orderNotes orderNotes[]
   orders     orders[]
+  settings   settings[]
 }
 
 model orderNotes {
@@ -114,6 +115,17 @@ model orderNotes {
   profile   profile   @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "userId")
 }
 
+model settings {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  value1    String?
+  value2    String?
+  value3    String?
+  updatedAt DateTime? @default(now()) @db.Timestamptz(6)
+  userId    String?
+  profile   profile?  @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+}
+
 enum Role {
   SUPERADMIN
   ADMIN
@@ -123,6 +135,7 @@ enum Role {
   PAYMENTVERIFIER
   DISPATCHER
   UNVERIFIED
+  INVENTORYMANAGER
 }
 
 enum Status {
@@ -131,4 +144,5 @@ enum Status {
   PAYMENTVERIFIED
   READYTODISPATCH
   CANCELLED
+  DISPATCHED
 }

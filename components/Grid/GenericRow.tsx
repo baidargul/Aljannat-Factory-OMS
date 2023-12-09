@@ -379,7 +379,8 @@ function getStageControls(stage: string, profile: any, row: any, updateRow: any)
       return _paymentVerificationStageControls(profile, row, updateRow);
     case "dispatchDivision":
       return _dispatcherStageControls(profile, row, updateRow);
-    case "InventoryManager":
+    case "inventoryManager":
+      return _inventoryStageControls(profile, row, updateRow);
       break;
     default:
       return null;
@@ -1026,6 +1027,232 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
           <button disabled={isWorking} onClick={() => handleTcsButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>TCS</button>
           <button disabled={isWorking} onClick={() => handleGopButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>GPO</button>
           <button disabled={isWorking} onClick={() => handleSpeedAfButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>SpeedAf</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+function _inventoryStageControls(profile: any, row: any, updateRow: any) {
+  const [otherNote, setOtherNote] = useState<string>("");
+  const [isWorking, setIsWorking] = useState<boolean>(false);
+
+
+  function handleNote(text: string) {
+    setOtherNote(text);
+  }
+
+  async function handleUpdateNote() {
+    const userId = profile.userId;
+    if (!otherNote) {
+      return
+    }
+    const note = `'${formalizeText(otherNote)}' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      console.log(response)
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        setOtherNote("")
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
+    });
+    setIsWorking(false)
+  }
+
+  async function handleMnPButton(row: any) {
+    const userId = profile.userId;
+    const note = `'Dispatch confirmed to: "M&P" ' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = Status.READYTODISPATCH
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
+    });
+
+    await axios.post("/api/order/dispatch/MnP/book", { userId, row }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
+    })
+
+    toast.success("Order ready to be dispatch towards M&P")
+    setIsWorking(false)
+  }
+  async function handleGopButton() {
+    const userId = profile.userId;
+    const note = `'Dispatch confirmed to: "GOP" ' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = Status.READYTODISPATCH
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
+      const data = res.data.data
+      updateRow(data)
+    });
+    setIsWorking(false)
+  }
+  async function handleSpeedAfButton() {
+    const userId = profile.userId;
+    const note = `'Dispatch confirmed to: "SpeedAf" ' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = Status.READYTODISPATCH
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
+    });
+    setIsWorking(false)
+  }
+  async function handleTcsButton() {
+    const userId = profile.userId;
+    const note = `'Dispatch confirmed to: "TCS" ' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    const status = Status.READYTODISPATCH
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const data = res.data.data
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
+    });
+    setIsWorking(false)
+  }
+  async function handleResetButton(row: any) {
+    const userId = profile.userId;
+    const note = `'Requested to reset order on dispatch' - ${formalizeText(profile.name)}`;
+    const orderId = row.id;
+    if (!note) {
+      return
+    }
+
+    setIsWorking(true)
+    let status = null
+
+    switch (row.status) {
+      case Status.VERIFIEDORDER:
+        status = Status.BOOKED
+        break;
+      case Status.PAYMENTVERIFIED:
+        status = Status.VERIFIEDORDER
+        break;
+      case Status.READYTODISPATCH:
+        status = Status.PAYMENTVERIFIED
+        break;
+      default:
+        status = Status.BOOKED
+        break;
+    }
+
+    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
+
+    });
+    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
+      const response = await res.data
+      if (response.status === 200) {
+        const data = response.data
+        toast.success(response.message, { duration: 1000 })
+        updateRow(data)
+      } else {
+        toast.warning(response.message, { duration: 1000 })
+      }
+    });
+    setIsWorking(false)
+  }
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex gap-1 items-center">
+        <Input placeholder="Rider instructions" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
+        <button disabled={row.status === Status.READYTODISPATCH ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 px-4 text-xs ${row.status === Status.READYTODISPATCH ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Add"}</button>
+      </div>
+      <div className="border border-green-300 rounded p-2">
+        <div className="widest font-semibold text-slate-700 text-sm mt-1">Actions:</div>
+        <div className="grid grid-cols-2 gap-1 mt-1">
+          <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== Status.READYTODISPATCH ? "" : "hidden"}`}>Reset Status</button>
+          <button disabled={isWorking} onClick={() => handleMnPButton(row)} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.READYTODISPATCH ? "" : "hidden"}`}>Dispatched</button>
+          <button disabled={isWorking} onClick={() => handleTcsButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.READYTODISPATCH ? "" : "hidden"}`}>CANCELLED</button>
         </div>
       </div>
     </div>
