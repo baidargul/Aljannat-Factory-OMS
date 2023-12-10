@@ -13,6 +13,7 @@ import axios from 'axios'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Setting_FETCH } from '@/lib/settings'
+import TimeRemainingToRefresh from './components/GridFilters/TimeRemainingToRefresh'
 
 type Props = {
     orders: any
@@ -133,43 +134,49 @@ const GridWithFilters = (props: Props) => {
 
     return (
         isMounted && <div className=''>
-            <div className='flex gap-2 w-full my-2 justify-end items-center'>
-                <div>
-                    <ComboBoxProvider setValue={setCityFilter} content={props.availableCities}>
-                        <div className={`relative`}>
-                            <div onClick={() => setCityFilter(null)} className={`absolute top-[8px] ${cityFilter === null && "hidden"} flex left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
-                                <p className=''>
-                                    x
-                                </p>
-                            </div>
-                            <div className='bg-slate-100 border-slate-200 border-t-2 text-sm p-1 rounded-md w-36 text-center'>
-                                {cityFilter ? formalizeText(cityFilter) : "Select city"}
-                            </div>
-                        </div>
-                    </ComboBoxProvider>
+            <div className='flex justify-between items-center'>
+                <div className='text-slate-400 text-xs flex'>
+                    <TimeRemainingToRefresh refreshRate={refreshRate} />
                 </div>
-                <div>
-                    <div className='text-xs text-slate-400 -my-1'>Range: {totalDays} {totalDays > 1 ? "days." : totalDays < 0 ? "Invalid date range." : "day."}</div>
-                    <div className='flex gap-1'>
-                        <DatePicker setValue={setFromDate} defaultValue={fromDate}>
-                            <div className='cursor-pointer'>
-                                <div className='text-sm text-right flex gap-1 w-40'>
-                                    <div className='font-semibold'>From:</div>
-                                    <div className='border-b border-slate-400'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
+                <div className='flex gap-2 w-full my-2 justify-end items-center'>
+                    <div>
+                        <ComboBoxProvider setValue={setCityFilter} content={props.availableCities}>
+                            <div className={`relative`}>
+                                <div onClick={() => setCityFilter(null)} className={`absolute top-[8px] ${cityFilter === null && "hidden"} flex left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
+                                    <p className=''>
+                                        x
+                                    </p>
+                                </div>
+                                <div className='bg-slate-100 border-slate-200 border-t-2 text-sm p-1 rounded-md w-36 text-center'>
+                                    {cityFilter ? formalizeText(cityFilter) : "Select city"}
                                 </div>
                             </div>
-                        </DatePicker>
-                        <DatePicker setValue={setToDate} defaultValue={toDate}>
-                            <div className='cursor-pointer'>
-                                <div className='text-sm text-right flex gap-1 w-40'>
-                                    <div className='font-semibold'>To:</div>
-                                    <div className='border-b border-slate-400'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
+                        </ComboBoxProvider>
+                    </div>
+                    <div>
+                        <div className='text-xs text-slate-400 -my-1'>Range: {totalDays} {totalDays > 1 ? "days." : totalDays < 0 ? "Invalid date range." : "day."}</div>
+                        <div className='flex gap-1'>
+                            <DatePicker setValue={setFromDate} defaultValue={fromDate}>
+                                <div className='cursor-pointer'>
+                                    <div className='text-sm text-right flex gap-1 w-40'>
+                                        <div className='font-semibold'>From:</div>
+                                        <div className='border-b border-slate-400'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
+                                    </div>
                                 </div>
-                            </div>
-                        </DatePicker>
+                            </DatePicker>
+                            <DatePicker setValue={setToDate} defaultValue={toDate}>
+                                <div className='cursor-pointer'>
+                                    <div className='text-sm text-right flex gap-1 w-40'>
+                                        <div className='font-semibold'>To:</div>
+                                        <div className='border-b border-slate-400'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
+                                    </div>
+                                </div>
+                            </DatePicker>
+                        </div>
                     </div>
                 </div>
             </div>
+
             <div className='border border-slate-400 w-full'>
                 <div className='grid grid-cols-10 w-full tracking-wide text-sm items-center justify-items-start bg-slate-400 text-zinc-800 border-slate-400 border p-2'>
                     <div>
