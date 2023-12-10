@@ -170,10 +170,15 @@ const GridWithFilters = (props: Props) => {
     return (
         isMounted && <div className=''>
             <div className='flex justify-between items-center gap-2'>
-                <div className='text-slate-400 text-xs flex'>
+                <div className='text-slate-400 text-xs flex w-24'>
                     <TimeRemainingToRefresh refreshRate={refreshRate} />
                 </div>
-                <div className=''>
+                <div className='relative'>
+                    <div onClick={() => setSelectedOrders([])} className={`absolute z-10 top-[8px] ${ selectedOrders.length < 1 && "hidden"} flex -top-2 -left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
+                        <p className=''>
+                            x
+                        </p>
+                    </div>
                     <button onClick={() => setMode(mode === 'normal' ? 'selection' : 'normal')} className='text-xs w-28 flex gap-1 justify-center items-center bg-slate-100 hover:bg-slate-50 drop-shadow-sm p-1 border rounded-md'>
                         {mode === 'normal' && <MousePointer className='text-xs w-4 h-4' />}
                         {mode === "selection" && <CheckSquare className='text-xs w-4 h-4' />}
@@ -339,7 +344,7 @@ const GridWithFilters = (props: Props) => {
                 </div>
 
             </div>
-        </div>
+        </div >
     )
 }
 
