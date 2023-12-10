@@ -173,18 +173,20 @@ const GridWithFilters = (props: Props) => {
                 <div className='text-slate-400 text-xs flex w-24'>
                     <TimeRemainingToRefresh refreshRate={refreshRate} />
                 </div>
-                <div className='relative'>
-                    <div onClick={() => setSelectedOrders([])} className={`absolute z-10 top-[8px] ${ selectedOrders.length < 1 && "hidden"} flex -top-2 -left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
-                        <p className=''>
-                            x
-                        </p>
+                <ToolTipProvider content={`Interaction mode: ${formalizeText(mode)}`}>
+                    <div className='relative'>
+                        <div onClick={() => setSelectedOrders([])} className={`absolute z-10 top-[8px] ${selectedOrders.length < 1 && "hidden"} flex -top-2 -left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
+                            <p className=''>
+                                x
+                            </p>
+                        </div>
+                        <button onClick={() => setMode(mode === 'normal' ? 'selection' : 'normal')} className='text-xs w-28 flex gap-1 justify-center items-center bg-slate-100 hover:bg-slate-50 drop-shadow-sm p-1 border rounded-md'>
+                            {mode === 'normal' && <MousePointer className='text-xs w-4 h-4' />}
+                            {mode === "selection" && <CheckSquare className='text-xs w-4 h-4' />}
+                            {formalizeText(mode)}
+                        </button>
                     </div>
-                    <button onClick={() => setMode(mode === 'normal' ? 'selection' : 'normal')} className='text-xs w-28 flex gap-1 justify-center items-center bg-slate-100 hover:bg-slate-50 drop-shadow-sm p-1 border rounded-md'>
-                        {mode === 'normal' && <MousePointer className='text-xs w-4 h-4' />}
-                        {mode === "selection" && <CheckSquare className='text-xs w-4 h-4' />}
-                        {formalizeText(mode)}
-                    </button>
-                </div>
+                </ToolTipProvider>
                 <div className='flex gap-2 w-full my-2 justify-end items-center'>
                     <div>
                         <ComboBoxProvider setValue={setCityFilter} content={props.availableCities}>
@@ -205,7 +207,7 @@ const GridWithFilters = (props: Props) => {
                         <div className='flex gap-1'>
                             <DatePicker setValue={setFromDate} defaultValue={fromDate}>
                                 <div className='cursor-pointer'>
-                                    <div className='text-sm text-right flex gap-1 w-40'>
+                                    <div className='text-sm text-right flex gap-1 w-44'>
                                         <div className='font-semibold'>From:</div>
                                         <div className='border-b border-slate-400'>{fromDate ? formalizeText((fromDate?.toDateString())) : ""}</div>
                                     </div>
@@ -213,7 +215,7 @@ const GridWithFilters = (props: Props) => {
                             </DatePicker>
                             <DatePicker setValue={setToDate} defaultValue={toDate}>
                                 <div className='cursor-pointer'>
-                                    <div className='text-sm text-right flex gap-1 w-40'>
+                                    <div className='text-sm text-right flex gap-1 w-44'>
                                         <div className='font-semibold'>To:</div>
                                         <div className='border-b border-slate-400'>{toDate ? formalizeText((toDate?.toDateString())) : ""}</div>
                                     </div>
