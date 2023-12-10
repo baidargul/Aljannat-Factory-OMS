@@ -7,7 +7,7 @@ import GenericRow from './GenericRow'
 import { ComboBoxProvider } from '../ComboBox/ComboBoxProvider'
 import { Role, Status } from '@prisma/client'
 import { v4 } from 'uuid'
-import { CalendarCheck, CalendarDays, Clock12, Clock2, Dot, Tally5, Truck, User } from 'lucide-react'
+import { CalendarCheck, CalendarDays, CheckSquare, MousePointer, Tally5, Truck, User } from 'lucide-react'
 import ToolTipProvider from '../ToolTipProvider/ToolTipProvider'
 import axios from 'axios'
 import { toast } from 'sonner'
@@ -174,7 +174,9 @@ const GridWithFilters = (props: Props) => {
                     <TimeRemainingToRefresh refreshRate={refreshRate} />
                 </div>
                 <div className=''>
-                    <button onClick={() => setMode(mode === 'normal' ? 'selection' : 'normal')} className='text-xs w-28 bg-slate-100 hover:bg-slate-50 drop-shadow-sm p-1 border rounded-md'>
+                    <button onClick={() => setMode(mode === 'normal' ? 'selection' : 'normal')} className='text-xs w-28 flex gap-1 justify-center items-center bg-slate-100 hover:bg-slate-50 drop-shadow-sm p-1 border rounded-md'>
+                        {mode === 'normal' && <MousePointer className='text-xs w-4 h-4' />}
+                        {mode === "selection" && <CheckSquare className='text-xs w-4 h-4' />}
                         {formalizeText(mode)}
                     </button>
                 </div>
