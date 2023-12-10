@@ -175,7 +175,7 @@ const GridWithFilters = (props: Props) => {
                 </div>
                 <ToolTipProvider content={`Interaction mode: ${formalizeText(mode)}`}>
                     <div className='relative'>
-                        <div onClick={() => setSelectedOrders([])} className={`absolute z-10 top-[8px] ${selectedOrders.length < 1 && "hidden"} flex -top-2 -left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
+                        <div onClick={() => setSelectedOrders([])} className={`absolute z-10 ${selectedOrders.length < 1 && "hidden"} flex -top-1 -left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
                             <p className=''>
                                 x
                             </p>
