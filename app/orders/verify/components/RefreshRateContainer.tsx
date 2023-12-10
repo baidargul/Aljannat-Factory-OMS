@@ -41,7 +41,7 @@ const RefreshRateContainer = (props: Props) => {
         <div className='flex flex-col gap-1 text-xs my-5'>
             <div>
                 <div className={``}>
-                    Refresh rate: (seconds only)
+                    Refresh rate: (In seconds)
                 </div>
                 {
                     requireReload && <div className={`text-xs scale-90 -ml-3 text-red-800 font-semibold flex gap-1`}>
