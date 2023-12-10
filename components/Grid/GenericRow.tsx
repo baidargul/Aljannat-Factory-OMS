@@ -178,24 +178,24 @@ const GenericRow = (props: Props) => {
               <div onClick={() => orderIdClicked(row.id)} className="text-xs uppercase text-center bg-slate-300 text-white py-1 border-y border-slate-400 hover:bg-slate-700 transition-all duration-1000 cursor-pointer">{row.id}</div>
 
               <div className="flex justify-between text-xs items-center">
-                <div className="p-1 border-b-2 border-red-900/30 tracking-wide ">
+                <div className="p-1 border-b-2 border-slate-900/30 tracking-wide ">
                   {orderDate}
                 </div>
-                <div className="text-red-900 p-1 border-b-2 border-red-900/30 border-double-2 font-semibold">
+                <div className="text-slate-900 p-1 border-b-2 border-slate-900/30 border-double-2 font-semibold">
                   {formalizeText(getStatusCasual(row.status))}
                 </div>
               </div>
-              <div className="bg-red-900 p-1 font-semibold">
-                <div className="bg-yellow-300 rounded flex p-2 gap-2 w-full items-center justify-between text-center">
-                  <div className="text-red-900">
+              <div className="bg-slate-900/40 p-1 font-semibold">
+                <div className="bg-slate-300 rounded flex p-2 gap-2 w-full items-center justify-between text-center">
+                  <div className="text-slate-900">
                     {getTotalWeight(row)}
                   </div>
                   <div className="">{formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)}</div>
-                  <div className="text-red-900">{formalizeText(row.ordersRegister[0].productVariations.name)}</div>
+                  <div className="text-slate-900">{formalizeText(row.ordersRegister[0].productVariations.name)}</div>
                 </div>
               </div>
               <div>
-                <div className="grid grid-cols-2 w-full">
+                <div className="grid grid-cols-2 w-full text-sm">
                   <div className="font-semibold">
                     <p className="">Customer</p>
                     <p className="">Phone 01</p>
@@ -216,7 +216,7 @@ const GenericRow = (props: Props) => {
                     <p className="text-ellipsis overflow-hidden whitespace-nowrap">
                       {formalizeText(row.customers.city)}
                     </p>
-                    <div className="text-ellipsis overflow-hidden whitespace-nowrap">
+                    <div className="text-ellipsis overflow-hidden whitespace-break-spaces h-16">
                       {formalizeText(row.customers.address)}
                     </div>
                   </div>
@@ -252,7 +252,7 @@ const GenericRow = (props: Props) => {
                   <p className="text-xs tracking-tight">{row.trackingNo}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-4 -mb-2 bg-slate-300 items-center px-2">
+              <div className="grid grid-cols-4 -mb-2 bg-slate-300 items-center px-2 py-1">
                 <p className="font-semibold text-sm">Product</p>
                 <p className="font-semibold text-sm">Variant</p>
                 <p className="font-semibold text-sm">Weight</p>
@@ -262,7 +262,7 @@ const GenericRow = (props: Props) => {
                 {
                   row.ordersRegister.map((item: any) => {
                     return (
-                      <div className="grid grid-cols-4 px-2 border-b border-x" key={formalizeText(item.name)}>
+                      <div className="grid grid-cols-4 px-2 py-1 border-b border-x" key={formalizeText(item.name)}>
                         <div>
                           <p className="text-xs tracking-tight">{formalizeText(item.product.name)}</p>
                         </div>
@@ -283,7 +283,7 @@ const GenericRow = (props: Props) => {
               <div className="flex justify-between mt-10 items-center">
                 <div className="text-sm flex gap-1 text-slate-700 items-center">
                   <p className="font-semibold ">
-                    Last handler:
+                    Current handler:
                   </p>
                   <p className="tracking-wide">
                     {formalizeText((row.profile.name))}

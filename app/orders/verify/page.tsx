@@ -9,7 +9,7 @@ import React from 'react'
 
 type Props = {}
 
-const page = async (props: Props) => {
+const OrdersVerifyingPage = async (props: Props) => {
     const orders = await getOrders()
     const profile = await currentProfile()
     if (!profile) {
@@ -30,7 +30,7 @@ const page = async (props: Props) => {
     )
 }
 
-export default page
+export default OrdersVerifyingPage
 
 
 async function getOrders() {
