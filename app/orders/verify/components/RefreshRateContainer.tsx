@@ -21,7 +21,8 @@ const RefreshRateContainer = (props: Props) => {
     useEffect(()=>{
         const test = async () => await Setting_FETCH("refreshgrid").then(async (res) => {
             const data = await res.data
-            const refreshRate = Number(data.value1)
+            console.log(data)
+            const refreshRate = Number(data?.value1)
             setRefreshRate(refreshRate)
 
         })

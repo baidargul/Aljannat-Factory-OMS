@@ -26,6 +26,8 @@ type availableCity = {
     label: String
 }
 
+type Mode = 'normal' | 'selection'
+
 const GridWithFilters = (props: Props) => {
     const [isMounted, setIsMounted] = React.useState(false)
     const [fromDate, setFromDate] = React.useState(new Date())
@@ -33,6 +35,8 @@ const GridWithFilters = (props: Props) => {
     const [cityFilter, setCityFilter] = React.useState(null)
     const [orders, setOrders] = React.useState(props.orders)
     const [refreshRate, setRefreshRate] = React.useState(30000)
+    const [selectedOrders, setSelectedOrders] = React.useState<any>([])
+    const [mode, setMode] = React.useState<Mode>('normal')
     const router = useRouter()
 
     async function getOrders(setOrders: any, router: any) {
@@ -49,6 +53,36 @@ const GridWithFilters = (props: Props) => {
         })
     }
 
+    function addToSelection(orderId: string) {
+        if (selectedOrders.length === 0) {
+            setSelectedOrders([orderId])
+            return
+        } else {
+            const index = selectedOrders.findIndex((id: string) => id === orderId)
+            if (index === -1) {
+                setSelectedOrders([...selectedOrders, orderId])
+            } else {
+                const newSelection = selectedOrders.filter((id: string) => id !== orderId)
+                setSelectedOrders(newSelection)
+            }
+        }
+    }
+
+    function removeFromSelection(orderId: string) {
+        const index = selectedOrders.findIndex((id: string) => id === orderId)
+        if (index !== -1) {
+            const newSelection = selectedOrders.filter((id: string) => id !== orderId)
+            setSelectedOrders(newSelection)
+        }
+    }
+
+    function isInSelection(orderId: string) {
+        const index = selectedOrders.findIndex((id: string) => id === orderId)
+        return index !== -1
+    }
+
+    const selectionProps = { addToSelection, removeFromSelection, isInSelection, mode }
+
     useEffect(() => {
         setTimeout(() => {
             getOrders(setOrders, router)
@@ -60,6 +94,7 @@ const GridWithFilters = (props: Props) => {
     }, [])
 
     async function getRefreshRate() {
+        if (!isMounted) return
         let response: any = null;
 
         const data = {
@@ -134,9 +169,14 @@ const GridWithFilters = (props: Props) => {
 
     return (
         isMounted && <div className=''>
-            <div className='flex justify-between items-center'>
+            <div className='flex justify-between items-center gap-2'>
                 <div className='text-slate-400 text-xs flex'>
                     <TimeRemainingToRefresh refreshRate={refreshRate} />
+                </div>
+                <div className=''>
+                    <button onClick={() => setMode(mode === 'normal' ? 'selection' : 'normal')} className='text-xs w-28 bg-slate-100 hover:bg-slate-50 drop-shadow-sm p-1 border rounded-md'>
+                        {formalizeText(mode)}
+                    </button>
                 </div>
                 <div className='flex gap-2 w-full my-2 justify-end items-center'>
                     <div>
@@ -278,7 +318,7 @@ const GridWithFilters = (props: Props) => {
 
                                 return (
                                     <div key={v4()} className={`${forNotThisUser && "opacity-30"}`}>
-                                        <GenericRow stage={stage} row={row} index={index} profile={props.profile} disabled={forNotThisUser} />
+                                        <GenericRow selectionProps={selectionProps} stage={stage} row={row} index={index} profile={props.profile} disabled={forNotThisUser} />
                                     </div>
                                 )
                             })

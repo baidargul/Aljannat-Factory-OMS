@@ -16,24 +16,33 @@ type Props = {
   stage?: "orderVerification" | "paymentVerification" | "DispatchDivision" | "InventoryManager" | any;
   profile: any
   disabled?: boolean;
+  selectionProps: {
+    addToSelection: (id: string) => void;
+    removeFromSelection: (id: string) => void;
+    isInSelection: (id: string) => boolean;
+    mode: Mode;
+  }
 };
+
+type Mode = 'normal' | 'selection'
 
 const GenericRow = (props: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [row, setRow] = useState<any>(props.row);
   const [rowTotalAmount, setRowTotalAmount] = useState<any>(0);
   const [timeLapsed, setTimeLapsed] = useState<any>();
+  const { addToSelection, isInSelection, mode } = props.selectionProps;
 
   const handleRowClick = () => {
     setSelectedOrder(row);
+    if (!props.disabled && mode==="selection") {
+      addToSelection(row.id);
+    }
   };
   function updateRow(newRow: any) {
     setRow(newRow);
   }
 
-  // useEffect(() => {
-  //   console.log(`Row:`, row)
-  // }, [row])
 
 
   useEffect(() => {
@@ -50,7 +59,7 @@ const GenericRow = (props: Props) => {
   function DataRow() {
     return (
       <div
-        className={`p-2 w-full ${!props.disabled && "hover:bg-yellow-50 cursor-pointer"} cursor-default justify-items-start grid grid-cols-10 items-center text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
+        className={`p-2 w-full  ${isInSelection(row.id) ? "bg-green-100" : ""} ${!props.disabled && !isInSelection(row.id) && "hover:bg-yellow-50 cursor-pointer"} cursor-default justify-items-start grid grid-cols-10 items-center text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
         onClick={handleRowClick}
       >
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis opacity-40">
@@ -168,7 +177,7 @@ const GenericRow = (props: Props) => {
 
   return (
     <SheetProvider trigger={DataRow()}>
-      <div>
+    
         {
           props.disabled ? (
             OtherUserOrder()
@@ -299,7 +308,7 @@ const GenericRow = (props: Props) => {
             </div >
           )
         }
-      </div>
+  
     </SheetProvider >
   );
 };
