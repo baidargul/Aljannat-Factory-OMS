@@ -20,6 +20,7 @@ type Props = {
     addToSelection: (id: string) => void;
     removeFromSelection: (id: string) => void;
     isInSelection: (id: string) => boolean;
+    clearSelection: () => void;
     mode: Mode;
   }
 };

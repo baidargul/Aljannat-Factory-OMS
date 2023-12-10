@@ -14,6 +14,8 @@ import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Setting_FETCH } from '@/lib/settings'
 import TimeRemainingToRefresh from './components/GridFilters/TimeRemainingToRefresh'
+import HoverCardProvider from '../HoverCardProvider/HoverCardProvider'
+import SelectionActions from './components/GridFilters/SelectionActions/SelectionActions'
 
 type Props = {
     orders: any
@@ -81,7 +83,11 @@ const GridWithFilters = (props: Props) => {
         return index !== -1
     }
 
-    const selectionProps = { addToSelection, removeFromSelection, isInSelection, mode }
+    function clearSelection() {
+        setSelectedOrders([])
+    }
+
+    const selectionProps = { addToSelection, removeFromSelection, isInSelection, clearSelection, mode }
 
     useEffect(() => {
         setTimeout(() => {
@@ -173,9 +179,9 @@ const GridWithFilters = (props: Props) => {
                 <div className='text-slate-400 text-xs flex w-24'>
                     <TimeRemainingToRefresh refreshRate={refreshRate} />
                 </div>
-                <ToolTipProvider content={`Interaction mode: ${formalizeText(mode)}`}>
+                <HoverCardProvider content={<SelectionActions selectionProps={selectionProps} />}>
                     <div className='relative'>
-                        <div onClick={() => setSelectedOrders([])} className={`absolute z-10 ${selectedOrders.length < 1 && "hidden"} flex -top-1 -left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
+                        <div onClick={() => clearSelection()} className={`absolute z-10 ${selectedOrders.length < 1 && "hidden"} flex -top-1 -left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
                             <p className=''>
                                 x
                             </p>
@@ -186,7 +192,8 @@ const GridWithFilters = (props: Props) => {
                             {formalizeText(mode)}
                         </button>
                     </div>
-                </ToolTipProvider>
+                </HoverCardProvider>
+
                 <div className='flex gap-2 w-full my-2 justify-end items-center'>
                     <div>
                         <ComboBoxProvider setValue={setCityFilter} content={props.availableCities}>
