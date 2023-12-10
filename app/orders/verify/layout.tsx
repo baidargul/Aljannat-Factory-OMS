@@ -2,6 +2,7 @@ import currentProfile from '@/lib/current-profile'
 import { redirectToSignIn } from '@clerk/nextjs'
 import Image from 'next/image'
 import React from 'react'
+import LogoutButton from './components/LogoutButton'
 
 type Props = {
   children: React.ReactNode
@@ -12,7 +13,6 @@ const OrdersLayout = async (props: Props) => {
   if (!profile) {
     redirectToSignIn()
   }
-
 
   return (
     <div>
@@ -27,6 +27,9 @@ const OrdersLayout = async (props: Props) => {
             </div>
             <div>
               <h2 className='tracking-wide text-xs -mt-2 text-slate-500 border-b border-slate-500 '>{profile && profile.role}</h2>
+            </div>
+            <div>
+              <LogoutButton />
             </div>
           </div>
         </div>

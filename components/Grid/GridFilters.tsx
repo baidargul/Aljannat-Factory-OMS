@@ -89,7 +89,7 @@ const GridWithFilters = (props: Props) => {
 
     useEffect(() => {
         getRefreshRate()
-    }, [])
+    }, [isMounted])
 
     useEffect(() => {
         setFromDate(new Date(new Date()))
