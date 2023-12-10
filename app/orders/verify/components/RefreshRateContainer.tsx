@@ -13,6 +13,12 @@ const RefreshRateContainer = (props: Props) => {
     const [refreshRate, setRefreshRate] = React.useState(30)
 
     useEffect(() => {
+       
+        setRequireReload(false)
+        setIsMounted(true)
+    }, [])
+
+    useEffect(()=>{
         const test = async () => await Setting_FETCH("refreshgrid").then(async (res) => {
             const data = await res.data
             const refreshRate = Number(data.value1)
@@ -20,9 +26,7 @@ const RefreshRateContainer = (props: Props) => {
 
         })
         test()
-        setRequireReload(false)
-        setIsMounted(true)
-    }, [])
+    },[isMounted])
 
     async function setRefreshRateHandler() {
         await Setting__WRITE("refreshgrid", String(refreshRate)).then(async (res) => {
