@@ -43,7 +43,7 @@ const TimeRemainingToRefresh = (props: Props) => {
                 <Clock2 className='inline w-4 h-4' />
             </div>
             :
-            <div>
+            <div className={`${timeRemainingToRefresh<10 ? "text-cyan-500 animate-pulse" : "text-slate-400"} transition-all duration-1000`}>
                 {`${timeRemainingToRefresh}/${initialTime}s`}
             </div>
         </div>
