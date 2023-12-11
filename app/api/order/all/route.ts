@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
                 },
             },
             orderBy: {
-                dateOfBooking: "desc",
+                dateOfBooking: "asc",
             }
         });
 
