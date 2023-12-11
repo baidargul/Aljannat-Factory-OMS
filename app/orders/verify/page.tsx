@@ -49,41 +49,76 @@ async function getOrders(profile: profile) {
         redirect("/")
     }
 
-    const targetStatus: Status = orderStatusforUser(user);
+    const role: Role = user.role;
+    let orders: any;
+    if (role === Role.ADMIN || role === Role.SUPERADMIN || role === Role.MANAGER) {
+        orders = await prisma.orders.findMany({
+            include: {
+                customers: true,
+                profile: true,
+                orderNotes: {
+                    orderBy: {
+                        createdAt: "desc",
+                    }
+                },
+                ordersRegister: {
+                    include: {
+                        productVariations: {
+                            select: {
+                                name: true,
+                                defaultUnit: true,
+                            }
+                        },
+                        product: {
+                            select: {
+                                id: true,
+                                name: true,
+                            }
+                        },
+                    }
+                },
+            },
+            orderBy: {
+                dateOfBooking: "asc",
+            }
+        });
+    } else {
+        const targetStatus: Status = orderStatusforUser(user);
 
-    const orders = await prisma.orders.findMany({
-        include: {
-            customers: true,
-            profile: true,
-            orderNotes: {
-                orderBy: {
-                    createdAt: "desc",
-                }
+        orders = await prisma.orders.findMany({
+            include: {
+                customers: true,
+                profile: true,
+                orderNotes: {
+                    orderBy: {
+                        createdAt: "desc",
+                    }
+                },
+                ordersRegister: {
+                    include: {
+                        productVariations: {
+                            select: {
+                                name: true,
+                                defaultUnit: true,
+                            }
+                        },
+                        product: {
+                            select: {
+                                id: true,
+                                name: true,
+                            }
+                        },
+                    }
+                },
             },
-            ordersRegister: {
-                include: {
-                    productVariations: {
-                        select: {
-                            name: true,
-                            defaultUnit: true,
-                        }
-                    },
-                    product: {
-                        select: {
-                            id: true,
-                            name: true,
-                        }
-                    },
-                }
+            orderBy: {
+                dateOfBooking: "asc",
             },
-        },
-        orderBy: {
-            dateOfBooking: "asc",
-        },
-        where: {
-            status: targetStatus,
-        }
-    });
+            where: {
+                status: targetStatus,
+            }
+        });
+    }
     return orders
 }
 

@@ -39,42 +39,78 @@ export async function POST(req: NextRequest) {
             return new Response(JSON.stringify(response));
         }
 
-        const targetStatus: Status = orderStatusforUser(user);
+        const role: Role = user.role;
+        let orders: any;
 
-        const orders = await prisma.orders.findMany({
-            include: {
-                customers: true,
-                profile: true,
-                orderNotes: {
-                    orderBy: {
-                        createdAt: "desc",
-                    }
+        if (role === Role.ADMIN || role === Role.SUPERADMIN || role === Role.MANAGER) {
+            orders = await prisma.orders.findMany({
+                include: {
+                    customers: true,
+                    profile: true,
+                    orderNotes: {
+                        orderBy: {
+                            createdAt: "desc",
+                        }
+                    },
+                    ordersRegister: {
+                        include: {
+                            productVariations: {
+                                select: {
+                                    name: true,
+                                    defaultUnit: true,
+                                }
+                            },
+                            product: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                }
+                            },
+                        }
+                    },
                 },
-                ordersRegister: {
-                    include: {
-                        productVariations: {
-                            select: {
-                                name: true,
-                                defaultUnit: true,
-                            }
-                        },
-                        product: {
-                            select: {
-                                id: true,
-                                name: true,
-                            }
-                        },
-                    }
-                },
-            },
-            orderBy: {
-                dateOfBooking: "asc",
-            },
-            where: {
-                status: targetStatus,
-            }
-        });
+                orderBy: {
+                    dateOfBooking: "asc",
+                }
+            });
+        } else {
+            const targetStatus: Status = orderStatusforUser(user);
 
+            orders = await prisma.orders.findMany({
+                include: {
+                    customers: true,
+                    profile: true,
+                    orderNotes: {
+                        orderBy: {
+                            createdAt: "desc",
+                        }
+                    },
+                    ordersRegister: {
+                        include: {
+                            productVariations: {
+                                select: {
+                                    name: true,
+                                    defaultUnit: true,
+                                }
+                            },
+                            product: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                }
+                            },
+                        }
+                    },
+                },
+                orderBy: {
+                    dateOfBooking: "asc",
+                },
+                where: {
+                    status: targetStatus,
+                }
+            });
+        }
+        
         response.status = 200;
         response.message = 'Orders are fetched for the user';
         response.data = orders;
