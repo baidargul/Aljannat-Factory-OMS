@@ -85,7 +85,7 @@ export async function PATCH(req: NextRequest) {
                     response.message = "Order has been processed and forwarded to the next department, you cannot edit this order"
                     response.data = null
                     return new Response(JSON.stringify(response))
-                    
+
                 } else if (roleStatus === "up") {
                     response.status = 400
                     response.message = "Order is being processed by a higher department, you cannot edit this order"
@@ -192,7 +192,7 @@ export async function PATCH(req: NextRequest) {
 
 function getRoleStatus(currentRole: Role, previousRole: Role) {
     let reply = ""
-    const ranks = {
+    const ranks: any = {
         [Role.SUPERADMIN]: 1,
         [Role.ADMIN]: 2,
         [Role.MANAGER]: 3,
@@ -203,8 +203,8 @@ function getRoleStatus(currentRole: Role, previousRole: Role) {
         [Role.UNVERIFIED]: 8,
     }
 
-    const currentUserRank = ranks[currentRole]
-    const previousUserRank = ranks[previousRole]
+    const currentUserRank: Role = ranks[currentRole as Role];
+    const previousUserRank: Role = ranks[previousRole as Role];
 
     if (currentUserRank < previousUserRank) {
         reply = "down"

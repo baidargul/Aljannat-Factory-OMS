@@ -8,10 +8,15 @@ type ResponseType = {
     data: any
 }
 
-export async function POST(req: NextRequest) {
-    const response = {} as ResponseType;
-    let trackingNo = "";
+export async function POST(req: NextRequest): Promise<void | Response> {
+    const response: ResponseType = {
+        status: 500,
+        message: 'Internal Server Error',
+        data: {}
+    }
+
     let freshOrder = null;
+    let trackingNo = "";
 
     try {
 
@@ -116,16 +121,16 @@ export async function POST(req: NextRequest) {
             response.status = 500;
             response.message = "Internal Server Error";
             response.data = null;
+        }).finally(() => {
+            return new Response(JSON.stringify(response))
         })
-
-         
 
     } catch (error) {
         console.log(`DISPATCH_MNP_BOOK_ROUTE_ERROR: ${error}`)
         response.status = 500;
         response.message = "Internal Server Error";
         response.data = null;
-        return JSON.stringify(response);
+        return new Response(JSON.stringify(response));
     }
 
     response.status = 200;
