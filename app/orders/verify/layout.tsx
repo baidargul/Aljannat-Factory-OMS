@@ -6,6 +6,7 @@ import LogoutButton from './components/LogoutButton'
 import UserInformation from './components/UserInformation'
 import { Input } from '@/components/ui/input'
 import RefreshRateContainer from './components/RefreshRateContainer'
+import OrdersSummary from './components/OrdersSummary'
 
 type Props = {
   children: React.ReactNode
@@ -23,6 +24,7 @@ const OrdersLayout = async (props: Props) => {
         <div className='w-[15%] bg-slate-100 rounded-md p-2'>
           <UserInformation profile={profile} />
           <RefreshRateContainer />
+          <OrdersSummary />
         </div>
         <div className='w-[85%]'>{props.children}</div>
       </div>
