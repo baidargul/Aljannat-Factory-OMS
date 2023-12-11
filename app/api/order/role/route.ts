@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { Role, Status, profile } from "@prisma/client";
 import { NextRequest } from "next/server";
 
 
@@ -32,11 +33,13 @@ export async function POST(req: NextRequest) {
             }
         })
 
-        if(!user) {
+        if (!user) {
             response.status = 404;
             response.message = 'Invalid user!';
             return new Response(JSON.stringify(response));
         }
+
+        const targetStatus: Status = orderStatusforUser(user);
 
         const orders = await prisma.orders.findMany({
             include: {
@@ -68,7 +71,7 @@ export async function POST(req: NextRequest) {
                 dateOfBooking: "asc",
             },
             where: {
-                userId: userId,
+                status: targetStatus,
             }
         });
 
@@ -83,4 +86,21 @@ export async function POST(req: NextRequest) {
         return new Response(JSON.stringify(response))
     }
 
+}
+
+function orderStatusforUser(user: profile) {
+    const role: Role = user.role;
+
+    switch (role) {
+        case Role.ORDERVERIFIER:
+            return Status.BOOKED;
+        case Role.PAYMENTVERIFIER:
+            return Status.VERIFIEDORDER
+        case Role.DISPATCHER:
+            return Status.PAYMENTVERIFIED
+        case Role.INVENTORYMANAGER:
+            return Status.READYTODISPATCH
+        default:
+            return Status.BOOKED;
+    }
 }
