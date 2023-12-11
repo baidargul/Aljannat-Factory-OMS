@@ -12,7 +12,6 @@ import ToolTipProvider from '../ToolTipProvider/ToolTipProvider'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { Setting_FETCH } from '@/lib/settings'
 import TimeRemainingToRefresh from './components/GridFilters/TimeRemainingToRefresh'
 import HoverCardProvider from '../HoverCardProvider/HoverCardProvider'
 import SelectionActions from './components/GridFilters/SelectionActions/SelectionActions'
@@ -44,7 +43,10 @@ const GridWithFilters = (props: Props) => {
     async function getOrders(setOrders: any, router: any) {
         let response = null;
 
-        await axios.get('/api/order/all').then(async (res) => {
+        const data = {
+            userId: props.profile.userId
+        }
+        await axios.post('/api/order/role', data).then(async (res) => {
             response = await res.data;
             if (response.status === 200) {
                 setOrders(response.data)

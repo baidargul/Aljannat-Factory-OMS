@@ -92,6 +92,8 @@ function orderStatusforUser(user: profile) {
     const role: Role = user.role;
 
     switch (role) {
+        case Role.ORDERBOOKER:
+            return Status.BOOKED;
         case Role.ORDERVERIFIER:
             return Status.BOOKED;
         case Role.PAYMENTVERIFIER:
