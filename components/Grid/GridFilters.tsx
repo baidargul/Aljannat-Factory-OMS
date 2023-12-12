@@ -330,8 +330,9 @@ const GridWithFilters = (props: Props) => {
                                 if (String(row.customers.city).toLocaleLowerCase() !== String(cityFilter).toLocaleLowerCase() && cityFilter !== null) {
                                     return null
                                 }
-                                const forNotThisUser = props.profile.userId !== row.userId;
-
+                                let forNotThisUser
+                                if (props.profile.userId !== row.userId) forNotThisUser = true
+                                if (row.userId === null) forNotThisUser = false
 
 
                                 return (

@@ -126,6 +126,17 @@ model settings {
   profile   profile?  @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model courier_dep {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  username  String?
+  password  String?
+  apikey    String?
+  createdAt DateTime? @db.Timestamptz(6)
+  useApiKey Boolean? @default(true)
+  accountNo String?
+}
+
 enum Role {
   SUPERADMIN
   ADMIN

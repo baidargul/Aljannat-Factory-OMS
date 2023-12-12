@@ -70,7 +70,7 @@ export async function PATCH(req: NextRequest) {
             },
             data: {
                 status: status,
-                userId: userId
+                userId: null
             }
         })
 

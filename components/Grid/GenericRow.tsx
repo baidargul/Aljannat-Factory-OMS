@@ -296,7 +296,7 @@ const GenericRow = (props: Props) => {
                     Current handler:
                   </p>
                   <p className="tracking-wide">
-                    {formalizeText((row.profile.name))}
+                    {formalizeText((row.profile? row.profile.name : ""))}
                   </p>
                 </div>
                 <p className="font-semibold text-lg text-green-700">

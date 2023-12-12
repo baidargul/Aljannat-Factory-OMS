@@ -20,7 +20,7 @@ const OrdersSummary = async (props: Props) => {
             <div className='pr-2'>
                 <section className='flex justify-between text-sm font-semibold font-mono text-slate-600'>
                     <div>
-                        On hold:
+                        In Processing:
                     </div>
                     <div>
                         {await getOrders()}
@@ -28,7 +28,7 @@ const OrdersSummary = async (props: Props) => {
                 </section>
                 <section className='flex justify-between text-sm font-semibold font-mono text-slate-600'>
                     <div>
-                        Under me:
+                        Assigned to me:
                     </div>
                     <div>
                         {await currentUserOrders(String(profile?.userId))}
@@ -57,6 +57,25 @@ const OrdersSummary = async (props: Props) => {
 }
 
 export default OrdersSummary
+
+function orderStatusforUser(user: profile) {
+    const role: Role = user.role;
+
+    switch (role) {
+        case Role.ORDERBOOKER:
+            return Status.BOOKED;
+        case Role.ORDERVERIFIER:
+            return Status.BOOKED;
+        case Role.PAYMENTVERIFIER:
+            return Status.VERIFIEDORDER
+        case Role.DISPATCHER:
+            return Status.PAYMENTVERIFIED
+        case Role.INVENTORYMANAGER:
+            return Status.READYTODISPATCH
+        default:
+            return Status.BOOKED;
+    }
+}
 
 async function getOrders() {
     const orders = await prisma.orders.findMany({
@@ -177,28 +196,12 @@ async function Pending(profile: any) {
                 dateOfBooking: "asc",
             },
             where: {
-                status: targetStatus,
+                NOT:{
+                    status: targetStatus,
+                },
+                userId: String(profile.userId),
             }
         });
     }
     return orders.length
-}
-
-function orderStatusforUser(user: profile) {
-    const role: Role = user.role;
-
-    switch (role) {
-        case Role.ORDERBOOKER:
-            return Status.BOOKED;
-        case Role.ORDERVERIFIER:
-            return Status.BOOKED;
-        case Role.PAYMENTVERIFIER:
-            return Status.VERIFIEDORDER
-        case Role.DISPATCHER:
-            return Status.PAYMENTVERIFIED
-        case Role.INVENTORYMANAGER:
-            return Status.READYTODISPATCH
-        default:
-            return Status.BOOKED;
-    }
 }
