@@ -159,7 +159,7 @@ export async function POST(req: NextRequest) {
             data: {
                 id: v4(),
                 status: "BOOKED",
-                userId: userId,
+                userId: null,
                 customerId: dbCustomer.id,
                 dateOfBooking: dateOfBooking,
                 dateOfDelivery: dateOfDelivery

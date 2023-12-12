@@ -57,55 +57,57 @@ export async function PATCH(req: NextRequest) {
             return new Response(JSON.stringify(response))
         }
 
-        const previousOrderUser = await prisma.orders.findUnique({
-            where: {
-                id: orderId
-            },
-            include: {
-                profile: true
-            }
-        })
 
-        if (!previousOrderUser) {
-            response.status = 400
-            response.message = "Order not found in the database"
-            response.data = null
-            return new Response(JSON.stringify(response))
-        }
+        // REJECTED CHECK FOR PREVIOUS ORDER USER AS PREVIOUS USER PASSES ORDER AND NULLED OUT FOR FURTHER PROCESSING BY OTHER USERS DOMAIN
+        // const previousOrderUser = await prisma.orders.findUnique({
+        //     where: {
+        //         id: orderId
+        //     },
+        //     include: {
+        //         profile: true
+        //     }
+        // })
 
-        if (previousOrderUser.profile) {
-            if (previousOrderUser.profile.userId !== userId) {
-                const previousRole = previousOrderUser.profile.role
-                const currentRole = user.role
+        // if (!previousOrderUser) {
+        //     response.status = 400
+        //     response.message = "Order not found in the database"
+        //     response.data = null
+        //     return new Response(JSON.stringify(response))
+        // }
 
-                const roleStatus = getRoleStatus(currentRole, previousRole)
+        // if (previousOrderUser.profile) {
+        //     if (previousOrderUser.profile.userId !== userId) {
+        //         const previousRole = previousOrderUser.profile.role
+        //         const currentRole = user.role
 
-                if (roleStatus === "down") {
-                    response.status = 400
-                    response.message = "Order has been processed and forwarded to the next department, you cannot edit this order"
-                    response.data = null
-                    return new Response(JSON.stringify(response))
+        //         const roleStatus = getRoleStatus(currentRole, previousRole)
 
-                } else if (roleStatus === "up") {
-                    response.status = 400
-                    response.message = "Order is being processed by a higher department, you cannot edit this order"
-                    response.data = null
-                    return new Response(JSON.stringify(response))
-                } else {
-                    // same
-                    response.status = 400
-                    response.message = "Order is under your department, but assigned to another user, you cannot edit this order"
-                    response.data = null
-                    return new Response(JSON.stringify(response))
-                }
+        //         if (roleStatus === "down") {
+        //             response.status = 400
+        //             response.message = "Order has been processed and forwarded to the next department, you cannot edit this order"
+        //             response.data = null
+        //             return new Response(JSON.stringify(response))
 
-            }
-        } else {
-            response.status = 400
-            response.message = "No previous author found for this order, please contact support"
-            response.data = null
-            return new Response(JSON.stringify(response))
-        }
+        //         } else if (roleStatus === "up") {
+        //             response.status = 400
+        //             response.message = "Order is being processed by a higher department, you cannot edit this order"
+        //             response.data = null
+        //             return new Response(JSON.stringify(response))
+        //         } else {
+        //             // same
+        //             response.status = 400
+        //             response.message = "Order is under your department, but assigned to another user, you cannot edit this order"
+        //             response.data = null
+        //             return new Response(JSON.stringify(response))
+        //         }
+
+        //     }
+        // } else {
+        //     response.status = 400
+        //     response.message = "No previous author found for this order, please contact support"
+        //     response.data = null
+        //     return new Response(JSON.stringify(response))
+        // }
 
         const order = await prisma.orders.findUnique({
             where: {
