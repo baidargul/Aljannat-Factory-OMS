@@ -9,6 +9,7 @@ import PopoverProvider from "../Popover/PopoverProvider";
 import { Status } from "@prisma/client";
 import { v4 } from "uuid";
 import { toast } from "sonner";
+import Image from "next/image";
 
 type Props = {
   row: any;
@@ -33,7 +34,7 @@ const GenericRow = (props: Props) => {
   const [rowTotalAmount, setRowTotalAmount] = useState<any>(0);
   const [timeLapsed, setTimeLapsed] = useState<any>();
   const { addToSelection, isInSelection, mode } = props.selectionProps;
-
+  console.log(props.row)
   const handleRowClick = () => {
     setSelectedOrder(row);
     if (!props.disabled && mode === "selection") {
@@ -342,8 +343,8 @@ function rowStatusStyle(status: string) {
       return "bg-red-100 text-red-500";
     case Status.VERIFIEDORDER:
       return "bg-cyan-100 text-cyan-700";
-      case Status.DISPATCHED:
-        return "bg-green-100 text-green-700 border-b border-green-700 ";
+    case Status.DISPATCHED:
+      return "bg-green-100 text-green-700 border-b border-green-700 ";
     default:
       return "bg-yellow-300";
   }
@@ -1245,7 +1246,7 @@ function GetOrderNotes(row: any) {
   }
 
   return (
-    <div className="w-[700px]">
+    <div className="w-[700px] select-none">
       <div className="flex justify-center items-center text-sm tracking-widest text-zinc-500 font-semibold border-b-2 border-spacing-2 mb-2 shadow-sm">
         ACTIVITY LOG
       </div>
@@ -1258,20 +1259,34 @@ function GetOrderNotes(row: any) {
             const rowIndex = row.orderNotes.length - index - 1;
             return (
 
-              <div onKeyDown={keyPressEvent} onClick={() => handleRowClick(index)} className={`select-none cursor-default border-b scale-90 ${index === selectedRowIndex ? "bg-red-100" : "hover:bg-slate-50"} `} key={v4()}>
-                <div className="grid grid-cols-4 ">
-                  <div className="text-xs text-slate-700 w-4 h-4 text-center font-semibold opacity-50">
+              <div onKeyDown={keyPressEvent} onClick={() => handleRowClick(index)} className={`select-none cursor-default border-b scale-90 ${index === selectedRowIndex ? "bg-red-100 rounded-md" : "hover:bg-slate-50"} `} key={v4()}>
+                <div className="grid grid-cols-3 gap-2 p-2 items-center">
+                  {/* <div className="text-xs text-slate-700 w-4 h-4 text-center font-semibold opacity-50">
                     {rowIndex === 0 ? "-" : rowIndex}
+                  </div> */}
+
+                  <div className="flex gap-1 text-xs items-center relative">
+                    <Image src={note?.profile?.imageURL} width={20} height={20} className="rounded-full w-6 h-6" alt="profile" />
+                    <div className="flex flex-col justify-start items-start text-start">
+                      <div>
+                        {note?.profile?.name}
+                      </div>
+                      <div className="text-xs scale-75">{note?.profile?.role}</div>
+                    </div>
+
                   </div>
-                  <div className="text-xs text-slate-700">
-                    {new Date(note.createdAt).toDateString()}
+                  <div className="text-xs text-slate-700 px-2">
+                    {String(note.note).toUpperCase()}
                   </div>
-                  <div className="text-xs text-slate-700">
-                    {new Date(note.createdAt).toLocaleTimeString()}
+                  <div className=" ml-auto">
+                    <div className="text-xs text-slate-700 ">
+                      {new Date(note.createdAt).toDateString()}
+                    </div>
+                    <div className="text-xs text-slate-700">
+                      {new Date(note.createdAt).toLocaleTimeString()}
+                    </div>
                   </div>
-                  <div className="text-xs text-slate-700">
-                    {String(note.note).charAt(0).toUpperCase() + String(note.note).slice(1).toLowerCase()}
-                  </div>
+
                 </div>
               </div>
             )
@@ -1292,8 +1307,8 @@ function getStatusCasual(status: Status) {
       return "PAYMENT VERIFIED";
     case Status.READYTODISPATCH:
       return "READY FOR DISPATCH";
-      case Status.DISPATCHED:
-        return "DISPATCHED"
+    case Status.DISPATCHED:
+      return "DISPATCHED"
     case Status.CANCELLED:
       return "CANCELLED"
     default:

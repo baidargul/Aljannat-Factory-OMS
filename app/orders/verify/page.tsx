@@ -57,6 +57,9 @@ async function getOrders(profile: profile) {
                 customers: true,
                 profile: true,
                 orderNotes: {
+                    include: {
+                        profile: true,
+                    },
                     orderBy: {
                         createdAt: "desc",
                     }
