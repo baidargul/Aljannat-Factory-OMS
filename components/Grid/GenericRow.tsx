@@ -235,7 +235,7 @@ const GenericRow = (props: Props) => {
             </div>
             <div className="">
               <div className="w-full">
-                <p className="font-semibold">Note</p>
+                <p className="font-semibold">HISTORY FILE</p>
                 <PopoverProvider content={GetOrderNotes(row)}>
                   <div className="w-full text-xs tracking-tight flex gap-1 items-center border-yellow-600 border-b bg-yellow-50 p-2">
                     <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-orange-200 border border-orange-500 text-orange-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
