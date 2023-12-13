@@ -10,6 +10,7 @@ import { Status } from "@prisma/client";
 import { v4 } from "uuid";
 import { toast } from "sonner";
 import Image from "next/image";
+import { Ungroup } from "lucide-react";
 
 type Props = {
   row: any;
@@ -249,7 +250,7 @@ const GenericRow = (props: Props) => {
                       </div>
                       <div>
                         <Image alt="last user" src={row.orderNotes[0]?.profile?.imageURL} width={20} height={20} className="w-6 h-6 rounded-full" />
-                        </div>
+                      </div>
                     </div>
                   </div>
                 </PopoverProvider>
@@ -1254,10 +1255,17 @@ function GetOrderNotes(row: any) {
 
   return (
     <div className="w-[700px] select-none">
-      <div className="flex justify-center items-center text-sm tracking-widest text-zinc-500 font-semibold border-b-2 border-spacing-2 mb-2 shadow-sm">
-        ACTIVITY LOG
+      <div className="flex justify-center items-center gap-2 text-sm tracking-widest text-zinc-500 font-semibold border-b-2 border-spacing-2 shadow-sm">
+        <div className="p-2 hover:bg-cyan-50 hover:scale-90 transition-all duration-1000 hover:border-cyan-700 rounded-full border border-transparent hover:rotate-90 hover:-mt-2 hover:mb-2 hover:text-cyan-700">
+          <a href="https://www.google.com" target="_blank" rel="noreferrer">
+            <Ungroup className="w-6 h-6 " />
+          </a>
+        </div>
+        <div>
+          ACTIVITY LOG
+        </div>
       </div>
-      <ScrollArea className="w-full flex gap-1 justify-between items-center h-[200px]">
+      <ScrollArea className="w-full flex gap-1 mt-2 justify-between items-center h-[200px]">
         {
           row.orderNotes.map((note: any, index: number) => {
             // if (index >= 5) {
