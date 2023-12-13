@@ -20,9 +20,15 @@ type Props = {
     orders: any
     profile: any
     availableCities: availableCity[]
+    availablePhones: AvailablePhones[]
 }
 
 type availableCity = {
+    name: String
+    label: String
+}
+
+type AvailablePhones = {
     name: String
     label: String
 }
@@ -34,6 +40,7 @@ const GridWithFilters = (props: Props) => {
     const [fromDate, setFromDate] = React.useState(new Date())
     const [toDate, setToDate] = React.useState(new Date())
     const [cityFilter, setCityFilter] = React.useState(null)
+    const [phoneFilter, setPhoneFilter] = React.useState(null)
     const [orders, setOrders] = React.useState(props.orders)
     const [refreshRate, setRefreshRate] = React.useState(30000)
     const [selectedOrders, setSelectedOrders] = React.useState<any>([])
@@ -197,6 +204,20 @@ const GridWithFilters = (props: Props) => {
                 </HoverCardProvider>
 
                 <div className='flex gap-2 w-full my-2 justify-end items-center'>
+                    <div>
+                        <ComboBoxProvider setValue={setPhoneFilter} content={props.availablePhones}>
+                            <div className={`relative`}>
+                                <div onClick={() => setPhoneFilter(null)} className={`absolute top-[8px] ${phoneFilter === null && "hidden"} flex left-2 bg-slate-400 border border-slate-500 font-semibold  items-center justify-center text-sm opacity-60 hover:opacity-100 w-4 h-4 text-white`}>
+                                    <p className=''>
+                                        x
+                                    </p>
+                                </div>
+                                <div className='bg-slate-100 border-slate-200 border-t-2 text-sm p-1 rounded-md w-36 text-center'>
+                                    {phoneFilter ? formalizeText(phoneFilter) : "Select phone"}
+                                </div>
+                            </div>
+                        </ComboBoxProvider>
+                    </div>
                     <div>
                         <ComboBoxProvider setValue={setCityFilter} content={props.availableCities}>
                             <div className={`relative`}>

@@ -24,6 +24,10 @@ const GenericRowsHolder = async (props: Props) => {
         name: String
         label: String
     }
+    type AvailablePhones = {
+        name: String
+        label: String
+    }
 
     const availableCities: availableCity[] = [];
     props.orders.map((order: any) => {
@@ -35,6 +39,30 @@ const GenericRowsHolder = async (props: Props) => {
         });
         if (!isCityAvailable) {
             availableCities.push({ name: order.customers.city, label: order.customers.city });
+        }
+    });
+
+    const availablePhones: AvailablePhones[] = [];
+    props.orders.map((order: any) => {
+        let isPhone1Available = false;
+        let isPhone2Available = false;
+        availablePhones.map((phone: AvailablePhones) => {
+            if (String(phone.name).toLocaleLowerCase() === String(order.customers.phone).toLocaleLowerCase()) {
+                isPhone1Available = true;
+            }
+            if (String(phone.name).toLocaleLowerCase() === String(order.customers.phone2).toLocaleLowerCase()) {
+                isPhone2Available = true;
+            }
+        });
+        if (!isPhone1Available) {
+            if (order.customers.phone) {
+                availablePhones.push({ name: order.customers.phone, label: order.customers.phone });
+            }
+        }
+        if (!isPhone2Available) {
+            if (order.customers.phone2) {
+                availablePhones.push({ name: order.customers.phone2, label: order.customers.phone2 });
+            }
         }
     });
 
@@ -58,7 +86,7 @@ const GenericRowsHolder = async (props: Props) => {
                                     <div className=''>
                                         {profile && (
                                             <ProfileRedirector>
-                                            <Image className='rounded border-b border-white cursor-pointer' src={String(profile.imageURL)} width={50} height={50} alt={profile ? profile.name : v4()} />
+                                                <Image className='rounded border-b border-white cursor-pointer' src={String(profile.imageURL)} width={50} height={50} alt={profile ? profile.name : v4()} />
                                             </ProfileRedirector>
                                         )}
                                     </div>
@@ -85,7 +113,7 @@ const GenericRowsHolder = async (props: Props) => {
                         </div>
                     </div>
                     <div className='mt-5'>
-                        <GridWithFilters orders={props.orders} profile={profile} availableCities={availableCities} />
+                        <GridWithFilters orders={props.orders} profile={profile} availableCities={availableCities} availablePhones={availablePhones} />
                     </div>
                 </div>
             </div>
@@ -113,8 +141,8 @@ function getStage(role: Role) {
             return 'Payment Verifier'
         case Role.DISPATCHER:
             return 'Dispatcher'
-            case Role.INVENTORYMANAGER:
-                return 'Inventory Handler'
+        case Role.INVENTORYMANAGER:
+            return 'Inventory Handler'
         case Role.SUPERADMIN:
             return 'Super Admin'
         case Role.UNVERIFIED:
