@@ -126,27 +126,21 @@ export default GenericRowsHolder
 function getStage(role: Role) {
     switch (role) {
         case Role.ADMIN:
-            break;
-
+            return 'Admin'
         case Role.MANAGER:
-            break;
-
+            return 'Manager'
         case Role.ORDERBOOKER:
             return 'Order Booker'
-
         case Role.ORDERVERIFIER:
             return 'Order Verifier'
-
         case Role.PAYMENTVERIFIER:
             return 'Payment Verifier'
         case Role.DISPATCHER:
             return 'Dispatcher'
         case Role.INVENTORYMANAGER:
-            return 'Inventory Handler'
+            return 'Inventory Manager'
         case Role.SUPERADMIN:
             return 'Super Admin'
-        case Role.UNVERIFIED:
-            return 'Unverified'
 
         default:
             break;

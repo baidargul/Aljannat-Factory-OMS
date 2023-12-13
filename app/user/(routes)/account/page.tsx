@@ -98,24 +98,21 @@ export default UserAccount
 function getStage(role: Role) {
     switch (role) {
         case Role.ADMIN:
-            break;
-
+            return 'Admin'
         case Role.MANAGER:
-            break;
-
+            return 'Manager'
         case Role.ORDERBOOKER:
             return 'Order Booker'
-            break;
-
         case Role.ORDERVERIFIER:
             return 'Order Verifier'
-
         case Role.PAYMENTVERIFIER:
             return 'Payment Verifier'
         case Role.DISPATCHER:
             return 'Dispatcher'
+        case Role.INVENTORYMANAGER:
+            return 'Inventory Manager'
         case Role.SUPERADMIN:
-            break;
+            return 'Super Admin'
 
         default:
             break;
