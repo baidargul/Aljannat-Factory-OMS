@@ -32,7 +32,7 @@ const HistoryFile = (props: Props) => {
                     order.orderNotes.map((Note: any, index: number) => {
 
                         return (
-                            <div onClick={() => handleClick(Note.id)} className={`grid grid-cols-2 p-2 even:bg-green-50 rounded  ${selectedRow === Note.id ? "bg-red-50" : "hover:bg-yellow-50"}`}>
+                            <div onClick={() => handleClick(Note.id)} className={`grid grid-cols-2 p-2 even:bg-slate-50 rounded  ${selectedRow === Note.id ? "bg-red-50" : "hover:bg-yellow-50"}`}>
 
                                 <div className='flex gap-2'>
                                     <div className='flex justify-start items-center'>
