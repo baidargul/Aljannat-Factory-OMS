@@ -1257,7 +1257,7 @@ function GetOrderNotes(row: any) {
     <div className="w-[700px] select-none">
       <div className="flex justify-center items-center gap-2 text-sm tracking-widest text-zinc-500 font-semibold border-b-2 border-spacing-2 shadow-sm">
         <div className="p-2 hover:bg-cyan-50 hover:scale-90 transition-all duration-1000 hover:border-cyan-700 rounded-full border border-transparent hover:rotate-90 hover:-mt-2 hover:mb-2 hover:text-cyan-700">
-          <a href="https://www.google.com" target="_blank" rel="noreferrer">
+          <a href={`/orders/history/${row.id}`} target="_blank" rel="noreferrer">
             <Ungroup className="w-6 h-6 " />
           </a>
         </div>
