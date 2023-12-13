@@ -9,6 +9,25 @@ const OrderDetails = (props: Props) => {
     const order = props.order
     return (
         <div>
+            <div className=' mb-24'>
+
+                <div className='font-bold text-2xl uppercase tracking-widest'>
+                    Order details
+                </div>
+                <div className='flex gap-1 text-xs'>
+                    <div className='font-bold'>
+                        Expected Delivery:
+                    </div>
+                    <div className='flex gap-1'>
+                        <div className='font-semibold'>
+                            {new Date(order.dateOfDelivery).toDateString()}
+                        </div>
+                        <div>
+                            {`(${getDeliveryDateDifference(order.dateOfDelivery)})`}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div>
                 <div className='flex gap-1 justify-between items-center p-y'>
                     <div className='font-semibold text-slate-700'>
@@ -24,7 +43,7 @@ const OrderDetails = (props: Props) => {
                     <div className='font-semibold text-slate-700'>
                         Customer:
                     </div>
-                    <div className='text-sm uppercase tracking-tighter'>
+                    <div className='text-sm uppercase tracking-tighter font-semibold'>
                         {order?.customers?.name}
                     </div>
                 </div>
@@ -90,19 +109,47 @@ function rowStatusStyle(status: string) {
 
 function getStatusCasual(status: Status) {
     switch (status) {
-      case Status.BOOKED:
-        return "BOOKED"
-      case Status.VERIFIEDORDER:
-        return "VERIFIED ORDER"
-      case Status.PAYMENTVERIFIED:
-        return "PAYMENT VERIFIED";
-      case Status.READYTODISPATCH:
-        return "READY FOR DISPATCH";
-      case Status.DISPATCHED:
-        return "DISPATCHED"
-      case Status.CANCELLED:
-        return "CANCELLED"
-      default:
-        return "Unknown"
+        case Status.BOOKED:
+            return "BOOKED"
+        case Status.VERIFIEDORDER:
+            return "VERIFIED ORDER"
+        case Status.PAYMENTVERIFIED:
+            return "PAYMENT VERIFIED";
+        case Status.READYTODISPATCH:
+            return "READY FOR DISPATCH";
+        case Status.DISPATCHED:
+            return "DISPATCHED"
+        case Status.CANCELLED:
+            return "CANCELLED"
+        default:
+            return "Unknown"
     }
-  }
+}
+
+function getDeliveryDateDifference(targetDateTime: any) {
+    const target = new Date(targetDateTime);
+    const now = new Date();
+    const diff = now.getTime() - target.getTime();
+
+    const diffInSeconds = Math.floor(diff / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInDays === 0) {
+        return "Today";
+    } else if (diffInDays === 1) {
+        return "Yesterday";
+    } else if (diffInDays < 7) {
+        return `${diffInDays} days ago`;
+    } else if (diffInDays < 30) {
+        const weeks = Math.floor(diffInDays / 7);
+        return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
+    } else if (diffInDays < 365) {
+        const months = Math.floor(diffInDays / 30);
+        return months === 1 ? "1 month ago" : `${months} months ago`;
+    } else {
+        const years = Math.floor(diffInDays / 365);
+        return years === 1 ? "1 year ago" : `${years} years ago`;
+    }
+}

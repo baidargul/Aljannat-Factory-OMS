@@ -123,30 +123,3 @@ function getStage(role: Role) {
     }
 }
 
-function getDeliveryDateDifference(targetDateTime: any) {
-    const target = new Date(targetDateTime);
-    const now = new Date();
-    const diff = now.getTime() - target.getTime();
-
-    const diffInSeconds = Math.floor(diff / 1000);
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    const diffInDays = Math.floor(diffInHours / 24);
-
-    if (diffInDays === 0) {
-        return "Today";
-    } else if (diffInDays === 1) {
-        return "Yesterday";
-    } else if (diffInDays < 7) {
-        return `${diffInDays} days ago`;
-    } else if (diffInDays < 30) {
-        const weeks = Math.floor(diffInDays / 7);
-        return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
-    } else if (diffInDays < 365) {
-        const months = Math.floor(diffInDays / 30);
-        return months === 1 ? "1 month ago" : `${months} months ago`;
-    } else {
-        const years = Math.floor(diffInDays / 365);
-        return years === 1 ? "1 year ago" : `${years} years ago`;
-    }
-}
