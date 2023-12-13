@@ -14,15 +14,24 @@ const OrdersSummary = async (props: Props) => {
         redirectToSignIn()
     }
 
+    const olderOrder = await oldestOrderDate()
 
     return (
         <div className='w-full'>
-            <div className='pr-2'>
+            <div className='pr-2 flex flex-col gap-1'>
+                <section className='flex justify-between text-sm font-semibold font-mono text-slate-600'>
+                    <div>
+                        Oldest:
+                    </div>
+                    <div className={`bg-slate-100 px-2 border-b border-slate-300 ${new Date(olderOrder) < new Date() ? "text-orange-700 bg-orange-50 border-orange-700" : ""}`}>
+                        {olderOrder}
+                    </div>
+                </section>
                 <section className='flex justify-between text-sm font-semibold font-mono text-slate-600'>
                     <div>
                         In Processing:
                     </div>
-                    <div>
+                    <div className='bg-slate-200 px-2 rounded border border-slate-300'>
                         {await getOrders()}
                     </div>
                 </section>
@@ -30,26 +39,11 @@ const OrdersSummary = async (props: Props) => {
                     <div>
                         Assigned to me:
                     </div>
-                    <div>
+                    <div className='bg-slate-200 px-2 rounded border border-slate-300'>
                         {await currentUserOrders(String(profile?.userId))}
                     </div>
                 </section>
-                <section className='flex justify-between text-sm font-semibold font-mono text-slate-600'>
-                    <div>
-                        Pending orders:
-                    </div>
-                    <div>
-                        {await Pending(profile)}
-                    </div>
-                </section>
-                <section className='flex justify-between text-sm font-semibold font-mono text-slate-600'>
-                    <div>
-                        Oldest:
-                    </div>
-                    <div>
-                        {await oldestOrderDate()}
-                    </div>
-                </section>
+
 
             </div>
         </div>
@@ -116,92 +110,4 @@ async function oldestOrderDate() {
     } else {
         return 0
     }
-}
-
-async function Pending(profile: any) {
-    const user = await prisma.profile.findUnique({
-        where: {
-            userId: String(profile.userId),
-        }
-    })
-
-    if (!user) {
-        toast.error("Invalid Session, User not found!")
-        redirect("/")
-    }
-
-    const role: Role = user.role;
-    let orders: any;
-    if (role === Role.ADMIN || role === Role.SUPERADMIN || role === Role.MANAGER) {
-        orders = await prisma.orders.findMany({
-            include: {
-                customers: true,
-                profile: true,
-                orderNotes: {
-                    orderBy: {
-                        createdAt: "desc",
-                    }
-                },
-                ordersRegister: {
-                    include: {
-                        productVariations: {
-                            select: {
-                                name: true,
-                                defaultUnit: true,
-                            }
-                        },
-                        product: {
-                            select: {
-                                id: true,
-                                name: true,
-                            }
-                        },
-                    }
-                },
-            },
-            orderBy: {
-                dateOfBooking: "asc",
-            }
-        });
-    } else {
-        const targetStatus: Status = orderStatusforUser(user);
-
-        orders = await prisma.orders.findMany({
-            include: {
-                customers: true,
-                profile: true,
-                orderNotes: {
-                    orderBy: {
-                        createdAt: "desc",
-                    }
-                },
-                ordersRegister: {
-                    include: {
-                        productVariations: {
-                            select: {
-                                name: true,
-                                defaultUnit: true,
-                            }
-                        },
-                        product: {
-                            select: {
-                                id: true,
-                                name: true,
-                            }
-                        },
-                    }
-                },
-            },
-            orderBy: {
-                dateOfBooking: "asc",
-            },
-            where: {
-                NOT:{
-                    status: targetStatus,
-                },
-                userId: String(profile.userId),
-            }
-        });
-    }
-    return orders.length
 }
