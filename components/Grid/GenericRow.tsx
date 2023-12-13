@@ -233,17 +233,24 @@ const GenericRow = (props: Props) => {
                 </div>
               </div>
             </div>
-            <div>
-              <div>
+            <div className="">
+              <div className="w-full">
                 <p className="font-semibold">Note</p>
                 <PopoverProvider content={GetOrderNotes(row)}>
-                  <div className="w-full text-xs tracking-tight flex gap-1 items-center">
-                    <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-zinc-200 border border-zinc-500 text-zinc-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
+                  <div className="w-full text-xs tracking-tight flex gap-1 items-center border-yellow-600 border-b bg-yellow-50 p-2">
+                    <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-orange-200 border border-orange-500 text-orange-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
                       <p className="scale-75">
                         {row.orderNotes.length - 1}
                       </p>
                     </div>
-                    {formalizeText(row.orderNotes[0].note)}
+                    <div className="flex items-center justify-between gap-2">
+                      <div>
+                        {String(row.orderNotes[0].note).toLocaleUpperCase()}
+                      </div>
+                      <div>
+                        <Image alt="last user" src={row.orderNotes[0]?.profile?.imageURL} width={20} height={20} className="w-6 h-6 rounded-full" />
+                        </div>
+                    </div>
                   </div>
                 </PopoverProvider>
               </div>
