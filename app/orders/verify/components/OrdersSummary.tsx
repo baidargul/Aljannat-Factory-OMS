@@ -74,11 +74,13 @@ function orderStatusforUser(user: profile) {
 async function getOrders() {
     const orders = await prisma.orders.findMany({
         where: {
-            NOT: {
-                status: 'DISPATCHED' || 'CANCELLED'
-            }
+            NOT: [
+                { status: 'DISPATCHED' },
+                { status: 'CANCELLED' }
+            ]
         }
     })
+    console.log(orders)
     return orders.length
 }
 
