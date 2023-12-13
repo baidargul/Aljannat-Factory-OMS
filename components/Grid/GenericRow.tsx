@@ -36,7 +36,7 @@ const GenericRow = (props: Props) => {
 
   const handleRowClick = () => {
     setSelectedOrder(row);
-    if (!props.disabled && mode==="selection") {
+    if (!props.disabled && mode === "selection") {
       addToSelection(row.id);
     }
   };
@@ -178,138 +178,138 @@ const GenericRow = (props: Props) => {
 
   return (
     <SheetProvider trigger={DataRow()}>
-    
-        {
-          props.disabled ? (
-            OtherUserOrder()
-          ) : (
-            <div className="select-none -mt-2 flex flex-col p-2  gap-2 ">
 
-              <div onClick={() => orderIdClicked(row.id)} className="text-xs uppercase text-center bg-slate-300 text-white py-1 border-y border-slate-400 hover:bg-slate-700 transition-all duration-1000 cursor-pointer">{row.id}</div>
+      {
+        props.disabled ? (
+          OtherUserOrder()
+        ) : (
+          <div className="select-none -mt-2 flex flex-col p-2  gap-2 ">
 
-              <div className="flex justify-between text-xs items-center">
-                <div className="p-1 border-b-2 border-slate-900/30 tracking-wide ">
-                  {orderDate}
+            <div onClick={() => orderIdClicked(row.id)} className="text-xs uppercase text-center bg-slate-300 text-white py-1 border-y border-slate-400 hover:bg-slate-700 transition-all duration-1000 cursor-pointer">{row.id}</div>
+
+            <div className="flex justify-between text-xs items-center">
+              <div className="p-1 border-b-2 border-slate-900/30 tracking-wide ">
+                {orderDate}
+              </div>
+              <div className="text-slate-900 p-1 border-b-2 border-slate-900/30 border-double-2 font-semibold">
+                {formalizeText(getStatusCasual(row.status))}
+              </div>
+            </div>
+            <div className="bg-slate-900/40 p-1 font-semibold">
+              <div className="bg-slate-300 rounded flex p-2 gap-2 w-full items-center justify-between text-center">
+                <div className="text-slate-900">
+                  {getTotalWeight(row)}
                 </div>
-                <div className="text-slate-900 p-1 border-b-2 border-slate-900/30 border-double-2 font-semibold">
-                  {formalizeText(getStatusCasual(row.status))}
+                <div className="">{formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)}</div>
+                <div className="text-slate-900">{formalizeText(row.ordersRegister[0].productVariations.name)}</div>
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-2 w-full text-sm">
+                <div className="font-semibold">
+                  <p className="">Customer</p>
+                  <p className="">Phone 01</p>
+                  <p className="">Phone 02</p>
+                  <p className="">City</p>
+                  <p className="">Address</p>
+                </div>
+                <div className="">
+                  <p className="text-ellipsis overflow-hidden whitespace-nowrap">
+                    {formalizeText(row.customers.name)}
+                  </p>
+                  <p className="">
+                    {row.customers.phone ? row.customers.phone !== "00000000001" ? <a className="text-blue-400" href={`tel:${row.customers.phone}`}>{row.customers.phone}</a> : "N/A" : "N/A"}
+                  </p>
+                  <p className="">
+                    {row.customers.phone2 ? row.customers.phone2 !== "00000000001" ? <a className="text-blue-400" href={`tel:${row.customers.phone2}`}>{row.customers.phone2}</a> : "N/A" : "N/A"}
+                  </p>
+                  <p className="text-ellipsis overflow-hidden whitespace-nowrap">
+                    {formalizeText(row.customers.city)}
+                  </p>
+                  <div className="text-ellipsis overflow-hidden whitespace-break-spaces h-16">
+                    {formalizeText(row.customers.address)}
+                  </div>
                 </div>
               </div>
-              <div className="bg-slate-900/40 p-1 font-semibold">
-                <div className="bg-slate-300 rounded flex p-2 gap-2 w-full items-center justify-between text-center">
-                  <div className="text-slate-900">
-                    {getTotalWeight(row)}
+            </div>
+            <div>
+              <div>
+                <p className="font-semibold">Note</p>
+                <PopoverProvider content={GetOrderNotes(row)}>
+                  <div className="w-full text-xs tracking-tight flex gap-1 items-center">
+                    <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-zinc-200 border border-zinc-500 text-zinc-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
+                      <p className="scale-75">
+                        {row.orderNotes.length - 1}
+                      </p>
+                    </div>
+                    {formalizeText(row.orderNotes[0].note)}
                   </div>
-                  <div className="">{formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)}</div>
-                  <div className="text-slate-900">{formalizeText(row.ordersRegister[0].productVariations.name)}</div>
-                </div>
+                </PopoverProvider>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3">
+              <div>
+                <p className="font-semibold">Status</p>
+                <p className="text-xs tracking-tight">{formalizeText(getStatusCasual(row.status))}</p>
               </div>
               <div>
-                <div className="grid grid-cols-2 w-full text-sm">
-                  <div className="font-semibold">
-                    <p className="">Customer</p>
-                    <p className="">Phone 01</p>
-                    <p className="">Phone 02</p>
-                    <p className="">City</p>
-                    <p className="">Address</p>
-                  </div>
-                  <div className="">
-                    <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                      {formalizeText(row.customers.name)}
-                    </p>
-                    <p className="">
-                      {row.customers.phone ? row.customers.phone !== "00000000001" ? <a className="text-blue-400" href={`tel:${row.customers.phone}`}>{row.customers.phone}</a> : "N/A" : "N/A"}
-                    </p>
-                    <p className="">
-                      {row.customers.phone2 ? row.customers.phone2 !== "00000000001" ? <a className="text-blue-400" href={`tel:${row.customers.phone2}`}>{row.customers.phone2}</a> : "N/A" : "N/A"}
-                    </p>
-                    <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                      {formalizeText(row.customers.city)}
-                    </p>
-                    <div className="text-ellipsis overflow-hidden whitespace-break-spaces h-16">
-                      {formalizeText(row.customers.address)}
-                    </div>
-                  </div>
-                </div>
+                <p className="font-semibold">Service</p>
+                <p className="text-xs tracking-tight">{row.courier}</p>
               </div>
               <div>
-                <div>
-                  <p className="font-semibold">Note</p>
-                  <PopoverProvider content={GetOrderNotes(row)}>
-                    <div className="w-full text-xs tracking-tight flex gap-1 items-center">
-                      <div className={row.orderNotes.length > 1 ? "text-xs w-4 h-4 bg-zinc-200 border border-zinc-500 text-zinc-800 rounded-full justify-center items-center flex text-center" : "hidden"}>
-                        <p className="scale-75">
-                          {row.orderNotes.length - 1}
-                        </p>
+                <p className="font-semibold">#</p>
+                <p className="text-xs tracking-tight">{row.trackingNo}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-4 -mb-2 bg-slate-300 items-center px-2 py-1">
+              <p className="font-semibold text-sm">Product</p>
+              <p className="font-semibold text-sm">Variant</p>
+              <p className="font-semibold text-sm">Weight</p>
+              <p className="font-semibold text-sm">Amount</p>
+            </div>
+            <div className="">
+              {
+                row.ordersRegister.map((item: any) => {
+                  return (
+                    <div className="grid grid-cols-4 px-2 py-1 border-b border-x" key={formalizeText(item.name)}>
+                      <div>
+                        <p className="text-xs tracking-tight">{formalizeText(item.product.name)}</p>
                       </div>
-                      {formalizeText(row.orderNotes[0].note)}
+                      <div>
+                        <p className="text-xs tracking-tight">{formalizeText(item.productVariations.name)}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs tracking-tight">{`${item.weight} ${item.productVariations.defaultUnit}`}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs tracking-tight">Rs {item.amount}</p>
+                      </div>
                     </div>
-                  </PopoverProvider>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3">
-                <div>
-                  <p className="font-semibold">Status</p>
-                  <p className="text-xs tracking-tight">{formalizeText(getStatusCasual(row.status))}</p>
-                </div>
-                <div>
-                  <p className="font-semibold">Service</p>
-                  <p className="text-xs tracking-tight">{row.courier}</p>
-                </div>
-                <div>
-                  <p className="font-semibold">#</p>
-                  <p className="text-xs tracking-tight">{row.trackingNo}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-4 -mb-2 bg-slate-300 items-center px-2 py-1">
-                <p className="font-semibold text-sm">Product</p>
-                <p className="font-semibold text-sm">Variant</p>
-                <p className="font-semibold text-sm">Weight</p>
-                <p className="font-semibold text-sm">Amount</p>
-              </div>
-              <div className="">
-                {
-                  row.ordersRegister.map((item: any) => {
-                    return (
-                      <div className="grid grid-cols-4 px-2 py-1 border-b border-x" key={formalizeText(item.name)}>
-                        <div>
-                          <p className="text-xs tracking-tight">{formalizeText(item.product.name)}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs tracking-tight">{formalizeText(item.productVariations.name)}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs tracking-tight">{`${item.weight} ${item.productVariations.defaultUnit}`}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs tracking-tight">Rs {item.amount}</p>
-                        </div>
-                      </div>
-                    )
-                  })
-                }
-              </div>
-              <div className="flex justify-between mt-10 items-center">
-                <div className="text-sm flex gap-1 text-slate-700 items-center">
-                  <p className="font-semibold ">
-                    Current handler:
-                  </p>
-                  <p className="tracking-wide">
-                    {formalizeText((row.profile? row.profile.name : ""))}
-                  </p>
-                </div>
-                <p className="font-semibold text-lg text-green-700">
-                  Rs {rowTotalAmount}
+                  )
+                })
+              }
+            </div>
+            <div className="flex justify-between mt-10 items-center">
+              <div className="text-sm flex gap-1 text-slate-700 items-center">
+                <p className="font-semibold ">
+                  Current handler:
+                </p>
+                <p className="tracking-wide">
+                  {formalizeText((row.profile ? row.profile.name : ""))}
                 </p>
               </div>
-              <div>
-                {props.stage && getStageControls(props.stage, props.profile, row, updateRow)}
-              </div>
-            </div >
-          )
-        }
-  
+              <p className="font-semibold text-lg text-green-700">
+                Rs {rowTotalAmount}
+              </p>
+            </div>
+            <div>
+              {props.stage && getStageControls(props.stage, props.profile, row, updateRow)}
+            </div>
+          </div >
+        )
+      }
+
     </SheetProvider >
   );
 };
@@ -342,6 +342,8 @@ function rowStatusStyle(status: string) {
       return "bg-red-100 text-red-500";
     case Status.VERIFIEDORDER:
       return "bg-cyan-100 text-cyan-700";
+      case Status.DISPATCHED:
+        return "bg-green-100 text-green-700 border-b border-green-700 ";
     default:
       return "bg-yellow-300";
   }
@@ -1078,16 +1080,16 @@ function _inventoryStageControls(profile: any, row: any, updateRow: any) {
     setIsWorking(false)
   }
 
-  async function handleMnPButton(row: any) {
+  async function handleDispatched(row: any) {
     const userId = profile.userId;
-    const note = `'Dispatch confirmed to: "M&P" ' - ${formalizeText(profile.name)}`;
+    const note = `'Dispatched' - ${formalizeText(profile.name)}`;
     const orderId = row.id;
     if (!note) {
       return
     }
 
     setIsWorking(true)
-    const status = Status.READYTODISPATCH
+    const status = Status.DISPATCHED
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
       updateRow(data)
@@ -1114,71 +1116,19 @@ function _inventoryStageControls(profile: any, row: any, updateRow: any) {
       }
     })
 
-    toast.success("Order ready to be dispatch towards M&P")
+    toast.success("Order dispatched!")
     setIsWorking(false)
   }
-  async function handleGopButton() {
+  async function handleCancelled() {
     const userId = profile.userId;
-    const note = `'Dispatch confirmed to: "GOP" ' - ${formalizeText(profile.name)}`;
+    const note = `'Cancelled' - ${formalizeText(profile.name)}`;
     const orderId = row.id;
     if (!note) {
       return
     }
 
     setIsWorking(true)
-    const status = Status.READYTODISPATCH
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
-    });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then((res) => {
-      const data = res.data.data
-      updateRow(data)
-    });
-    setIsWorking(false)
-  }
-  async function handleSpeedAfButton() {
-    const userId = profile.userId;
-    const note = `'Dispatch confirmed to: "SpeedAf" ' - ${formalizeText(profile.name)}`;
-    const orderId = row.id;
-    if (!note) {
-      return
-    }
-
-    setIsWorking(true)
-    const status = Status.READYTODISPATCH
-    await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
-      const response = await res.data
-      if (response.status === 200) {
-        const data = response.data
-        toast.success(response.message, { duration: 1000 })
-        updateRow(data)
-      } else {
-        toast.warning(response.message, { duration: 1000 })
-      }
-    });
-    await axios.patch("/api/order/status/update", { userId, status, orderId }).then(async (res) => {
-      const response = await res.data
-      if (response.status === 200) {
-        const data = response.data
-        toast.success(response.message, { duration: 1000 })
-        updateRow(data)
-      } else {
-        toast.warning(response.message, { duration: 1000 })
-      }
-    });
-    setIsWorking(false)
-  }
-  async function handleTcsButton() {
-    const userId = profile.userId;
-    const note = `'Dispatch confirmed to: "TCS" ' - ${formalizeText(profile.name)}`;
-    const orderId = row.id;
-    if (!note) {
-      return
-    }
-
-    setIsWorking(true)
-    const status = Status.READYTODISPATCH
+    const status = Status.CANCELLED
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
       const response = await res.data
       if (response.status === 200) {
@@ -1223,8 +1173,10 @@ function _inventoryStageControls(profile: any, row: any, updateRow: any) {
       case Status.READYTODISPATCH:
         status = Status.PAYMENTVERIFIED
         break;
+      case Status.DISPATCHED:
+        status = Status.READYTODISPATCH
       default:
-        status = Status.BOOKED
+        status = Status.READYTODISPATCH
         break;
     }
 
@@ -1253,16 +1205,12 @@ function _inventoryStageControls(profile: any, row: any, updateRow: any) {
   }
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex gap-1 items-center">
-        <Input placeholder="Rider instructions" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
-        <button disabled={row.status === Status.READYTODISPATCH ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 px-4 text-xs ${row.status === Status.READYTODISPATCH ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Add"}</button>
-      </div>
       <div className="border border-green-300 rounded p-2">
         <div className="widest font-semibold text-slate-700 text-sm mt-1">Actions:</div>
         <div className="grid grid-cols-2 gap-1 mt-1">
           <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== Status.READYTODISPATCH ? "" : "hidden"}`}>Reset Status</button>
-          <button disabled={isWorking} onClick={() => handleMnPButton(row)} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.READYTODISPATCH ? "" : "hidden"}`}>Dispatched</button>
-          <button disabled={isWorking} onClick={() => handleTcsButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.READYTODISPATCH ? "" : "hidden"}`}>CANCELLED</button>
+          <button disabled={isWorking} onClick={() => handleDispatched(row)} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.READYTODISPATCH ? "" : "hidden"}`}>Dispatched</button>
+          <button disabled={isWorking} onClick={() => handleCancelled()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.READYTODISPATCH ? "" : "hidden"}`}>CANCELLED</button>
         </div>
       </div>
     </div>
@@ -1344,6 +1292,8 @@ function getStatusCasual(status: Status) {
       return "PAYMENT VERIFIED";
     case Status.READYTODISPATCH:
       return "READY FOR DISPATCH";
+      case Status.DISPATCHED:
+        return "DISPATCHED"
     case Status.CANCELLED:
       return "CANCELLED"
     default:

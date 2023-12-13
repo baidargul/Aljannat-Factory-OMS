@@ -80,7 +80,6 @@ async function getOrders() {
             ]
         }
     })
-    console.log(orders)
     return orders.length
 }
 
