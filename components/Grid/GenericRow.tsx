@@ -35,7 +35,6 @@ const GenericRow = (props: Props) => {
   const [rowTotalAmount, setRowTotalAmount] = useState<any>(0);
   const [timeLapsed, setTimeLapsed] = useState<any>();
   const { addToSelection, isInSelection, mode } = props.selectionProps;
-  console.log(props.row)
   const handleRowClick = () => {
     setSelectedOrder(row);
     if (!props.disabled && mode === "selection") {
@@ -177,7 +176,6 @@ const GenericRow = (props: Props) => {
       setSelectedOrder(row.id)
     }
   }
-
   return (
     <SheetProvider trigger={DataRow()}>
 
@@ -848,7 +846,7 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
     setIsWorking(true)
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
       const response = await res.data
-      console.log(response)
+
       if (response.status === 200) {
         const data = response.data
         toast.success(response.message, { duration: 1000 })
@@ -1076,7 +1074,6 @@ function _inventoryStageControls(profile: any, row: any, updateRow: any) {
     setIsWorking(true)
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then(async (res) => {
       const response = await res.data
-      console.log(response)
       if (response.status === 200) {
         const data = response.data
         toast.success(response.message, { duration: 1000 })
