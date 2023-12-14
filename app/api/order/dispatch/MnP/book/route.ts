@@ -86,6 +86,9 @@ export async function POST(req: NextRequest): Promise<void | Response> {
                         customers: true,
                         profile: true,
                         orderNotes: {
+                            include:{
+                                profile: true,  
+                            },
                             orderBy: {
                                 createdAt: "desc",
                             }

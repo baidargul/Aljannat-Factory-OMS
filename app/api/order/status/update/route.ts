@@ -86,6 +86,9 @@ export async function PATCH(req: NextRequest) {
                 customers: true,
                 profile: true,
                 orderNotes: {
+                    include:{
+                        profile: true,  
+                    },
                     orderBy: {
                         createdAt: "desc",
                     }
