@@ -1,11 +1,11 @@
 generator client {
   provider = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = "postgresql://baidargul:iamacracker@localhost:5432/exceltodb"
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model orders {
@@ -134,7 +134,7 @@ model courier_dep {
   password  String?
   apikey    String?
   createdAt DateTime? @db.Timestamptz(6)
-  useApiKey Boolean? @default(true)
+  useApiKey Boolean?  @default(true)
   accountNo String?
 }
 
