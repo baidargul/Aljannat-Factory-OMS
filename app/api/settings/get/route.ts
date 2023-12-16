@@ -30,7 +30,23 @@ export async function POST(req: NextRequest) {
             return new Response(JSON.stringify(response))
         }
 
+        const isSettingExists = await prisma.settings.findUnique({
+            where: {
+                name
+            }
+        })
+        
+        if(!isSettingExists){
+            await prisma.settings.create({
+                data: {
+                    name,
+                }
+            })
+        }
+
         let setting
+
+        
         switch (method) {
             case "READ":
                 setting = await READ(name)
