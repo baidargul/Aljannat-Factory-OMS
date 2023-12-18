@@ -2,9 +2,11 @@
 import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
 import { useClerk } from '@clerk/nextjs'
 import { profile } from '@prisma/client'
+import axios from 'axios'
 import { Globe, LogOut, Mail, PaintBucket, PersonStanding, ShoppingBag, Trash, User, User2 } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 type Props = {
     profile: any
@@ -85,7 +87,7 @@ function getMenuComponent(selectedMenu: any, profile: profile) {
         case "orders":
             break;
         case "users":
-            break;
+            return <PendingUsers profile={profile} />
         default:
             break;
     }
@@ -141,6 +143,60 @@ function PersonalMenu(profile: any) {
                 </div>
             </div>
 
+        </div>
+    )
+}
+
+const PendingUsers = (profile: any) => {
+    const [pendingUsers, setPendingUsers] = useState<any>([])
+
+    useEffect(() => {
+        axios.get('/api/user/unverified/').then(async (res) => {
+            const response = res.data
+            if (response.status === 200) {
+                setPendingUsers(response.data)
+            }
+        }).catch((error: any) => {
+            setPendingUsers(null)
+            toast.error(error.message)
+        })
+    }, [])
+
+
+
+
+
+    return (
+        <div className='w-full'>
+            {
+                pendingUsers && pendingUsers.length > 0 ? pendingUsers.map((user: any, index: number) => {
+                    return (
+                        <div className='grid grid-cols-6 w-full text-slate-700 items-center'>
+                            <div className=''>
+                                <div className='flex gap-1 items-center font-semibold '>
+                                    <Image src={user.imageURL ? user.imageURL : "/Placeholders/default.png"} width={50} height={50} alt='loggedInUser' className='rounded-md' />
+                                    <div>{user.name}</div>
+                                </div>
+                            </div>
+                            <div className='font-semibold'>
+                                {formalizeText(user.email)}
+                            </div>
+                            <div className='font-sans text-sm uppercase truncate'>
+                                {user.userId}
+                            </div>
+                            <div>
+                                Role Selection
+                            </div>
+                            <div>
+                                <button className='bg-green-500 text-white rounded-md p-1'>Accept</button>
+                            </div>
+                            <div>
+                                <button className='bg-red-500 text-white rounded-md p-1'>Reject</button>
+                            </div>
+                        </div>
+                    )
+                }) : <div>No Pending Users</div>
+            }
         </div>
     )
 }
