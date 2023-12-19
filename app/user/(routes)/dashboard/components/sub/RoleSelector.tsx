@@ -75,7 +75,7 @@ const RoleSelector = (props: Props) => {
     }
 
     return (
-        <div className='grid grid-cols-2 w-full'>
+        <div className='flex justify-between'>
             <div className=''>
                 <ComboBoxProvider placeholder='User role' setValue={setRole} content={props.roleMenu} returnLabel>
                     <div className='flex gap-1 items-center px-2 py-1'>
