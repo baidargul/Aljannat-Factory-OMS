@@ -1,9 +1,10 @@
 'use client'
+import { ComboBoxProvider } from '@/components/ComboBox/ComboBoxProvider'
 import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
 import { useClerk } from '@clerk/nextjs'
 import { profile } from '@prisma/client'
 import axios from 'axios'
-import { Globe, LogOut, Mail, PaintBucket, PersonStanding, ShoppingBag, Trash, User, User2 } from 'lucide-react'
+import { Ban, Check, Globe, LogOut, Mail, PaintBucket, PersonStanding, ShoppingBag, Trash, User, User2 } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -151,6 +152,10 @@ const PendingUsers = (profile: any) => {
     const [pendingUsers, setPendingUsers] = useState<any>([])
 
     useEffect(() => {
+        getPendingUsers()
+    }, [])
+
+    async function getPendingUsers() {
         axios.get('/api/user/unverified/').then(async (res) => {
             const response = res.data
             if (response.status === 200) {
@@ -160,43 +165,60 @@ const PendingUsers = (profile: any) => {
             setPendingUsers(null)
             toast.error(error.message)
         })
-    }, [])
-
-
+    }
 
 
 
     return (
-        <div className='w-full'>
-            {
-                pendingUsers && pendingUsers.length > 0 ? pendingUsers.map((user: any, index: number) => {
-                    return (
-                        <div className='grid grid-cols-6 w-full text-slate-700 items-center'>
-                            <div className=''>
-                                <div className='flex gap-1 items-center font-semibold '>
-                                    <Image src={user.imageURL ? user.imageURL : "/Placeholders/default.png"} width={50} height={50} alt='loggedInUser' className='rounded-md' />
-                                    <div>{user.name}</div>
+        <div className='p-1 border rounded-md'>
+            <div className='font-semibold text-md text-slate-700 tracking-tight'>
+                Pending users:
+            </div>
+            <div className='w-full p-1'>
+                {
+                    pendingUsers && pendingUsers.length > 0 ? pendingUsers.map((user: any, index: number) => {
+                        return (
+                            <div className='grid grid-cols-5 w-full text-slate-700 items-center bg-slate-50 border border-slate-100 p-1'>
+                                <div className=''>
+                                    <div className='flex gap-3 items-center font-semibold '>
+                                        <Image src={user.imageURL ? user.imageURL : "/Placeholders/default.png"} width={50} height={50} alt='loggedInUser' className='rounded-full w-8 h-8' />
+                                        <div>{user.name}</div>
+                                    </div>
+                                </div>
+                                <div className='font-semibold'>
+                                    {user.email}
+                                </div>
+                                <div className='font-sans text-xs uppercase truncate'>
+                                    {user.userId}
+                                </div>
+                                <div>
+                                    <ComboBoxProvider>
+                                        <div className='flex gap-1 items-center'>
+                                            <div>
+                                                <User2 className='w-4 h-4 text-slate-700' />
+                                            </div>
+                                            <div>
+                                                Role
+                                            </div>
+                                        </div>
+                                    </ComboBoxProvider>
+                                </div>
+                                <div className='flex gap-1 items-center'>
+                                    <div className='flex items-center border drop-shadow-sm bg-white rounded w-32 justify-center hover:bg-slate-50 active:bg-green-50'>
+                                        <Check className='w-6 h-6 text-green-500' />
+                                        <button className=' text-slate-700 rounded-md p-1'>Accept</button>
+                                    </div>
+                                    <div className='flex items-center border drop-shadow-sm bg-white rounded w-32 justify-center hover:bg-slate-50 active:bg-red-50'>
+                                        <Ban className='w-5 h-5 text-red-500' />
+                                        <button className=' text-slate-700 rounded-md p-1'>Reject</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div className='font-semibold'>
-                                {formalizeText(user.email)}
-                            </div>
-                            <div className='font-sans text-sm uppercase truncate'>
-                                {user.userId}
-                            </div>
-                            <div>
-                                Role Selection
-                            </div>
-                            <div>
-                                <button className='bg-green-500 text-white rounded-md p-1'>Accept</button>
-                            </div>
-                            <div>
-                                <button className='bg-red-500 text-white rounded-md p-1'>Reject</button>
-                            </div>
-                        </div>
-                    )
-                }) : <div>No Pending Users</div>
-            }
+                        )
+                    }) : <div>No Pending Users</div>
+                }
+            </div>
         </div>
+
     )
 }
