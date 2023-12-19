@@ -106,7 +106,7 @@ const Menu = (props: Props) => {
                     })
                 }
             </div>
-            <div>
+            <div className='h-[400px]'>
                 {
                     getMenuComponent(selectedMenu, props.profile)
                 }
@@ -138,51 +138,51 @@ function PersonalMenu(profile: any) {
     const { signOut } = useClerk()
 
     return (
-        <div className='bg-slate-100 p-2 grid grid-cols-3 justify-center items-center w-full gap-2'>
-            <div className='flex flex-col h-full justify-center items-center text-zinc-700 px-20 py-4 drop-shadow-sm rounded-md bg-white border w-fit'>
-                <div>
-                    <Image src={profile.profile.imageURL ? profile.profile.imageURL : "/Placeholders/default.png"} width={150} height={150} alt='loggedInUser' className='rounded-md' />
-                </div>
-                <div className='font-semibold text-lg'>
-                    {profile.profile.name}
-                </div>
-                <div className='text-sm text-zinc-400'>
-                    {new Date(profile.profile.createdAt).toDateString() + " " + new Date(profile.profile.createdAt).toLocaleTimeString()}
-                </div>
-            </div>
-            <div className='flex flex-col h-full justify-center items-center text-zinc-700 px-20 py-4 drop-shadow-sm rounded-md bg-white border w-fit'>
-                <div className='font-semibold pb-1 border-b mb-10'>
-                    Your role
-                </div>
-                <div className='flex gap-1 items-center'>
-                    <Mail className='w-4 h-4' />
-                    {
-                        formalizeText(profile.profile.email)
-                    }
-                </div>
-                <div className='font-semibold text-sm text-zinc-400'>
-                    {
-                        getCurrentUserCasualStatus(profile.profile.role)
-                    }
-                </div>
-            </div>
-
-            <div className='flex flex-col h-full justify-center items-center text-zinc-700 px-20 py-4 drop-shadow-sm rounded-md bg-white border w-fit'>
-                <div className='font-semibold pb-1 border-b mb-10'>
-                    Actions
-                </div>
-                <div className='flex flex-col gap-2'>
-                    <div className='flex gap-1 items-center w-36 p-1 text-sm text-slate-400 border-b border-transparent hover:border-slate-200 hover:text-slate-700 transition-all duration-700 hover:drop-shadow-sm rounded-md'>
-                        <Trash className='w-4 h-4' />
-                        <button>Delete Account</button>
+        <div className='flex justify-center items-center bg-slate-100 p-2 w-[1100px]'>
+            <div className='grid grid-cols-3 justify-center justify-items-center place-items-center'>
+                <div className='flex flex-col h-full justify-center items-center text-zinc-700 px-20 py-4 drop-shadow-sm rounded-md bg-white border w-fit'>
+                    <div>
+                        <Image src={profile.profile.imageURL ? profile.profile.imageURL : "/Placeholders/default.png"} width={150} height={150} alt='loggedInUser' className='rounded-md' />
                     </div>
-                    <div onClick={() => signOut()} className='flex gap-1 items-center w-36 p-1 text-sm text-slate-400 border-b border-transparent hover:border-slate-200 hover:text-slate-700 transition-all duration-700 hover:drop-shadow-sm rounded-md'>
-                        <LogOut className='w-4 h-4' />
-                        <button>Logout</button>
+                    <div className='font-semibold text-lg'>
+                        {profile.profile.name}
+                    </div>
+                    <div className='text-sm text-zinc-400'>
+                        {new Date(profile.profile.createdAt).toDateString() + " " + new Date(profile.profile.createdAt).toLocaleTimeString()}
                     </div>
                 </div>
+                <div className='flex flex-col h-full justify-center items-center text-zinc-700 px-20 py-4 drop-shadow-sm rounded-md bg-white border w-fit'>
+                    <div className='font-semibold pb-1 border-b mb-10'>
+                        Your role
+                    </div>
+                    <div className='flex gap-1 items-center'>
+                        <Mail className='w-4 h-4' />
+                        {
+                            formalizeText(profile.profile.email)
+                        }
+                    </div>
+                    <div className='font-semibold text-sm text-zinc-400'>
+                        {
+                            getCurrentUserCasualStatus(profile.profile.role)
+                        }
+                    </div>
+                </div>
+                <div className='flex flex-col h-full justify-center items-center text-zinc-700 px-20 py-4 drop-shadow-sm rounded-md bg-white border w-fit'>
+                    <div className='font-semibold pb-1 border-b mb-10'>
+                        Actions
+                    </div>
+                    <div className='flex flex-col gap-2'>
+                        <div className='flex gap-1 items-center w-36 p-1 text-sm text-slate-400 border-b border-transparent hover:border-slate-200 hover:text-slate-700 transition-all duration-700 hover:drop-shadow-sm rounded-md'>
+                            <Trash className='w-4 h-4' />
+                            <button>Delete Account</button>
+                        </div>
+                        <div onClick={() => signOut()} className='flex gap-1 items-center w-36 p-1 text-sm text-slate-400 border-b border-transparent hover:border-slate-200 hover:text-slate-700 transition-all duration-700 hover:drop-shadow-sm rounded-md'>
+                            <LogOut className='w-4 h-4' />
+                            <button>Logout</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-
         </div>
     )
 }
@@ -208,7 +208,7 @@ const PendingUsers = (profile: any) => {
 
 
     return (
-        <div className='p-1 border rounded-md'>
+        <div className='p-1 border rounded-md w-[1100px]'>
             <div className='font-semibold text-md text-slate-700 tracking-tight'>
                 Pending users:
             </div>
@@ -230,7 +230,7 @@ const PendingUsers = (profile: any) => {
                                     {user.userId}
                                 </div>
                                 <div className='flex'>
-                                    <RoleSelector user={user} roleMenu={roleMenu}/>
+                                    <RoleSelector user={user} roleMenu={roleMenu} />
                                 </div>
                             </div>
                         )
