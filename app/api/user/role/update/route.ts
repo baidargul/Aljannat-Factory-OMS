@@ -34,7 +34,6 @@ export async function PATCH(req: NextRequest) {
             return new Response(JSON.stringify(response))
         }
 
-        console.log(user)
         const isExists = await prisma.profile.findUnique({
             where: {
                 id: user.id
