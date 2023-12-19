@@ -90,7 +90,7 @@ const Menu = (props: Props) => {
                 {
                     menu.map((item, index) => {
                         return (
-                            <div onClick={() => setSelectedMenu(item.name)} key={index} className={`flex gap-2 items-center p-1  cursor-pointer rounded-md transition-all duration-300  ${selectedMenu === item.name && "bg-zinc-500 text-white border border-zinc-600/50 drop-shadow-sm"}`}>
+                            <div onClick={() => setSelectedMenu(item.name)} key={index} className={`flex gap-2 items-center p-1  cursor-pointer rounded-md transition-all duration-300   ${selectedMenu === item.name ? "bg-zinc-500 text-white border border-zinc-600/50 drop-shadow-sm" : "hover:bg-slate-100"}`}>
                                 <div>
                                     {
                                         item.icon
