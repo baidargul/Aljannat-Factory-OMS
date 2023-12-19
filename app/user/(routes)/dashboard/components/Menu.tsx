@@ -1,10 +1,9 @@
 'use client'
-import { ComboBoxProvider } from '@/components/ComboBox/ComboBoxProvider'
 import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
 import { useClerk } from '@clerk/nextjs'
 import { Role, profile } from '@prisma/client'
 import axios from 'axios'
-import { Ban, Check, Globe, LoaderIcon, LogOut, Mail, PaintBucket, PersonStanding, ShoppingBag, Trash, User, User2 } from 'lucide-react'
+import { Globe, LogOut, Mail, ShoppingBag, Trash, User, User2 } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -91,7 +90,7 @@ const Menu = (props: Props) => {
                 {
                     menu.map((item, index) => {
                         return (
-                            <div onClick={() => setSelectedMenu(item.name)} key={index} className={`flex gap-2 items-center p-1  cursor-pointer rounded-md  ${selectedMenu === item.name && "bg-zinc-500 text-white border border-zinc-600/50 drop-shadow-sm"}`}>
+                            <div onClick={() => setSelectedMenu(item.name)} key={index} className={`flex gap-2 items-center p-1  cursor-pointer rounded-md transition-all duration-300  ${selectedMenu === item.name && "bg-zinc-500 text-white border border-zinc-600/50 drop-shadow-sm"}`}>
                                 <div>
                                     {
                                         item.icon
@@ -216,7 +215,6 @@ const PendingUsers = (profile: any) => {
             <div className='w-full p-1'>
                 {
                     pendingUsers && pendingUsers.length > 0 ? pendingUsers.map((user: any, index: number) => {
-                        let currentRole = Role.UNVERIFIED
                         return (
                             <div className='grid grid-cols-4 justify-items-start w-full text-slate-700 items-center bg-slate-50 border border-slate-100 p-1'>
                                 <div className=''>
