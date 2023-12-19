@@ -66,12 +66,25 @@ const RoleSelector = (props: Props) => {
     }
 
     async function reject() {
-        // try {
-        //     await axios.delete(`/api/user/${props.userId}/role`)
-        //     toast.success('User rejected.')
-        // } catch (e: any) {
-        //     toast.error(e.message)
-        // }
+        try {
+            const data = {
+                user: user
+            }
+            await axios.post(`/api/user/role/delete/`, data).then(async (res) => {
+                const { data } = await res.data
+                if (data.status === 200) {
+                    toast.success('User rejected and removed.')
+                    setIsConfirmed(true)
+                    setConfirmationText('Rejected')
+                } else {
+                    toast.error(data.message)
+                    setIsConfirmed(false)
+                    setConfirmationText('')
+                }
+            })
+        } catch (e: any) {
+            toast.error(e.message)
+        }
     }
 
     return (

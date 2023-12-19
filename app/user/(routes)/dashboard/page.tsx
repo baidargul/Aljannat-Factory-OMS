@@ -2,19 +2,20 @@ import React from 'react'
 import Menu from './components/Menu'
 import currentProfile from '@/lib/current-profile'
 import { redirectToSignIn } from '@clerk/nextjs'
+import { redirect } from 'next/navigation'
 
 type Props = {}
 
-const page = async(props: Props) => {
+const page = async (props: Props) => {
     const profile = await currentProfile()
     if (!profile) {
-        return redirectToSignIn()
+        redirect('/')
     }
 
     return (
         <div>
             <div>
-                <Menu profile={profile}/>
+                <Menu profile={profile} />
             </div>
         </div>
     )

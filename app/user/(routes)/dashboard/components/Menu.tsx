@@ -234,7 +234,7 @@ const PendingUsers = (profile: any) => {
                                 </div>
                             </div>
                         )
-                    }) : <div>No Pending Users</div>
+                    }) : <div className='text-sm font-sans text-slate-500'>No Pending Users</div>
                 }
             </div>
         </div>
