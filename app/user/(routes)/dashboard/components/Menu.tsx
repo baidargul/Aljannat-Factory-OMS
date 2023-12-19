@@ -139,8 +139,8 @@ function PersonalMenu(profile: any) {
 
     return (
         <div className='flex justify-center items-center bg-slate-100 p-2 w-[1100px]'>
-            <div className='grid grid-cols-3 justify-center justify-items-center place-items-center'>
-                <div className='flex flex-col h-full justify-center items-center text-zinc-700 px-20 py-4 drop-shadow-sm rounded-md bg-white border w-fit'>
+            <div className='grid grid-cols-3 justify-center justify-items-center place-items-center gap-2'>
+                <div className='flex flex-col h-full justify-center items-center text-zinc-700 w-80 py-4 drop-shadow-sm rounded-md bg-white border'>
                     <div>
                         <Image src={profile.profile.imageURL ? profile.profile.imageURL : "/Placeholders/default.png"} width={150} height={150} alt='loggedInUser' className='rounded-md' />
                     </div>
@@ -151,7 +151,7 @@ function PersonalMenu(profile: any) {
                         {new Date(profile.profile.createdAt).toDateString() + " " + new Date(profile.profile.createdAt).toLocaleTimeString()}
                     </div>
                 </div>
-                <div className='flex flex-col h-full justify-center items-center text-zinc-700 px-20 py-4 drop-shadow-sm rounded-md bg-white border w-fit'>
+                <div className='flex flex-col h-full justify-center items-center text-zinc-700 w-80 py-4 drop-shadow-sm rounded-md bg-white border'>
                     <div className='font-semibold pb-1 border-b mb-10'>
                         Your role
                     </div>
@@ -167,7 +167,7 @@ function PersonalMenu(profile: any) {
                         }
                     </div>
                 </div>
-                <div className='flex flex-col h-full justify-center items-center text-zinc-700 px-20 py-4 drop-shadow-sm rounded-md bg-white border w-fit'>
+                <div className='flex flex-col h-full justify-center items-center text-zinc-700 w-80 py-4 drop-shadow-sm rounded-md bg-white border'>
                     <div className='font-semibold pb-1 border-b mb-10'>
                         Actions
                     </div>
