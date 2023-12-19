@@ -2,12 +2,13 @@
 import { ComboBoxProvider } from '@/components/ComboBox/ComboBoxProvider'
 import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
 import { useClerk } from '@clerk/nextjs'
-import { profile } from '@prisma/client'
+import { Role, profile } from '@prisma/client'
 import axios from 'axios'
-import { Ban, Check, Globe, LogOut, Mail, PaintBucket, PersonStanding, ShoppingBag, Trash, User, User2 } from 'lucide-react'
+import { Ban, Check, Globe, LoaderIcon, LogOut, Mail, PaintBucket, PersonStanding, ShoppingBag, Trash, User, User2 } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import RoleSelector from './sub/RoleSelector'
 
 type Props = {
     profile: any
@@ -34,6 +35,45 @@ const menu = [
         label: "Users",
         icon: <User />,
     },
+]
+
+const roleMenu = [
+    {
+        name: Role.ADMIN,
+        label: "Admin"
+    },
+    {
+        name: Role.DISPATCHER,
+        label: "Dispatcher"
+    },
+    {
+        name: Role.INVENTORYMANAGER,
+        label: "Inventory Manager"
+    },
+    {
+        name: Role.MANAGER,
+        label: "Manager"
+    },
+    {
+        name: Role.ORDERBOOKER,
+        label: "Order Booker"
+    },
+    {
+        name: Role.ORDERVERIFIER,
+        label: "Order Verifier"
+    },
+    {
+        name: Role.PAYMENTVERIFIER,
+        label: "Payment Verifier"
+    },
+    {
+        name: Role.SUPERADMIN,
+        label: "Super Admin"
+    },
+    {
+        name: Role.UNVERIFIED,
+        label: "Unverified"
+    }
 ]
 
 const Menu = (props: Props) => {
@@ -168,7 +208,6 @@ const PendingUsers = (profile: any) => {
     }
 
 
-
     return (
         <div className='p-1 border rounded-md'>
             <div className='font-semibold text-md text-slate-700 tracking-tight'>
@@ -177,41 +216,23 @@ const PendingUsers = (profile: any) => {
             <div className='w-full p-1'>
                 {
                     pendingUsers && pendingUsers.length > 0 ? pendingUsers.map((user: any, index: number) => {
+                        let currentRole = Role.UNVERIFIED
                         return (
-                            <div className='grid grid-cols-5 w-full text-slate-700 items-center bg-slate-50 border border-slate-100 p-1'>
+                            <div className='grid grid-cols-4 justify-items-start w-full text-slate-700 items-center bg-slate-50 border border-slate-100 p-1'>
                                 <div className=''>
-                                    <div className='flex gap-3 items-center font-semibold '>
+                                    <div className='flex gap-3 justify-center items-center font-semibold w-32 truncate'>
                                         <Image src={user.imageURL ? user.imageURL : "/Placeholders/default.png"} width={50} height={50} alt='loggedInUser' className='rounded-full w-8 h-8' />
                                         <div>{user.name}</div>
                                     </div>
                                 </div>
-                                <div className='font-semibold'>
+                                <div className='font-semibold truncate'>
                                     {user.email}
                                 </div>
                                 <div className='font-sans text-xs uppercase truncate'>
                                     {user.userId}
                                 </div>
-                                <div>
-                                    <ComboBoxProvider>
-                                        <div className='flex gap-1 items-center'>
-                                            <div>
-                                                <User2 className='w-4 h-4 text-slate-700' />
-                                            </div>
-                                            <div>
-                                                Role
-                                            </div>
-                                        </div>
-                                    </ComboBoxProvider>
-                                </div>
-                                <div className='flex gap-1 items-center'>
-                                    <div className='flex items-center border drop-shadow-sm bg-white rounded w-32 justify-center hover:bg-slate-50 active:bg-green-50'>
-                                        <Check className='w-6 h-6 text-green-500' />
-                                        <button className=' text-slate-700 rounded-md p-1'>Accept</button>
-                                    </div>
-                                    <div className='flex items-center border drop-shadow-sm bg-white rounded w-32 justify-center hover:bg-slate-50 active:bg-red-50'>
-                                        <Ban className='w-5 h-5 text-red-500' />
-                                        <button className=' text-slate-700 rounded-md p-1'>Reject</button>
-                                    </div>
+                                <div className='flex'>
+                                    <RoleSelector user={user} roleMenu={roleMenu}/>
                                 </div>
                             </div>
                         )

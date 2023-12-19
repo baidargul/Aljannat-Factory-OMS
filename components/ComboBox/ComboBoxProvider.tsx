@@ -17,6 +17,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { getCurrentUserFormalStatus } from "@/lib/my"
 
 
 
@@ -80,7 +81,7 @@ export function ComboBoxProvider(props: ComboBoxProviderProps) {
                                 <Check
                                     className={cn(
                                         "mr-2 h-4 w-4",
-                                        value === framework.name ? "opacity-100" : "opacity-0"
+                                        (props.returnLabel && String(value).toLocaleLowerCase() === String(getCurrentUserFormalStatus(framework.label)).toLocaleLowerCase()) || (!props.returnLabel && String(value).toLocaleLowerCase() === String(framework.name).toLocaleLowerCase()) ? "opacity-100" : "opacity-0"
                                     )}
                                 />
                                 {framework.label}
