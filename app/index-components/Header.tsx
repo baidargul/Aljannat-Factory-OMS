@@ -1,5 +1,4 @@
-import { ArrowDown, ChevronDown, Menu } from 'lucide-react'
-import Image from 'next/image'
+import { Menu } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import ProfileMenu from './components/ProfileMenu'
@@ -7,6 +6,7 @@ import ProfileMenu from './components/ProfileMenu'
 type Props = {}
 
 const Header = (props: Props) => {
+    
     return (
         <div className='flex p-4 bg-slate-100 items-center justify-between select-none text-slate-700'>
             <div className='flex gap-2 items-center group'>

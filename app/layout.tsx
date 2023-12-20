@@ -5,6 +5,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { Toaster } from 'sonner';
 import Header from './index-components/Header';
 import { cn } from '@/lib/utils';
+import currentProfile from '@/lib/current-profile';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -12,16 +13,19 @@ export const metadata: Metadata = {
   description: 'Created by Baidar Gul.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+
+  const profile = await currentProfile()
+    
   return (
     <ClerkProvider>
       <html lang="en">
         <body className={cn(inter.className, "min-h-screen w-full")}>
-          <Header />
+          {profile && <Header />}
           <div className=''>
             {children}
           </div>
