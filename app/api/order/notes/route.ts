@@ -3,6 +3,45 @@ import { Role } from "@prisma/client";
 import { NextRequest } from "next/server";
 import { v4 } from "uuid";
 
+export async function GET(req: NextRequest) {
+    const response = {
+        status: 400,
+        message: "Bad Request",
+        data: null as any
+    }
+
+    try {
+
+        const orders = await prisma.orderNotes.findMany({
+            take: 6,
+            include: {
+                profile: true,
+            },
+            orderBy: {
+                createdAt: "desc",
+            }
+        })
+
+        if (!orders) {
+            response.status = 400
+            response.message = "No orders found"
+            response.data = null
+            return new Response(JSON.stringify(response))
+        }
+
+        response.status = 200
+        response.message = "Success"
+        response.data = orders
+        return new Response(JSON.stringify(response))
+    } catch (error) {
+        console.log(`[SERVER ERROR]: Order->Notes->GET: `, error)
+        response.status = 500
+        response.message = "Internal Server Error"
+        response.data = null
+        return new Response(JSON.stringify(response))
+    }
+}
+
 export async function PATCH(req: NextRequest) {
     const response = {
         status: 400,
@@ -153,8 +192,8 @@ export async function PATCH(req: NextRequest) {
                 customers: true,
                 profile: true,
                 orderNotes: {
-                    include:{
-                        profile: true,  
+                    include: {
+                        profile: true,
                     },
                     orderBy: {
                         createdAt: "desc",

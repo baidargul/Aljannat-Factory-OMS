@@ -8,6 +8,7 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import RoleSelector from './sub/RoleSelector'
+import OrderNotes from './sub/OrderNotes'
 
 type Props = {
     profile: any
@@ -125,7 +126,7 @@ function getMenuComponent(selectedMenu: any, profile: profile) {
         case "global":
             break;
         case "orders":
-            break;
+            return <OrdersMenu profile={profile} />
         case "users":
             return <PendingUsers profile={profile} />
         default:
@@ -208,7 +209,7 @@ const PendingUsers = (profile: any) => {
 
 
     return (
-        <div className='p-1 border rounded-md w-[1100px]'>
+        <div className=' bg-slate-100 p-2 border w-[1100px]'>
             <div className='font-semibold text-md text-slate-700 tracking-tight'>
                 Pending users:
             </div>
@@ -239,5 +240,19 @@ const PendingUsers = (profile: any) => {
             </div>
         </div>
 
+    )
+}
+
+const OrdersMenu = (profile: any) => {
+
+    return(
+        <div className='bg-slate-100 p-2 w-[1100px]'>
+            <div className='font-semibold text-md text-slate-700 tracking-tight'>
+                Orders:
+            </div>
+            <div>
+                <OrderNotes />
+            </div>
+        </div>
     )
 }
