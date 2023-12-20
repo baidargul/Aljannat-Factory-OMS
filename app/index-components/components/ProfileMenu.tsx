@@ -2,12 +2,13 @@ import HoverCardProvider from '@/components/HoverCardProvider/HoverCardProvider'
 import { ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
+import ProfileHoverCard from './sub/ProfileHoverCard'
 
 type Props = {}
 
 const ProfileMenu = (props: Props) => {
     return (
-        <HoverCardProvider content={hoverCard()}>
+        <HoverCardProvider content={<ProfileHoverCard/>}>
             <div className='flex items-center gap-2 bg-white p-1 rounded drop-shadow-sm group cursor-pointer'>
                 <div>
                     <Image src='/Placeholders/default.png' width={30} height={30} alt='userProfile' className='rounded-full' />
@@ -29,11 +30,3 @@ const ProfileMenu = (props: Props) => {
 }
 
 export default ProfileMenu
-
-function hoverCard() {
-    return (
-        <div>
-            Card
-        </div>
-    )
-}
