@@ -1,14 +1,22 @@
 'use client'
+import { getStatusCasual, getTimeLapsed } from '@/components/Grid/GenericRow'
+import ToolTipProvider from '@/components/ToolTipProvider/ToolTipProvider'
+import { formalizeText, getCurrentUserCasualStatus, getCurrentUserFormalStatus } from '@/lib/my'
 import axios from 'axios'
+import Image from 'next/image'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
-type Props = {}
+type Props = {
+    setWorking: any
+}
 
 const OrderNotes = (props: Props) => {
     const [orders, setOrders] = useState<any[]>([])
 
     useEffect(() => {
+        getOrders();
         const intervalId = setInterval(() => {
             getOrders();
         }, 5000);
@@ -18,12 +26,9 @@ const OrderNotes = (props: Props) => {
         };
     }, []);
 
-    useEffect(() => {
-        console.log(orders);
-    }, [orders]);
-
     async function getOrders() {
         try {
+            props.setWorking(true)
             const res = await axios.get('/api/order/notes');
             const data = res.data;
 
@@ -32,8 +37,12 @@ const OrderNotes = (props: Props) => {
             } else {
                 setOrders([]);
             }
+            props.setWorking(false)
         } catch (err: any) {
+            props.setWorking(false)
             toast.error(err.message);
+        } finally {
+            props.setWorking(false)
         }
     }
 
@@ -41,22 +50,73 @@ const OrderNotes = (props: Props) => {
         <div>
             {
                 orders.map((order) => {
+                    console.log(order)
 
                     return (
-                        <div className="flex flex-col border border-gray-200 rounded-lg shadow-md p-4 mb-4">
-                            <div className="flex justify-between items-center">
-                                <div className="flex items-center">
-                                    <div className="flex flex-col">
-                                        <span className="text-sm font-medium text-gray-700">{order.orderId}</span>
-                                        <span className="text-xs font-medium text-gray-500">{order.customerName}</span>
+                        <div className="flex border bg-white py-1 overflow-x-auto">
+                            <div className='grid grid-cols-3 w-full'>
+                                <Link href={`/user/account/${order.profile.userId}`} target='_blank'>
+                                    <div className='flex gap-1 items-center'>
+                                        <div className='pl-1'>
+                                            <Image src={order.profile.imageURL} width={40} height={40} alt='userImage' className='rounded' />
+                                        </div>
+                                        <div className=''>
+                                            <div className='font-semibold -mb-1'>
+                                                {order.profile.name}
+                                            </div>
+                                            <div className='text-xs'>
+                                                {getCurrentUserCasualStatus(order.profile.role)}
+                                            </div>
+                                            <div className='text-xs text-slate-500 scale-90 -ml-2 -mt-1'>
+                                                {order.profile.email}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                                <div>
+                                    <div className='font-sans'>
+                                        <div className='flex gap-1 items-center w-[70%]'>
+                                            <div className='truncate'>
+                                                <ToolTipProvider content={order.note}>
+                                                    {order.note}
+                                                </ToolTipProvider>
+                                            </div>
+                                            <div className='text-xs bg-slate-100 text-center p-1 rounded border border-slate-200 animate-pulse'>
+                                                {getTimeLapsed((order.createdAt))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='flex justify-between'>
+                                        <div className='tracking-tight'>
+                                            {formalizeText(getStatusCasual(order.orders.status))}
+                                        </div>
+                                        <div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center">
-                                    <span className="text-xs font-medium text-gray-500">{order.createdAt}</span>
+                                <div className='text-xs flex flex-col items-start'>
+                                    <div className='border-b border-blue-400 bg-blue-50 uppercase scale-90 -ml-3'>
+                                        <Link href={`/orders/history/${order.orders.id}`} target='_blank'>
+                                            @ {order.orderId}
+                                        </Link>
+                                    </div>
+                                    <div className='flex gap-1 text-slate-500'>
+                                        <div className='font-semibold'>
+                                            Booked:
+                                        </div>
+                                        <div className=''>
+                                            {new Date(order.orders.dateOfBooking).toDateString() + " " + new Date(order.orders.dateOfBooking).toLocaleTimeString() + " - " + getTimeLapsed(order.orders.dateOfBooking)}
+                                        </div>
+                                    </div>
+                                    <div className='flex gap-1 text-slate-500'>
+                                        <div className='font-semibold'>
+                                            Delivery:
+                                        </div>
+                                        <div>
+                                            {new Date(order.orders.dateOfDelivery).toDateString() + " " + new Date(order.orders.dateOfDelivery).toLocaleTimeString()}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-sm font-medium text-gray-700">{order.notes}</span>
                             </div>
                         </div>
                     )

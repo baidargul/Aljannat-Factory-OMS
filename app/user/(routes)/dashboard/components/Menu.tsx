@@ -244,14 +244,15 @@ const PendingUsers = (profile: any) => {
 }
 
 const OrdersMenu = (profile: any) => {
+    const [isWorking, setIsWorking] = useState(false)
 
     return(
         <div className='bg-slate-100 p-2 w-[1100px]'>
-            <div className='font-semibold text-md text-slate-700 tracking-tight'>
-                Orders:
+            <div className='font-semibold text-md text-slate-700 tracking-tight mb-4'>
+                {isWorking? "Loading orders" : "Orders processing:"}
             </div>
             <div>
-                <OrderNotes />
+                <OrderNotes setWorking={setIsWorking} />
             </div>
         </div>
     )

@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
             take: 6,
             include: {
                 profile: true,
+                orders:true,
             },
             orderBy: {
                 createdAt: "desc",

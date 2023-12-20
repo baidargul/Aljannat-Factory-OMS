@@ -1309,7 +1309,7 @@ function GetOrderNotes(row: any) {
   )
 }
 
-function getStatusCasual(status: Status) {
+export function getStatusCasual(status: Status) {
   switch (status) {
     case Status.BOOKED:
       return "BOOKED"
@@ -1328,7 +1328,7 @@ function getStatusCasual(status: Status) {
   }
 }
 
-function getTimeLapsed(targetDateTime: any) {
+export function getTimeLapsed(targetDateTime: any) {
   const target = new Date(targetDateTime);
   const now = new Date();
   const diff = now.getTime() - target.getTime();
