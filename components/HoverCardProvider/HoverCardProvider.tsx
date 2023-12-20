@@ -15,7 +15,7 @@ const HoverCardProvider = (props: Props) => {
     return (
         <HoverCard>
             <HoverCardTrigger>{props.children}</HoverCardTrigger>
-            <HoverCardContent>
+            <HoverCardContent collisionPadding={10}>
                 {
                     typeof props.content === 'string' ? (<div>{props.content}</div>) : props.content
                 }
