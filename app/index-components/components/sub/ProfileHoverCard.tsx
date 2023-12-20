@@ -1,10 +1,14 @@
 'use client'
+import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
 import { useClerk } from '@clerk/nextjs'
+import { profile } from '@prisma/client'
 import { Barcode, LayoutDashboard, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-type Props = {}
+type Props = {
+    profile: profile
+}
 
 const ProfileHoverCard = (props: Props) => {
     const { signOut } = useClerk()
@@ -25,8 +29,8 @@ const ProfileHoverCard = (props: Props) => {
 
     return (
         <div>
-            <div className='text-xs underline mb-2 text-slate-400'>
-                Navigation
+            <div className='text-xs mb-2 text-slate-400'>
+                {props.profile ? `You are signed in as: ${getCurrentUserCasualStatus(props.profile.role)}` : "Navigation"}
             </div>
             <div className='flex flex-col gap-2'>
                 {
@@ -47,8 +51,8 @@ const ProfileHoverCard = (props: Props) => {
                 }
 
             </div>
-            <div onClick={() => signOut()} className='cursor-pointer border-t border-slate-200 mt-4 py-1 text-slate-700 flex gap-1 items-center rounded-md hover:px-1 transition-all duration-500 hover:text-red-500 hover:bg-orange-50  hover:border-red-500'>
-                <div>
+            <div onClick={() => signOut()} className='group cursor-pointer border-t border-slate-200 mt-4 py-1 text-slate-700 flex gap-1 items-center rounded-md hover:px-1 transition-all duration-500 hover:text-red-500 hover:bg-orange-50  hover:border-red-500'>
+                <div className='group-hover:rotate-90 transition-all duration-1000'>
                     <LogOut size={15} />
                 </div>
                 <div>
