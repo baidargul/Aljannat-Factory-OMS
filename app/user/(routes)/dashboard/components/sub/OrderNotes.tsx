@@ -76,7 +76,7 @@ const OrderNotes = (props: Props) => {
                                 <div>
                                     <div className='font-sans'>
                                         <div className='flex gap-1 items-center w-[70%]'>
-                                            <div className='truncate'>
+                                            <div className='truncate cursor-default'>
                                                 <ToolTipProvider content={order.note}>
                                                     {order.note}
                                                 </ToolTipProvider>

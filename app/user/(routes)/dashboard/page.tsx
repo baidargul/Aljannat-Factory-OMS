@@ -14,7 +14,7 @@ const page = async (props: Props) => {
 
     return (
         <div>
-            <div>
+            <div className='mt-20'>
                 <Menu profile={profile} />
             </div>
         </div>
