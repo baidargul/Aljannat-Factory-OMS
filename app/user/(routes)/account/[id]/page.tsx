@@ -1,4 +1,5 @@
 import currentProfile from '@/lib/current-profile'
+import prisma from '@/lib/prisma'
 import { redirectToSignIn } from '@clerk/nextjs'
 import { Role } from '@prisma/client'
 import { Scan } from 'lucide-react'
@@ -7,9 +8,14 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 import { v4 } from 'uuid'
 
-type Props = {}
+type Props = {
+    params: {
+        id: string
+    }
+}
 
 const UserAccount = async (props: Props) => {
+    const { id } = props.params
     const profile = await currentProfile()
     if (!profile) {
         redirectToSignIn()
@@ -17,6 +23,13 @@ const UserAccount = async (props: Props) => {
         if (profile.role === Role.UNVERIFIED) redirect(`/home/unverified/${profile.userId}`)
     }
 
+    const user = await prisma.profile.findUnique({
+        where: {
+            userId: id
+        }
+    })
+
+    if (!user) redirect('404')
 
     const settings = [
         "Profile", "APIs", "Orders", "Activities"
