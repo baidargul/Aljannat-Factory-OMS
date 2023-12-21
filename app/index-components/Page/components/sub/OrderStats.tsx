@@ -69,7 +69,7 @@ const OrderStats = async (props: Props) => {
                 </div>
                 <div className='bg-yellow-100 p-5 rounded-md'>
                     <div className='text-3xl font-bold text-center'>{data.pendingOrders}</div>
-                    <div className='text-center'>Yours</div>
+                    <div className='text-center'>Under You</div>
                 </div>
                 <div className='bg-green-100 p-5 rounded-md'>
                     <div className='text-3xl font-bold text-center'>{data.interations}</div>
