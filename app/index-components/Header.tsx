@@ -26,11 +26,11 @@ const Header = async (props: Props) => {
                     </Link>
                 </div>
             </div>
-            <div className='flex gap-1 items-center'>
+            <div className='flex items-center gap-1'>
                 <div>
                     <ProfileMenu />
                 </div>
-                <div>
+                <div className=''>
                     <NotificationIcon pendingUsers={pendingUsers} />
                 </div>
             </div>

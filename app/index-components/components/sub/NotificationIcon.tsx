@@ -28,7 +28,7 @@ const NotificationIcon = (props: Props) => {
 
     return (
         <PopoverProvider content={<NotificationArea pendingUsers={pendingUsers ? pendingUsers : null} />}>
-            <div className='relative text-slate-700 bg-white p-1 rounded-md'>
+            <div className='relative text-slate-700 bg-white p-3 mt-2 rounded-md'>
                 <p className={`absolute bg-red-500 text-white text-center text-xs rounded-full scale-75 -right-1 -top-2 w-4 h-4 ${pendingUsers.length <1 ? "hidden" : ""}`}>{pendingUsers.length}</p>
                 <Bell size={20} />
             </div>
