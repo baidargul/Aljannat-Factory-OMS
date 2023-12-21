@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import ProfileMenu from './components/ProfileMenu'
 import prisma from '@/lib/prisma'
+import NotificationIcon from './components/sub/NotificationIcon'
 
 type Props = {}
 
@@ -29,9 +30,8 @@ const Header = async (props: Props) => {
                 <div>
                     <ProfileMenu />
                 </div>
-                <div className='relative text-slate-700 bg-white p-1 rounded-md'>
-                    <p className={`absolute bg-red-500 text-white text-center text-xs rounded-full scale-75 -right-1 -top-2 w-4 h-4 ${pendingUsers.length === 0 ? "hidden": ""}`}>{pendingUsers.length}</p>
-                    <Bell size={20} />
+                <div>
+                    <NotificationIcon pendingUsers={pendingUsers} />
                 </div>
             </div>
 

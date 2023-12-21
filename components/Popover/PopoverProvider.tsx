@@ -17,7 +17,7 @@ const PopoverProvider = (props: Props) => {
       <PopoverTrigger>
         {props.children}
       </PopoverTrigger>
-      < PopoverContent className="w-full">
+      < PopoverContent className="w-full" collisionPadding={10}>
         {props.content}
       </PopoverContent>
     </Popover>
