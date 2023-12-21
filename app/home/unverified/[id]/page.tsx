@@ -1,9 +1,10 @@
 import prisma from '@/lib/prisma'
-import { Role } from '@prisma/client'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import Redirector from './components/Redirector'
+import LogoutButton from './components/LogoutButton'
+import currentProfile from '@/lib/current-profile'
 
 
 type Params = {
@@ -16,6 +17,11 @@ type Props = {
 
 const page = async (props: Props) => {
   const userId = props.params.id
+  const profile = await currentProfile()
+  if (profile) {
+    profile.role !== "UNVERIFIED" && redirect('/')
+  }
+
 
   const user = await prisma.profile.findUnique({
     where: {
@@ -36,6 +42,9 @@ const page = async (props: Props) => {
         <div className='text-sm opacity-60'>{user.email}</div>
         <Redirector profile={user} />
         <div className='text-sm font-bold text-slate-700 border-b border-spacing-1 flex'>You are currently <p className='text-red-700 ml-1'>unverified user</p>. Please contact admins.</div>
+        <div className='mt-10'>
+          <LogoutButton />
+        </div>
       </div>
     </div>
   )

@@ -139,7 +139,7 @@ function getMenuComponent(selectedMenu: any, profile: profile) {
 }
 
 function PersonalMenu(profile: any) {
-    const router = useRouter()
+    const { signOut } = useClerk()
 
     const deleteAccount = async (user: any) => {
         const data = {
@@ -149,9 +149,7 @@ function PersonalMenu(profile: any) {
             const data = await res.data
             if (data.status === 200) {
                 toast.success(data.message)
-                router.push('/')
-                router.refresh()
-
+                signOut()
             } else {
                 toast.error(data.message)
             }
@@ -160,7 +158,6 @@ function PersonalMenu(profile: any) {
         }))
     }
 
-    const { signOut } = useClerk()
 
     return (
         <div className='flex gap-2 justify-between items-center bg-gradient-to-b from-slate-50 to-slate-200 p-2 w-full'>
