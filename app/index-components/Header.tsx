@@ -4,6 +4,7 @@ import React from 'react'
 import ProfileMenu from './components/ProfileMenu'
 import prisma from '@/lib/prisma'
 import NotificationIcon from './components/sub/NotificationIcon'
+import MainMenu from './components/MainMenu'
 
 type Props = {}
 
@@ -17,8 +18,8 @@ const Header = async (props: Props) => {
     return (
         <div className='flex p-4 bg-slate-100 items-center justify-between select-none text-slate-700'>
             <div className='flex gap-2 items-center group'>
-                <div className='cursor-pointer hover:skew-x-12 transition-all duration-500'>
-                    <Menu size={24} />
+                <div>
+                    <MainMenu />
                 </div>
                 <div className='text-2xl font-semibold font-sans group-hover:tracking-wide transition-all duration-500'>
                     <Link href='/'>
