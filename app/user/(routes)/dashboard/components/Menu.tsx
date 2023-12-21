@@ -209,7 +209,7 @@ const PendingUsers = (profile: any) => {
 
 
     return (
-        <div className=' bg-slate-100 p-2 border w-[1100px]'>
+        <div className=' bg-slate-100 p-2 border w-[800px]'>
             <div className='font-semibold text-md text-slate-700 tracking-tight'>
                 Pending users:
             </div>
@@ -224,11 +224,8 @@ const PendingUsers = (profile: any) => {
                                         <div>{user.name}</div>
                                     </div>
                                 </div>
-                                <div className='font-semibold truncate'>
+                                <div className='font-semibold truncate text-sm'>
                                     {user.email}
-                                </div>
-                                <div className='font-sans text-xs uppercase truncate'>
-                                    {user.userId}
                                 </div>
                                 <div className='flex'>
                                     <RoleSelector user={user} roleMenu={roleMenu} />

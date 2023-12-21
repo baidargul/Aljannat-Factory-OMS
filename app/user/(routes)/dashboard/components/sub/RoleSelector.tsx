@@ -108,7 +108,7 @@ const RoleSelector = (props: Props) => {
                 {
                     !isConfirmed ? (
                         <div className='flex gap-1 items-center'>
-                            <div onClick={async () => await accept()} className='flex items-center border drop-shadow-sm bg-white rounded w-32 justify-center hover:bg-slate-50 active:bg-green-50'>
+                            <div onClick={async () => await accept()} className='flex items-center border drop-shadow-sm bg-white rounded w-28 justify-center hover:bg-slate-50 active:bg-green-50'>
                                 {isWorking && <LoaderIcon cursor-pointer className='w-5 h-5 text-green-500 animate-spin duration-1000' />}
                                 {!isWorking && <Check cursor-pointer className='w-6 h-6 text-green-500' />}
                                 <button className=' text-slate-700 rounded-md p-1'>Accept</button>
@@ -119,7 +119,7 @@ const RoleSelector = (props: Props) => {
                             </div>
                         </div>
                     ) : (
-                        <div className='bg-green-50 text-green-600 p-1 rounded-md w-32 text-center border border-green-200'>
+                        <div className='bg-green-50 text-green-600 p-1 rounded-md w-28 text-center border border-green-200'>
                             {
                                 confirmationText && (
                                     <div className=''>
