@@ -1,5 +1,5 @@
 import SheetProvider from '@/components/SheetProvider/SheetProvider'
-import { Barcode, Home, LayoutDashboard, Menu, PackageSearch } from 'lucide-react'
+import { Barcode, Calculator, Home, LayoutDashboard, Menu, PackageSearch } from 'lucide-react'
 import React from 'react'
 
 type Props = {}
@@ -18,6 +18,12 @@ const MainMenu = (props: Props) => {
                 <Home size={16} />
               </div>
               <a href='/'>Home</a>
+            </div>
+            <div className='text-xl font-semibold hover:bg-slate-50 rounded-md w-full cursor-pointer flex gap-1 items-center'>
+              <div>
+                <Calculator size={16} />
+              </div>
+              <a href='/create/order/'>POS</a>
             </div>
             <div className='text-xl font-semibold hover:bg-slate-50 rounded-md w-full cursor-pointer flex gap-1 items-center'>
               <div>

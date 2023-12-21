@@ -211,7 +211,7 @@ const POSHolder = (props: Props) => {
                 <div className="flex gap-2 min-h-screen mt-2 drop-shadow-md">
                     <div className={`w-[40%] text-ellipsis overflow-hidden whitespace-nowrap p-2 bg-slate-200`}>
                         <POSItemsHolder products={props.products} selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
-                        <div className='py-4 px-1 w-full flex gap-2 items-center bg-slate-50'>
+                        {/* <div className='py-4 px-1 w-full flex gap-2 items-center bg-slate-50'>
                             <Image src={currentUser.imageURL} alt='loggedInUser' width={65} height={65} className='rounded-md' />
                             <section>
                                 <h1>
@@ -228,7 +228,7 @@ const POSHolder = (props: Props) => {
                                     </button>
                                 </div>
                             </section>
-                        </div>
+                        </div> */}
                     </div>
                     <div className='w-[60%] text-ellipsis overflow-hidden whitespace-nowrap px-2 bg-slate-200'>
                         <POSOrderRowHolder />
