@@ -92,7 +92,7 @@ const Menu = (props: Props) => {
                 {
                     menu.map((item, index) => {
                         return (
-                            <div onClick={() => setSelectedMenu(item.name)} key={index} className={`flex gap-2 items-center p-1  cursor-pointer rounded-md transition-all duration-300   ${selectedMenu === item.name ? "bg-zinc-500 text-white border border-zinc-600/50 drop-shadow-sm" : "hover:bg-slate-100"}`}>
+                            <div onClick={() => setSelectedMenu(item.name)} key={index} className={`flex gap-2 items-center p-1  cursor-pointer rounded-md transition-all duration-300   ${selectedMenu === item.name ? "bg-gradient-to-b from-slate-50 to-slate-100 text-black border-zinc-600/50 drop-shadow-sm" : "hover:bg-slate-100"}`}>
                                 <div>
                                     {
                                         item.icon
@@ -141,7 +141,7 @@ function PersonalMenu(profile: any) {
 
     return (
         <div className='flex gap-2 justify-between items-center bg-gradient-to-b from-slate-50 to-slate-200 p-2 w-full'>
-            <div className='group flex gap-2 py-28 w-[36%] justify-center items-center text-zinc-700 drop-shadow-sm rounded-md bg-white border hover:scale-90 z-[1] transition-all duration-500'>
+            <div className='group flex gap-2 py-28 w-[36%] justify-center items-center text-zinc-700 drop-shadow-sm rounded-md bg-white border transition-all duration-500'>
                 <Link href={`/user/account/${profile.profile.userId}`}>
                     <div className='flex gap-2 items-center'>
                         <div className='text-4xl font-semibold group-hover:rotate-180 opacity-100 transition-all duration-1000 group-hover:opacity-0'>
