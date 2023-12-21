@@ -3,6 +3,7 @@ import { profile } from "@prisma/client"
 import axios from "axios"
 import { ChevronRight } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 
 type pendingUsersType = {
@@ -19,7 +20,7 @@ export function NotificationArea(props: props) {
 
     useEffect(() => {
         const timer = setTimeout(async () => {
-            await axios.get('/api/user/unverified').then(async (res) => {
+            await axios.get('/api/user/unverified').then(async (res: any) => {
                 const data = await res.data
                 if (data.status === 200) {
                     setPendingUsers(data.data)
@@ -65,14 +66,16 @@ export function NotificationArea(props: props) {
                     })
                 }
             </div>
-            <div className='group scale-90 w-full hover:bg-green-50 duration-1000 flex justify-center items-center mt-2 text-slate-500 select-none border-t p-1 bg-white rounded-md drop-shadow-sm cursor-pointer '>
-                <div className='group-hover:font-semibold transition-all duration-500'>
-                    See all
+            <Link href='/user/dashboard/'>
+                <div className='group scale-90 w-full hover:bg-green-50 duration-1000 flex justify-center items-center mt-2 text-slate-500 select-none border-t p-1 bg-white rounded-md drop-shadow-sm cursor-pointer '>
+                    <div className='group-hover:font-semibold transition-all duration-500'>
+                        See all
+                    </div>
+                    <div>
+                        <ChevronRight size={20} className='group-hover:ml-1 transition-all duration-500' />
+                    </div>
                 </div>
-                <div>
-                    <ChevronRight size={20} className='group-hover:ml-1 transition-all duration-500' />
-                </div>
-            </div>
+            </Link>
         </div>
     )
 }
