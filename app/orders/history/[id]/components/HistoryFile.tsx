@@ -2,6 +2,7 @@
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Role } from '@prisma/client'
 import Image from 'next/image'
+import Link from 'next/link'
 import React, { useEffect } from 'react'
 
 type Props = {
@@ -27,7 +28,7 @@ const HistoryFile = (props: Props) => {
     const order = props.order
     return (
         isMounted && <div className='p-1 bg-white'>
-            <ScrollArea className='h-[600px] pr-4 bg-white' type='always'>
+            <ScrollArea className='h-[500px] pr-4 bg-white' type='always'>
                 {
                     order.orderNotes.map((Note: any, index: number) => {
 
@@ -40,15 +41,19 @@ const HistoryFile = (props: Props) => {
                                             order.orderNotes.length - index === 1 ? <div className='text-xs text-gray-500'>-</div> : <div className='text-xs text-gray-500'>{order.orderNotes.length - index - 1}</div>
                                         }
                                     </div>
-                                    <Image src={Note.profile.imageURL} alt='userImage' width={20} height={20} className='w-10 h-10 rounded-md' />
-                                    <div className='flex flex-col'>
-                                        <div className='font-semibold'>
-                                            {Note.profile.name}
+                                    <Link href={`/user/account/${Note.profile.userId}`} target='_blank'>
+                                        <div className='flex gap-2'>
+                                            <Image src={Note.profile.imageURL} alt='userImage' width={20} height={20} className='w-10 h-10 rounded-md' />
+                                            <div className='flex flex-col'>
+                                                <div className='font-semibold'>
+                                                    {Note.profile.name}
+                                                </div>
+                                                <div className='text-xs tracking-tighter'>
+                                                    {getStage(Note.profile.role)}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className='text-xs tracking-tighter'>
-                                            {getStage(Note.profile.role)}
-                                        </div>
-                                    </div>
+                                    </Link>
                                 </div>
                                 <div className='flex flex-col justify-end items-end'>
                                     <div className=''>

@@ -56,7 +56,7 @@ const page = async (props: Props) => {
 
 
     return (
-        order && <div className='min-h-screen flex justify-center items-center w-full p-2 bg-slate-100 select-none'>
+        order && <div className=' flex justify-center items-center w-full p-2  select-none'>
             <section className='w-full grid grid-cols-2 gap-2'>
                 <div>
                     <div>
@@ -66,7 +66,8 @@ const page = async (props: Props) => {
                         <ProductTable order={order} />
                     </div>
                 </div>
-                <div className=''>
+                <div className='border rounded'>
+                    <div className='p-1 ml-1 text-sm text-slate-700 font-sans'>History:</div>
                     <HistoryFile order={order} />
                 </div>
             </section>

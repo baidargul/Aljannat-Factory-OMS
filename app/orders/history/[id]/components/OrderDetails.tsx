@@ -1,5 +1,8 @@
 import { Status } from '@prisma/client'
+import { Copy } from 'lucide-react'
 import React from 'react'
+import { toast } from 'sonner'
+import OrderIDCopy from './sub/OrderIDCopy'
 
 type Props = {
     order: any
@@ -7,6 +10,10 @@ type Props = {
 
 const OrderDetails = (props: Props) => {
     const order = props.order
+
+
+
+
     return (
         <div>
             <div className=' mb-24'>
@@ -30,11 +37,11 @@ const OrderDetails = (props: Props) => {
             </div>
             <div>
                 <div className='flex gap-1 justify-between items-center p-y'>
-                    <div className='font-semibold text-slate-700'>
+                    <div className='font-semibold text-slate-700 '>
                         Order#
                     </div>
-                    <div className='text-sm uppercase tracking-tighter'>
-                        {order.id}
+                    <div>
+                        <OrderIDCopy order={order} />
                     </div>
                 </div>
             </div>
