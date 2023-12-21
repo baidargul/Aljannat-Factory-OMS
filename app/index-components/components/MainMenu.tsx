@@ -6,7 +6,7 @@ type Props = {}
 
 const MainMenu = (props: Props) => {
   return (
-    <SheetProvider side='left' trigger={<Menu size={24} className='cursor-pointer hover:skew-x-12 transition-all duration-500 mt-2' />}>
+    <SheetProvider side='left' trigger={<Menu size={24} className='cursor-pointer hover:skew-x-12 transition-all duration-500 mt-2 group-hover:bg-white group-hover:rounded-md group-hover:drop-shadow-sm' />}>
       <div className=''>
         <div className=' text-2xl text-center font-semibold border-b-2 pb-2'>
           Aljannat
