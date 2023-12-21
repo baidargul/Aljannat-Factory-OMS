@@ -57,7 +57,7 @@ export function NotificationArea(props: props) {
                         return (
                             <div className='flex gap-1 items-center select-none scale-90 justify-start' key={user.name}>
                                 <div>
-                                    <Image src='/Placeholders/default.png' width={30} height={30} alt='userProfile' className='rounded-full' />
+                                    <Image src={user.imageURL ? user.imageURL : '/Placeholders/default.png'} width={30} height={30} alt='userProfile' className='rounded-full' />
                                 </div>
                                 <p>{user.name}</p>
                             </div>

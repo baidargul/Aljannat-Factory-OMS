@@ -16,14 +16,14 @@ const ProfileMenu = async (props: Props) => {
         <PopoverProvider content={<ProfileHoverCard profile={profile} />} >
             <div className='flex items-center gap-2 bg-white p-1 rounded drop-shadow-sm group cursor-pointer'>
                 <div>
-                    <Image src='/Placeholders/default.png' width={30} height={30} alt='userProfile' className='rounded-full' />
+                    <Image src={profile.imageURL ? profile.imageURL : '/Placeholders/default.png'} width={30} height={30} alt='userProfile' className='rounded-full' />
                 </div>
                 <div className='flex flex-col'>
                     <div className='font-bold'>
-                        Baidar Gul
+                        {profile.name}
                     </div>
                     <div className='text-sm -mt-1 scale-90 -ml-2'>
-                        baidargul@outlook.com
+                        {profile.email}
                     </div>
                 </div>
                 <div className='text-slate-500 group-hover:mt-1 transition-all duration-500'>
