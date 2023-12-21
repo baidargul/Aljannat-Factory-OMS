@@ -141,17 +141,17 @@ function PersonalMenu(profile: any) {
 
     return (
         <div className='flex gap-2 justify-between items-center bg-slate-100 p-2 w-full'>
-            <div className='group flex gap-2 py-28 w-[36%] justify-center items-center text-zinc-700 drop-shadow-sm rounded-md bg-gradient-to-r from-amber-200 to-yellow-200 border '>
+            <div className='group flex gap-2 py-28 w-[36%] justify-center items-center text-zinc-700 drop-shadow-sm rounded-md bg-gradient-to-r from-teal-100 to-yellow-50 border '>
                 <Link href={`/user/account/${profile.profile.userId}`}>
                     <div className='flex gap-2 items-center'>
                         <div className='text-4xl font-semibold group-hover:rotate-180 opacity-100 transition-all duration-1000 group-hover:opacity-0'>
-                            <ChevronRight size={30} className='text-orange-500' />
+                            <ChevronRight size={30} className='text-zinc-500' />
                         </div>
-                        <div className='text-orange-500 group-hover:tracking-tight transition-all duration-500 text-4xl font-semibold'>
+                        <div className='text-zinc-500 group-hover:tracking-tight transition-all duration-500 text-4xl font-semibold'>
                             Profile
                         </div>
                         <div className='text-4xl font-semibold mt-1 group-hover:animate-pulse  group-hover:rotate-180 opacity-0 transition-all duration-1000 group-hover:opacity-100'>
-                            <ChevronLeft size={30} className='text-orange-500' />
+                            <ChevronLeft size={30} className='text-zinc-500' />
                         </div>
                     </div>
                 </Link>
