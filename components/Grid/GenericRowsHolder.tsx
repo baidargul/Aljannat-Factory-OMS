@@ -112,7 +112,7 @@ const GenericRowsHolder = async (props: Props) => {
                             </div>
                         </div>
                     </div> */}
-                    <div className='mt-5'>
+                    <div className=''>
                         <GridWithFilters orders={props.orders} profile={profile} availableCities={availableCities} availablePhones={availablePhones} />
                     </div>
                 </div>
