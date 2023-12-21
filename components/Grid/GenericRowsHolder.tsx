@@ -71,7 +71,7 @@ const GenericRowsHolder = async (props: Props) => {
         <>
             <div className='w-full'>
                 <div>
-                    <div className='p-2 border-b-4 border-slate-800 bg-slate-800 text-white'>
+                    {/* <div className='p-2 border-b-4 border-slate-800 bg-slate-800 text-white'>
                         <div className='p-2 flex justify-between items-center'>
                             <div className='flex flex-col items-center gap-2'>
                                 <div className='text-4xl font-semibold text-white'>
@@ -111,7 +111,7 @@ const GenericRowsHolder = async (props: Props) => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className='mt-5'>
                         <GridWithFilters orders={props.orders} profile={profile} availableCities={availableCities} availablePhones={availablePhones} />
                     </div>
