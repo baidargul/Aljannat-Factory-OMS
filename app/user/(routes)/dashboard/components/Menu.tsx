@@ -139,7 +139,7 @@ function PersonalMenu(profile: any) {
     const { signOut } = useClerk()
 
     return (
-        <div className='flex justify-center items-center bg-slate-100 p-2 w-[1100px]'>
+        <div className='flex justify-center items-center bg-slate-100 p-2 w-full'>
             <div className='grid grid-cols-3 justify-center justify-items-center place-items-center gap-2'>
                 <div className='flex flex-col h-full justify-center items-center text-zinc-700 w-80 py-4 drop-shadow-sm rounded-md bg-white border'>
                     <div>
@@ -209,7 +209,7 @@ const PendingUsers = (profile: any) => {
 
 
     return (
-        <div className=' bg-slate-100 p-2 border w-[800px]'>
+        <div className=' bg-slate-100 p-2 border w-full'>
             <div className='font-semibold text-md text-slate-700 tracking-tight'>
                 Pending users:
             </div>
@@ -227,7 +227,10 @@ const PendingUsers = (profile: any) => {
                                 <div className='font-semibold truncate text-sm'>
                                     {user.email}
                                 </div>
-                                <div className='flex'>
+                                <div className='font-sans truncate text-sm scale-90 uppercase'>
+                                    {user.userId}
+                                </div>
+                                <div className='ml-auto'>
                                     <RoleSelector user={user} roleMenu={roleMenu} />
                                 </div>
                             </div>
@@ -243,10 +246,10 @@ const PendingUsers = (profile: any) => {
 const OrdersMenu = (profile: any) => {
     const [isWorking, setIsWorking] = useState(false)
 
-    return(
-        <div className='bg-slate-100 p-2 w-[1100px]'>
+    return (
+        <div className='bg-slate-100 p-2 w-full'>
             <div className='font-semibold text-md text-slate-700 tracking-tight mb-4'>
-                {isWorking? "Loading orders" : "Orders processing:"}
+                {isWorking ? "Loading orders" : "Orders processing:"}
             </div>
             <div>
                 <OrderNotes setWorking={setIsWorking} />
