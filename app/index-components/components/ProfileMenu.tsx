@@ -5,14 +5,15 @@ import React from 'react'
 import ProfileHoverCard from './sub/ProfileHoverCard'
 import currentProfile from '@/lib/current-profile'
 import { profile } from '@prisma/client'
+import PopoverProvider from '@/components/Popover/PopoverProvider'
 
 type Props = {}
 
 const ProfileMenu = async (props: Props) => {
-    const profile:any = await currentProfile()
+    const profile: any = await currentProfile()
 
     return (
-        <HoverCardProvider content={<ProfileHoverCard profile={profile}/>}>
+        <PopoverProvider content={<ProfileHoverCard profile={profile} />} >
             <div className='flex items-center gap-2 bg-white p-1 rounded drop-shadow-sm group cursor-pointer'>
                 <div>
                     <Image src='/Placeholders/default.png' width={30} height={30} alt='userProfile' className='rounded-full' />
@@ -29,7 +30,7 @@ const ProfileMenu = async (props: Props) => {
                     <ChevronDown size={20} />
                 </div>
             </div>
-        </HoverCardProvider>
+        </PopoverProvider>
     )
 }
 

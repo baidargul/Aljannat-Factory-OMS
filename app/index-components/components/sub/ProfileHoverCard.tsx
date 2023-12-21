@@ -2,7 +2,7 @@
 import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
 import { useClerk } from '@clerk/nextjs'
 import { profile } from '@prisma/client'
-import { Barcode, LayoutDashboard, LogOut } from 'lucide-react'
+import { Barcode, Home, LayoutDashboard, LogOut } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -19,6 +19,11 @@ const ProfileHoverCard = (props: Props) => {
             name: "Dashboard",
             link: "/user/dashboard",
             icon: LayoutDashboard
+        },
+        {
+            name:"Home",
+            link: "/",
+            icon: Home
         },
         {
             name: "Orders",
