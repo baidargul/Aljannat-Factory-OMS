@@ -1,4 +1,5 @@
 'use client'
+import { getTimeLapsed } from "@/components/Grid/GenericRow"
 import { profile } from "@prisma/client"
 import axios from "axios"
 import { ChevronRight } from "lucide-react"
@@ -57,9 +58,16 @@ export function NotificationArea(props: props) {
                         return (
                             <div className='flex gap-1 items-center select-none scale-90 justify-start' key={user.name}>
                                 <div>
-                                    <Image src={user.imageURL ? user.imageURL : '/Placeholders/default.png'} width={30} height={30} alt='userProfile' className='rounded-full' />
+                                    <Image src={user.imageURL ? user.imageURL : '/Placeholders/default.png'} width={40} height={40} alt='userProfile' className='rounded-full' />
                                 </div>
-                                <p>{user.name}</p>
+                                <div className="flex flex-col items-start">
+                                    <div>
+                                        {user.name}
+                                    </div>
+                                    <div className="text-xs bg-blue-100/50 rounded-md p-1 scale-90">
+                                        {getTimeLapsed(user.createdAt)} ago.
+                                    </div>
+                                </div>
                             </div>
                         )
 
