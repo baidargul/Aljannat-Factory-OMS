@@ -3,12 +3,13 @@ import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
 import { useClerk } from '@clerk/nextjs'
 import { Role, profile } from '@prisma/client'
 import axios from 'axios'
-import { Globe, LogOut, Mail, ShoppingBag, Trash, User, User2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Globe, LogOut, Mail, ShoppingBag, Trash, User, User2 } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import RoleSelector from './sub/RoleSelector'
 import OrderNotes from './sub/OrderNotes'
+import Link from 'next/link'
 
 type Props = {
     profile: any
@@ -139,7 +140,22 @@ function PersonalMenu(profile: any) {
     const { signOut } = useClerk()
 
     return (
-        <div className='flex justify-center items-center bg-slate-100 p-2 w-full'>
+        <div className='flex gap-2 justify-between items-center bg-slate-100 p-2 w-full'>
+            <div className='group flex gap-2 py-28 w-[36%] justify-center items-center text-zinc-700 drop-shadow-sm rounded-md bg-gradient-to-r from-amber-200 to-yellow-200 border '>
+                <Link href={`/user/account/${profile.profile.userId}`}>
+                    <div className='flex gap-2 items-center'>
+                        <div className='text-4xl font-semibold group-hover:rotate-180 opacity-100 transition-all duration-1000 group-hover:opacity-0'>
+                            <ChevronRight size={30} className='text-orange-500' />
+                        </div>
+                        <div className='text-orange-500 group-hover:tracking-tight transition-all duration-500 text-4xl font-semibold'>
+                            Profile
+                        </div>
+                        <div className='text-4xl font-semibold mt-1 group-hover:animate-pulse  group-hover:rotate-180 opacity-0 transition-all duration-1000 group-hover:opacity-100'>
+                            <ChevronLeft size={30} className='text-orange-500' />
+                        </div>
+                    </div>
+                </Link>
+            </div>
             <div className='grid grid-cols-3 justify-center justify-items-center place-items-center gap-2'>
                 <div className='flex flex-col h-full justify-center items-center text-zinc-700 w-80 py-4 drop-shadow-sm rounded-md bg-white border'>
                     <div>
@@ -184,6 +200,7 @@ function PersonalMenu(profile: any) {
                     </div>
                 </div>
             </div>
+
         </div>
     )
 }
