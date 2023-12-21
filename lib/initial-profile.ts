@@ -1,5 +1,6 @@
 import { currentUser, redirectToSignIn } from "@clerk/nextjs";
 import prisma from "@/lib/prisma";
+import { Role } from "@prisma/client";
 
 export async function initialProfile() {
   try {
@@ -16,6 +17,20 @@ export async function initialProfile() {
 
     if (profile) {
       return profile;
+    }
+
+    const check = await prisma.profile.findMany({})
+    if (check.length === 0) {
+      const newProfile = await prisma.profile.create({
+        data: {
+          userId: user.id,
+          name: user.firstName + " " + user.lastName,
+          imageURL: user.imageUrl,
+          email: user.emailAddresses[0].emailAddress,
+          role: Role.ADMIN
+        },
+      });
+      return newProfile;
     }
 
     const newProfile = await prisma.profile.create({

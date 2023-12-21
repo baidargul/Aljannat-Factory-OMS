@@ -1,6 +1,6 @@
 'use client'
 import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
-import { useClerk } from '@clerk/nextjs'
+import { redirectToSignIn, useClerk } from '@clerk/nextjs'
 import { Role, profile } from '@prisma/client'
 import axios from 'axios'
 import { ChevronLeft, ChevronRight, Globe, LogOut, Mail, ShoppingBag, Trash, User, User2 } from 'lucide-react'
@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import RoleSelector from './sub/RoleSelector'
 import OrderNotes from './sub/OrderNotes'
 import Link from 'next/link'
+import { redirect, useRouter } from 'next/navigation'
 
 type Props = {
     profile: any
@@ -86,6 +87,8 @@ const Menu = (props: Props) => {
     }, [])
 
 
+
+
     return (
         isMounted && <div className='select-none'>
             <div className={`flex justify-between items-center text-slate-700 p-1 font-semibold`}>
@@ -136,6 +139,26 @@ function getMenuComponent(selectedMenu: any, profile: profile) {
 }
 
 function PersonalMenu(profile: any) {
+    const router = useRouter()
+
+    const deleteAccount = async (user: any) => {
+        const data = {
+            user: user
+        }
+        await axios.post(`/api/user/role/delete`, data).then(async (res) => {
+            const data = await res.data
+            if (data.status === 200) {
+                toast.success(data.message)
+                router.push('/')
+                router.refresh()
+
+            } else {
+                toast.error(data.message)
+            }
+        }).catch((error => {
+            toast.error(error.message)
+        }))
+    }
 
     const { signOut } = useClerk()
 
@@ -189,7 +212,7 @@ function PersonalMenu(profile: any) {
                         Actions
                     </div>
                     <div className='flex flex-col gap-2'>
-                        <div className='flex gap-1 items-center w-36 p-1 text-sm text-slate-400 border-b border-transparent hover:border-slate-200 hover:text-slate-700 transition-all duration-700 hover:drop-shadow-sm rounded-md'>
+                        <div onClick={() => deleteAccount(profile.profile)} className='flex gap-1 items-center w-36 p-1 text-sm text-slate-400 border-b border-transparent hover:border-slate-200 hover:text-slate-700 transition-all duration-700 hover:drop-shadow-sm rounded-md'>
                             <Trash className='w-4 h-4' />
                             <button>Delete Account</button>
                         </div>
