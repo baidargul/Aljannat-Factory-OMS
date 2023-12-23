@@ -316,7 +316,7 @@ const GlobalMenu = (profile: any) => {
 
 
     return (
-        <div>
+        <div className='p-2 bg-slate-100'>
             <SettingList settingList={settingList} />
         </div>
     )

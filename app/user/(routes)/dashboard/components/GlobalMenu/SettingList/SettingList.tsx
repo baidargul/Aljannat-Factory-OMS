@@ -19,11 +19,11 @@ const SettingList = (props: Props) => {
         <table className='w-full'>
             <thead>
                 <tr>
-                    <th className='border text-start pl-2 bg-slate-100'>Name</th>
-                    <th className='border text-start pl-2 bg-slate-100'>Value 1</th>
-                    <th className='border text-start pl-2 bg-slate-100'>Value 2</th>
-                    <th className='border text-start pl-2 bg-slate-100'>Value 3</th>
-                    <th className='border text-end pr-2 bg-slate-100'>Actions</th>
+                    <th className='border text-start pl-2 bg-zinc-600 text-white tracking-wide'>Name</th>
+                    <th className='border text-start pl-2 bg-zinc-600 text-white tracking-wide'>Value 1</th>
+                    <th className='border text-start pl-2 bg-zinc-600 text-white tracking-wide'>Value 2</th>
+                    <th className='border text-start pl-2 bg-zinc-600 text-white tracking-wide'>Value 3</th>
+                    <th className='border text-end pr-4 bg-zinc-600 text-white tracking-wide'>Actions</th>
                 </tr>
             </thead>
             <tbody>
