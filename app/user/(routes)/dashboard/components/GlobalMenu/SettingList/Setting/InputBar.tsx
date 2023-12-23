@@ -23,12 +23,12 @@ const InputBar = (props: Props) => {
             props.setSelectedValue(null)
         } else if (e.key === 'Enter') {
             console.log(value)
-            props.setSelectedValue(null) 
+            props.setSelectedValue(null)
         }
     }
 
     return (
-        <Input onKeyDown={handleKeyDown} onClick={() => ref.current?.select()} ref={ref} value={value} onChange={(e: any) => setValue(e.target.value)} className='w-28 h-10' />
+        <Input onBlur={() => props.setSelectedValue(null)} onKeyDown={handleKeyDown} onClick={() => ref.current?.select()} ref={ref} value={value} onChange={(e: any) => setValue(e.target.value)} className='w-28 h-8' />
     );
 }
 
