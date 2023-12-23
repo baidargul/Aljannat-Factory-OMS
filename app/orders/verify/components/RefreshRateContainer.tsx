@@ -19,7 +19,7 @@ const RefreshRateContainer = (props: Props) => {
     }, [])
 
     useEffect(()=>{
-        const test = async () => await Setting_FETCH("refreshgrid").then(async (res) => {
+        const test = async () => await Setting_FETCH("Order rows refresh rate").then(async (res) => {
             const data = await res.data
             const refreshRate = Number(data?.value1)
             setRefreshRate(refreshRate)
@@ -29,7 +29,7 @@ const RefreshRateContainer = (props: Props) => {
     },[isMounted])
 
     async function setRefreshRateHandler() {
-        await Setting__WRITE("refreshgrid", String(refreshRate)).then(async (res) => {
+        await Setting__WRITE("Order rows refresh rate", String(refreshRate)).then(async (res) => {
             const data: any = await res.data
             if (data) {
                 toast.success(`Refresh rate updated!`)

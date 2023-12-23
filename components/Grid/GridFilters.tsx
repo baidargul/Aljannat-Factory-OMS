@@ -113,7 +113,7 @@ const GridWithFilters = (props: Props) => {
         let response: any = null;
 
         const data = {
-            name: "refreshgrid",
+            name: "Order rows refresh rate",
             method: "READ"
         }
 
