@@ -6,6 +6,7 @@ import { Plus } from 'lucide-react'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { v4 } from 'uuid'
+import DialogProvider from '@/components/DialogProvider/DialogProvider'
 
 type Props = {
     settingList: any
@@ -14,6 +15,7 @@ type Props = {
 
 const SettingList = (props: Props) => {
     const [settingList, setSettingList] = React.useState<any>(props.settingList)
+    const [newSettingName, setNewSettingName] = React.useState<string>('')
     const [isOnRow, setIsOnRow] = React.useState<number>()
 
     useEffect(() => {
@@ -32,11 +34,14 @@ const SettingList = (props: Props) => {
     }, [isOnRow])
 
     const addSettingClick = async () => {
+
+        if (!newSettingName) return
+
         const data = {
-            name: v4(),
-            value1: 'New value 1',
-            value2: 'New value 2',
-            value3: 'New value 3',
+            name: newSettingName,
+            value1: '',
+            value2: '',
+            value3: '',
         }
 
         await axios.post('/api/settings/create/', data).then(async (res: any) => {
@@ -52,6 +57,43 @@ const SettingList = (props: Props) => {
         })
 
         props.fetchSettings()
+    }
+
+    const addSettingDialog = () => {
+        const [name, setName] = React.useState<string>('')
+
+        useEffect(() => {
+            setNewSettingName(name)
+        }, [name])
+
+        const handleKeyDown = (e: any) => {
+            if (e.key === 'Enter') {
+                addSettingClick()
+            }
+        }
+
+        return (
+            <div className='flex gap-1 items-center'>
+                <Input onKeyDown={handleKeyDown} value={name} onChange={(e: any) => setName(e.target.value)} />
+            </div>
+        )
+    }
+
+    function dialogCloseButton() {
+        return (
+            <div className='flex justify-end items-center'>
+                <button className='bg-slate-100 border rounded-md p-1 hover:bg-slate-100/40'>Cancel</button>
+            </div>
+        )
+    }
+
+    const dialogAcceptButton = () => {
+
+        return (
+            <div className='flex justify-end items-center'>
+                <button onClick={addSettingClick} className='bg-slate-100 border rounded-md p-1 hover:bg-slate-100/40'>Create</button>
+            </div>
+        )
     }
 
 
@@ -77,15 +119,22 @@ const SettingList = (props: Props) => {
                     }
                 </tbody>
             </table>
-            {(isOnRow === settingList.length - 1) && <div onClick={addSettingClick} className='cursor-pointer'>
-                <div className='bg-green-400 w-full h-1 rounded-b'>
-                </div>
-                <div className='bg-green-100 w-full text-green-700 border-b border-green-400 rounded-md text-center p-1 '>
-                    <Plus className='inline-block w-5 h-5 mr-2' />
-                </div>
-            </div>}
+            <div className='w-full'>
+                <DialogProvider acceptButton={dialogAcceptButton()} closeButton={dialogCloseButton()} content={addSettingDialog()} description='New setting name:' title='Create Setting' >
+                    {(isOnRow === settingList.length - 1) && (
+                        <div className='cursor-pointer w-full'>
+                            <div className='bg-green-400 w-full h-1 rounded-b'>
+                            </div>
+                            <div className='bg-green-100 w-full text-green-700 border-b border-green-400 rounded-md text-center p-1 '>
+                                <Plus className='inline-block w-5 h-5 mr-2' />
+                            </div>
+                        </div>)
+                    }
+                </DialogProvider>
+            </div>
         </div>
     )
 }
 
 export default SettingList
+

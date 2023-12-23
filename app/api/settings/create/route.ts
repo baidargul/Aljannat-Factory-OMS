@@ -13,9 +13,21 @@ export async function POST(req: NextRequest) {
 
         const { name, value1, value2, value3 } = await req.json()
 
-        if (!name || !value1 || !value2 || !value3) {
+        if (!name) {
             response.status = 400;
             response.message = 'Bad Request';
+            return new Response(JSON.stringify(response));
+        }
+
+        const isExists = await prisma.settings.findUnique({
+            where: {
+                name
+            }
+        })
+
+        if (isExists) {
+            response.status = 400;
+            response.message = 'Setting already exists';
             return new Response(JSON.stringify(response));
         }
 
