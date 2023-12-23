@@ -9,6 +9,8 @@ import { toast } from 'sonner'
 type Props = {
     setting: settings
     fetchSettings: any
+    setIsOnRow?: any
+    rowIndex: number
 }
 
 
@@ -50,7 +52,7 @@ const Setting = (props: Props) => {
     }, [isValueChanged])
 
     return (
-        <tr key={setting.id} className='group'>
+        <tr key={setting.id} className='group' onMouseOver={() => props.setIsOnRow(props.rowIndex)}>
             <td className='border pl-3 p-2 group-hover:bg-yellow-50/60 '>{setting.name}</td>
             <td onDoubleClick={() => handleValueDoubleClick(1)} className='border pl-3 p-2 group-hover:bg-yellow-50/60 '>
                 {selectedValue === 1 ? <InputBar name={setting.name} index={1} prevValue={setting.value1 || ""} setSelectedValue={setSelectedValue} setIsValueChanged={setIsValueChanged} /> : setting.value1}
