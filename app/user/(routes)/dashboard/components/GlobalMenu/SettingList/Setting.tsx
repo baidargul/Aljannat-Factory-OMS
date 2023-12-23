@@ -61,13 +61,10 @@ const Setting = (props: Props) => {
             <td onDoubleClick={() => handleValueDoubleClick(3)} className='border pl-3 p-2 group-hover:bg-yellow-50/60 '>
                 {selectedValue === 3 ? <InputBar name={setting.name} index={3} prevValue={setting.value3 || ""} setSelectedValue={setSelectedValue} setIsValueChanged={setIsValueChanged} /> : setting.value3}
             </td>
-            <td className='border pr-3 p-2 group-hover:bg-yellow-50/60  flex gap-4 items-center justify-end'>
-                <button onClick={handleDelete} className='bg-slate-100 group-hover:bg-red-50 hover:bg-red-500 border rounded px-2 py-1 w-24 flex gap-1 items-center'>
+            <td className='border pr-3 p-2 group-hover:bg-yellow-50/60  flex gap-4 items-center justify-center'>
+                <button onClick={handleDelete} className='bg-slate-100  group-hover:bg-red-700 group-hover:text-white  border rounded px-2 py-1 flex gap-1 justify-center items-center w-20'>
                     <div className='fill-red-50'>
                         <Trash size={16} />
-                    </div>
-                    <div>
-                        Delete
                     </div>
                 </button>
             </td>

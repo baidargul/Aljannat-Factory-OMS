@@ -24,7 +24,7 @@ const SettingList = (props: Props) => {
                     <th className='border text-start pl-2 p-2 bg-zinc-600 text-white tracking-wide'>Value 1</th>
                     <th className='border text-start pl-2 p-2 bg-zinc-600 text-white tracking-wide'>Value 2</th>
                     <th className='border text-start pl-2 p-2 bg-zinc-600 text-white tracking-wide'>Value 3</th>
-                    <th className='border text-end pr-4 p-2 bg-zinc-600 text-white tracking-wide'>Actions</th>
+                    <th className='border text-center pr-4 p-2 bg-zinc-600 text-white tracking-wide'>Actions</th>
                 </tr>
             </thead>
             <tbody>
