@@ -1,16 +1,19 @@
 import { Input } from '@/components/ui/input'
+import axios from 'axios'
 import React, { useEffect, useRef } from 'react'
+import { toast } from 'sonner'
 
 type Props = {
     index: number,
+    name: string,
     prevValue: string
     setSelectedValue: any
+    setIsValueChanged: any
 }
 
 const InputBar = (props: Props) => {
     const ref = useRef<HTMLInputElement>(null)
     const [index, setIndex] = React.useState<number>(props.index)
-    const [prevValue, setPrevValue] = React.useState<string>(props.prevValue)
     const [value, setValue] = React.useState<string>(props.prevValue);
 
     useEffect(() => {
@@ -18,11 +21,29 @@ const InputBar = (props: Props) => {
         ref.current?.select()
     }, [])
 
-    const handleKeyDown = (e: any) => {
+    const handleKeyDown = async (e: any) => {
         if (e.key === 'Escape') {
             props.setSelectedValue(null)
         } else if (e.key === 'Enter') {
-            console.log(value)
+
+            const data = {
+                method: "WRITE",
+                name: props.name,
+                [index === 1 ? "value1" : index === 2 ? "value2" : "value3"]: value ? value : "[/BLANK]",
+            }
+
+            await axios.post('/api/settings/get/', data).then(async (res) => {
+                const data = await res.data
+                if (data.status === 200) {
+                    props.setIsValueChanged(true)
+                    toast.success('Successfully updated setting')
+                } else {
+                    toast.error(data.message)
+                }
+            }).catch((err) => {
+                toast.error(`Server error: ${err.message}`)
+            })
+
             props.setSelectedValue(null)
         }
     }

@@ -5,6 +5,7 @@ import Setting from './Setting'
 
 type Props = {
     settingList: any
+    fetchSettings: any
 }
 
 const SettingList = (props: Props) => {
@@ -30,7 +31,7 @@ const SettingList = (props: Props) => {
                 {
                     settingList.map((setting: settings) => {
                         return (
-                                <Setting setting={setting} />
+                            <Setting setting={setting} fetchSettings={props.fetchSettings} />
                         )
                     })
                 }

@@ -109,7 +109,7 @@ async function WRITE(name: string, value1?: string, value2?: string, value3?: st
                 name
             },
             data: {
-                value1: value1
+                value1: value1 === "[/BLANK]" ? "" : value1
             }
         })
     }
@@ -120,7 +120,7 @@ async function WRITE(name: string, value1?: string, value2?: string, value3?: st
                 name
             },
             data: {
-                value2: value2
+                value2: value2 === "[/BLANK]" ? "" : value2
             }
         })
     }
@@ -131,7 +131,7 @@ async function WRITE(name: string, value1?: string, value2?: string, value3?: st
                 name
             },
             data: {
-                value3: value3
+                value3: value3 === "[/BLANK]" ? "" : value3
             }
         })
     }
