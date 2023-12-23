@@ -71,7 +71,7 @@ const OrderNotes = (props: Props) => {
                                             <Image src={order.profile.imageURL} width={40} height={40} alt='userImage' className='rounded' />
                                         </div>
                                         <div className=''>
-                                            <div className={`font-semibold -mb-1 ${profile ? profile.userId === order.profile.userId ? "text-green-500 bg-green-50 w-fit rounded-md" : null : null}`}>
+                                            <div className={`font-semibold -mb-1 ${profile ? profile.userId === order.profile.userId ? "text-green-700 bg-green-50 w-fit rounded-md" : null : null}`}>
                                                 {profile ? profile.userId === order.profile.userId ? "You" : order.profile.name : order.profile.name}
                                             </div>
                                             <div className='text-xs'>
