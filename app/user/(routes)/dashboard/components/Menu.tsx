@@ -1,7 +1,7 @@
 'use client'
 import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
 import { redirectToSignIn, useClerk } from '@clerk/nextjs'
-import { Role, profile } from '@prisma/client'
+import { Role, profile, settings } from '@prisma/client'
 import axios from 'axios'
 import { ChevronLeft, ChevronRight, Globe, LogOut, Mail, ShoppingBag, Trash, User, User2 } from 'lucide-react'
 import Image from 'next/image'
@@ -11,6 +11,8 @@ import RoleSelector from './sub/RoleSelector'
 import OrderNotes from './sub/OrderNotes'
 import Link from 'next/link'
 import { redirect, useRouter } from 'next/navigation'
+import Setting from './GlobalMenu/SettingList/SettingList'
+import SettingList from './GlobalMenu/SettingList/SettingList'
 
 type Props = {
     profile: any
@@ -128,7 +130,7 @@ function getMenuComponent(selectedMenu: any, profile: profile) {
         case "personal":
             return <PersonalMenu profile={profile} />
         case "global":
-            break;
+            return <GlobalMenu profile={profile} />
         case "orders":
             return <OrdersMenu profile={profile} />
         case "users":
@@ -282,15 +284,40 @@ const PendingUsers = (profile: any) => {
 
 const OrdersMenu = (profile: any) => {
     const [isWorking, setIsWorking] = useState(false)
-
     return (
         <div className='bg-slate-100 p-2 w-full'>
             <div className='font-semibold text-md text-slate-700 tracking-tight mb-4'>
                 {isWorking ? "Loading orders" : "Orders processing:"}
             </div>
             <div>
-                <OrderNotes setWorking={setIsWorking} />
+                <OrderNotes setWorking={setIsWorking} profile={profile.profile} />
             </div>
+        </div>
+    )
+}
+
+const GlobalMenu = (profile: any) => {
+    const [settingList, setSettingList] = useState([])
+
+    const fetchSettings = async () => {
+        await axios.get('/api/settings/list').then(async (res) => {
+            const response = await res.data
+            if (response.status === 200) {
+                setSettingList(response.data)
+            }
+        }).catch((error) => {
+            toast.error(error.message)
+        })
+    }
+
+    useEffect(() => {
+        fetchSettings()
+    }, [])
+
+
+    return (
+        <div>
+            <SettingList settingList={settingList} />
         </div>
     )
 }
