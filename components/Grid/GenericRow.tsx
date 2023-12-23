@@ -111,7 +111,7 @@ const GenericRow = (props: Props) => {
         <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
           Rs {rowTotalAmount}
         </div>
-        <ToolTipProvider content={String(row.orderNotes ? row.orderNotes[0].note : "")}>
+        <ToolTipProvider content={String(row.orderNotes ? row.orderNotes[0]?.note : "")}>
           <div className="flex flex-col items-center ">
             <div>
               {row.orderNotes.length > 1 ? (
@@ -244,7 +244,7 @@ const GenericRow = (props: Props) => {
                     </div>
                     <div className="flex items-center justify-between gap-2">
                       <div>
-                        {String(row.orderNotes[0].note).toLocaleUpperCase()}
+                        {String(row.orderNotes[0]?.note).toLocaleUpperCase()}
                       </div>
                       <div>
                         <Image alt="last user" src={row.orderNotes[0]?.profile?.imageURL} width={20} height={20} className="w-6 h-6 rounded-full" />

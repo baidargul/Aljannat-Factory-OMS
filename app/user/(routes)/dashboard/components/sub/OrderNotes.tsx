@@ -9,10 +9,14 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 type Props = {
-    setWorking: any
+    setWorking?: any
+    profile?: any
 }
 
 const OrderNotes = (props: Props) => {
+    const [profile, setProfile] = useState<any>(props.profile)
+
+
     const [orders, setOrders] = useState<any[]>([])
 
     useEffect(() => {
@@ -28,7 +32,9 @@ const OrderNotes = (props: Props) => {
 
     async function getOrders() {
         try {
-            props.setWorking(true)
+            if (props.setWorking) {
+                props.setWorking(true)
+            }
             const res = await axios.get('/api/order/notes');
             const data = res.data;
 
@@ -37,12 +43,18 @@ const OrderNotes = (props: Props) => {
             } else {
                 setOrders([]);
             }
-            props.setWorking(false)
+            if (props.setWorking) {
+                props.setWorking(false)
+            }
         } catch (err: any) {
-            props.setWorking(false)
+            if (props.setWorking) {
+                props.setWorking(false)
+            }
             toast.error(err.message);
         } finally {
-            props.setWorking(false)
+            if (props.setWorking) {
+                props.setWorking(false)
+            }
         }
     }
 
@@ -50,10 +62,8 @@ const OrderNotes = (props: Props) => {
         <div>
             {
                 orders.map((order) => {
-                    console.log(order)
-
                     return (
-                        <div className="flex border bg-white py-1 overflow-x-auto">
+                        <div className={`flex border bg-white py-1 overflow-x-auto ${profile ? profile.userId === order.profile.userId ? "bg-green-50/50" : null : null}`}>
                             <div className='grid grid-cols-3 w-full'>
                                 <Link href={`/user/account/${order.profile.userId}`} target='_blank'>
                                     <div className='flex gap-1 items-center'>
@@ -61,8 +71,8 @@ const OrderNotes = (props: Props) => {
                                             <Image src={order.profile.imageURL} width={40} height={40} alt='userImage' className='rounded' />
                                         </div>
                                         <div className=''>
-                                            <div className='font-semibold -mb-1'>
-                                                {order.profile.name}
+                                            <div className={`font-semibold -mb-1 ${profile ? profile.userId === order.profile.userId ? "text-green-500 bg-green-50 w-fit rounded-md" : null : null}`}>
+                                                {profile ? profile.userId === order.profile.userId ? "You" : order.profile.name : order.profile.name}
                                             </div>
                                             <div className='text-xs'>
                                                 {getCurrentUserCasualStatus(order.profile.role)}
