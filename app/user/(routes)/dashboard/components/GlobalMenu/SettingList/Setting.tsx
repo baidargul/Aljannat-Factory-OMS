@@ -3,6 +3,8 @@ import { settings } from '@prisma/client'
 import { Save, Trash } from 'lucide-react'
 import React, { useEffect } from 'react'
 import InputBar from './Setting/InputBar'
+import axios from 'axios'
+import { toast } from 'sonner'
 
 type Props = {
     setting: settings
@@ -23,6 +25,25 @@ const Setting = (props: Props) => {
         setSelectedValue(index)
     }
 
+    const handleDelete = async () => {
+        const data = {
+            id: setting.id
+        }
+        await axios.post('/api/settings/delete/', data).then(async (res) => {
+            const data = await res.data
+            if (data.status === 200) {
+                props.fetchSettings()
+                toast.success('Successfully deleted setting')
+            } else {
+                toast.error(data.message)
+            }
+        }).catch((err) => {
+            toast.error(`Server error: ${err.message}`)
+        })
+
+        props.fetchSettings()
+    }
+
     useEffect(() => {
         props.fetchSettings()
         setIsValueChanged(false)
@@ -41,7 +62,7 @@ const Setting = (props: Props) => {
                 {selectedValue === 3 ? <InputBar name={setting.name} index={3} prevValue={setting.value3 || ""} setSelectedValue={setSelectedValue} setIsValueChanged={setIsValueChanged} /> : setting.value3}
             </td>
             <td className='border pr-3 p-2 group-hover:bg-yellow-50/60  flex gap-4 items-center justify-end'>
-                <button className='bg-slate-100 group-hover:bg-red-50 hover:bg-red-500 border rounded px-2 py-1 w-24 flex gap-1 items-center'>
+                <button onClick={handleDelete} className='bg-slate-100 group-hover:bg-red-50 hover:bg-red-500 border rounded px-2 py-1 w-24 flex gap-1 items-center'>
                     <div className='fill-red-50'>
                         <Trash size={16} />
                     </div>
