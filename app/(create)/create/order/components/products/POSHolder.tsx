@@ -61,6 +61,14 @@ const POSHolder = (props: Props) => {
                 return;
             }
 
+            if (response.status === 403) {
+                console.log(response)
+                setCustomer(response.data);
+                toast.warning(response.message);
+                setIsLoading(false);
+                return;
+            }
+
             if (response.status === 200) {
                 setCustomer(response.data);
                 toast.success(response.message);
@@ -122,6 +130,22 @@ const POSHolder = (props: Props) => {
         setDateOfDelivery(date);
     };
 
+    const handlePhoneChange = async (e: any, type: "1" | "2") => {
+        if (e.target.value.length > 11) {
+            return
+        }
+
+        const phone = e.target.value;
+        if (type === "1") setCustomer({ ...customer, phone });
+        else {
+            setCustomer({ ...customer, phone2: phone });
+        }
+
+        if (e.target.value.length === 11) {
+            await handleSearch(e.target.value);
+        }
+    }
+
     return (
         <div>
             {isLoading && (
@@ -169,11 +193,11 @@ const POSHolder = (props: Props) => {
                         <div className='flex gap-2'>
                             <div className='flex flex-col'>
                                 <p className='font-semibold text-sm tracking-wider'>Phone 01:</p>
-                                <Input autoComplete='off' disabled={isLoading} name='customerphone01' placeholder='Phone01' type='number' className='text-black' value={customer ? customer?.phone : ""} onChange={(e: any) => { setCustomer({ ...customer, phone: e.target.value }) }} maxLength={11} onKeyDown={async (e: any) => e.key === "Enter" ? await handleSearch(customer?.phone) : null} />
+                                <Input autoComplete='off' disabled={isLoading} name='customerphone01' placeholder='Phone01' type='number' className='text-black' value={customer ? customer?.phone : ""} onChange={(e: any) => { handlePhoneChange(e, "1") }} maxLength={11} onKeyDown={async (e: any) => e.key === "Enter" ? await handleSearch(customer?.phone) : null} />
                             </div>
                             <div className='flex flex-col'>
                                 <p className='font-semibold text-sm tracking-wider'>Phone 02:</p>
-                                <Input autoComplete='off' disabled={isLoading} name='customerphone02' placeholder='Phone02' type='number' className='text-black' value={customer ? customer?.phone2 : ""} onChange={(e: any) => { setCustomer({ ...customer, phone2: e.target.value }) }} maxLength={11} onKeyDown={async (e: any) => e.key === "Enter" ? await handleSearch(customer?.phone2) : null} />
+                                <Input autoComplete='off' disabled={isLoading} name='customerphone02' placeholder='Phone02' type='number' className='text-black' value={customer ? customer?.phone2 : ""} onChange={(e: any) => { handlePhoneChange(e, "2") }} maxLength={11} onKeyDown={async (e: any) => e.key === "Enter" ? await handleSearch(customer?.phone2) : null} />
                             </div>
                             <div className='flex flex-col'>
                                 <p className='font-semibold text-sm tracking-wider'>City:</p>
