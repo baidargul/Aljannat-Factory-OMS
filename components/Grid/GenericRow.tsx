@@ -10,7 +10,8 @@ import { Status } from "@prisma/client";
 import { v4 } from "uuid";
 import { toast } from "sonner";
 import Image from "next/image";
-import { Ungroup } from "lucide-react";
+import { FileWarning, Layers3, Ungroup } from "lucide-react";
+import { HoverCard } from "../ui/hover-card";
 
 type Props = {
   row: any;
@@ -30,6 +31,7 @@ type Props = {
 type Mode = 'normal' | 'selection'
 
 const GenericRow = (props: Props) => {
+  const [isDuplicateOrder, setIsDuplicateOrder] = useState<any>(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [row, setRow] = useState<any>(props.row);
   const [rowTotalAmount, setRowTotalAmount] = useState<any>(0);
@@ -45,107 +47,126 @@ const GenericRow = (props: Props) => {
     setRow(newRow);
   }
 
+  useEffect(() => {
+    axios.get(`/api/customer/find/phone/${row.customers.phone}`).then(async (res) => {
+      const data = await res.data
+      if (data.status === 403) {
+        setIsDuplicateOrder(true)
+      } else {
+        setIsDuplicateOrder(false)
+      }
+    })
+
+  }, [])
 
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       const time = getTimeLapsed(row.createdAt);
       setTimeLapsed(time);
-    }, 1000); // run every second
+    }, 1000);
 
-    // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
   }, [row.createdAt]);
 
 
   function DataRow() {
     return (
-      <div
-        className={`p-2 w-full  ${isInSelection(row.id) ? "bg-green-100" : ""} ${!props.disabled && !isInSelection(row.id) && "hover:bg-yellow-50 cursor-pointer"} cursor-default justify-items-start grid grid-cols-10 items-center text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
-        onClick={handleRowClick}
-      >
-        <div className=" overflow-hidden whitespace-nowrap text-ellipsis opacity-40">
-          {props.index + 1}
-        </div>
-        <div>
-          <div className="overflow-hidden whitespace-nowrap text-ellipsis ml-auto mr-auto">
-            {new Date(row.createdAt).toDateString()}
-          </div>
-          <div className="flex gap-1 text-slate-400 text-xs scale-90 -ml-1">
-            <div>{timeLapsed && "Created"}</div>
-            <div>
-              {
-                timeLapsed && `${timeLapsed} ago`
-              }
-            </div>
-          </div>
-        </div>
-        <div className="ml-auto mr-auto">
-          <ToolTipProvider content={String(new Date(row.dateOfDelivery).toDateString())}>
-            <div className={`overflow-hidden whitespace-nowrap text-ellipsis ${getDeliveryDateDifference(row.dateOfDelivery) === "Yesterday" || Number(getDeliveryDateDifference(row.dateOfDelivery)) < 1 ? "text-red-800 opacity-40 font-semibold tracking-tight" : ""}`}>
-              {
-                getDeliveryDateDifference(row.dateOfDelivery)
-              }
+      <div className="relative">
+        <div className={`absolute left-5 top-5 opacity-0  ${isDuplicateOrder && "opacity-100 animate-pulse"}`}>
+          <ToolTipProvider content={"Duplicate order warning!"}>
+            <div className="pointer-events-none">
+              <FileWarning size={16} className="fill-orange-200" />
             </div>
           </ToolTipProvider>
         </div>
-        <div className="w-24 overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.customers.name.charAt(0).toUpperCase() +
-            row.customers.name.slice(1).toLowerCase()}
-        </div>
-        <div className="font-semibold  overflow-hidden whitespace-nowrap text-ellipsis">
-          {
-            formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)
-          }
-        </div>
         <div
-          className={`${row.ordersRegister[0].weight !== 0 ? "opacity-100" : "opacity-40 "
-            }  overflow-hidden whitespace-nowrap text-ellipsis`}
+          className={`p-2 w-full  ${isInSelection(row.id) ? "bg-green-100" : ""} ${!props.disabled && !isInSelection(row.id) && "hover:bg-yellow-50 cursor-pointer"} cursor-default justify-items-start grid grid-cols-10 items-center text-xs text-start border select-none ${String(row.status).toLocaleLowerCase() === "fake" && "opacity-40 line-through"}`}
+          onClick={handleRowClick}
         >
-          {getTotalWeight(row)}
-        </div>
-        <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
-          {row.customers.city}
-        </div>
-
-        <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
-          Rs {rowTotalAmount}
-        </div>
-        <ToolTipProvider content={String(row.orderNotes ? row.orderNotes[0]?.note : "")}>
-          <div className="flex flex-col items-center ">
-            <div>
-              {row.orderNotes.length > 1 ? (
-                <div className="text-xs w-4 h-4 border-zinc-500 text-zinc-800 justify-center items-center flex text-center">
-                  <div className="scale-75 flex gap-1 opacity-60 items-center font-semibold">
-                    <div>
-                      Interactions:
-                    </div>
-                    <div>
-                      {row.orderNotes.length - 1}
-                    </div>
-                  </div>
-                </div>
-              ) : (<div className="scale-75 flex gap-1 opacity-60 items-center font-semibold">New</div>)}
+          <div className=" overflow-hidden whitespace-nowrap text-ellipsis opacity-40">
+            {props.index + 1}
+          </div>
+          <div>
+            <div className="overflow-hidden whitespace-nowrap text-ellipsis ml-auto mr-auto">
+              {new Date(row.createdAt).toDateString()}
             </div>
-            <div className={` ${rowStatusStyle(row.status)} p-1 text-center w-28 text-xs rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
-              {getStatusCasual(row.status)}
+            <div className="flex gap-1 text-slate-400 text-xs scale-90 -ml-1">
+              <div>{timeLapsed && "Created"}</div>
+              <div>
+                {
+                  timeLapsed && `${timeLapsed} ago`
+                }
+              </div>
             </div>
           </div>
-        </ToolTipProvider>
-        <div className=" overflow-hidden whitespace-nowrap text-ellipsis ml-auto">
-          {row.trackingNo ? (
-            <ToolTipProvider content={row.trackingNo}>
-              <div className="flex flex-col items-center">
-                <div className="font-semibold">
-                  {row.courier}
-                </div>
-                <div className="text-black/60 p-1 bg-slate-100 rounded border border-slate-200">
-                  {row.trackingNo}
-                </div>
+          <div className="ml-auto mr-auto">
+            <ToolTipProvider content={String(new Date(row.dateOfDelivery).toDateString())}>
+              <div className={`overflow-hidden whitespace-nowrap text-ellipsis ${getDeliveryDateDifference(row.dateOfDelivery) === "Yesterday" || Number(getDeliveryDateDifference(row.dateOfDelivery)) < 1 ? "text-red-800 opacity-40 font-semibold tracking-tight" : ""}`}>
+                {
+                  getDeliveryDateDifference(row.dateOfDelivery)
+                }
               </div>
             </ToolTipProvider>
-          ) : null}
-        </div>
+          </div>
+          <div className="w-24 overflow-hidden whitespace-nowrap text-ellipsis">
+            {row.customers.name.charAt(0).toUpperCase() +
+              row.customers.name.slice(1).toLowerCase()}
+          </div>
+          <div className="font-semibold  overflow-hidden whitespace-nowrap text-ellipsis">
+            {
+              formalizeText(row.ordersRegister.length > 1 ? `${row.ordersRegister[0].product.name} (...)` : `${row.ordersRegister[0].product.name}`)
+            }
+          </div>
+          <div
+            className={`${row.ordersRegister[0].weight !== 0 ? "opacity-100" : "opacity-40 "
+              }  overflow-hidden whitespace-nowrap text-ellipsis`}
+          >
+            {getTotalWeight(row)}
+          </div>
+          <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
+            {row.customers.city}
+          </div>
+
+          <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
+            Rs {rowTotalAmount}
+          </div>
+          <ToolTipProvider content={String(row.orderNotes ? row.orderNotes[0]?.note : "")}>
+            <div className="flex flex-col items-center ">
+              <div>
+                {row.orderNotes.length > 1 ? (
+                  <div className="text-xs w-4 h-4 border-zinc-500 text-zinc-800 justify-center items-center flex text-center">
+                    <div className="scale-75 flex gap-1 opacity-60 items-center font-semibold">
+                      <div>
+                        Interactions:
+                      </div>
+                      <div>
+                        {row.orderNotes.length - 1}
+                      </div>
+                    </div>
+                  </div>
+                ) : (<div className="scale-75 flex gap-1 opacity-60 items-center font-semibold">New</div>)}
+              </div>
+              <div className={` ${rowStatusStyle(row.status)} p-1 text-center w-28 text-xs rounded-md  overflow-hidden whitespace-nowrap text-ellipsis`}>
+                {getStatusCasual(row.status)}
+              </div>
+            </div>
+          </ToolTipProvider>
+          <div className=" overflow-hidden whitespace-nowrap text-ellipsis ml-auto">
+            {row.trackingNo ? (
+              <ToolTipProvider content={row.trackingNo}>
+                <div className="flex flex-col items-center">
+                  <div className="font-semibold">
+                    {row.courier}
+                  </div>
+                  <div className="text-black/60 p-1 bg-slate-100 rounded border border-slate-200">
+                    {row.trackingNo}
+                  </div>
+                </div>
+              </ToolTipProvider>
+            ) : null}
+          </div>
+        </div >
       </div >
     );
   }

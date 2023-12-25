@@ -64,7 +64,7 @@ export async function GET(req: NextRequest, props: any) {
 
 
     if (customer) {
-        const minimumOrderDayThreshold = 4
+        const minimumOrderDayThreshold = 2
 
         let customerCanOrder = true
         if (lastOrderFromThisCustomer) {

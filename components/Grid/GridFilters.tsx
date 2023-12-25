@@ -355,7 +355,6 @@ const GridWithFilters = (props: Props) => {
                                 if (props.profile.userId !== row.userId) forNotThisUser = true
                                 if (row.userId === null) forNotThisUser = false
 
-
                                 return (
                                     <div key={v4()} className={`${forNotThisUser && "opacity-30"}`}>
                                         <GenericRow selectionProps={selectionProps} stage={stage} row={row} index={index} profile={props.profile} disabled={forNotThisUser} />
