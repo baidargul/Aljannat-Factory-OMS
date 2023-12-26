@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
             }
         })
 
-        if(order){
+        if (order) {
             //Check difference between last order and current order dates
 
             const lastOrderDate = new Date(lastOrderFromThisCustomer?.createdAt as Date);
@@ -63,14 +63,19 @@ export async function POST(req: NextRequest) {
 
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            const minimumOrderDayThreshold = 2
+            let minimumOrderDayThreshold: any = await prisma.settings.findUnique({
+                where: {
+                    name: "Order duplication threshold"
+                }
+            })
+            minimumOrderDayThreshold = minimumOrderDayThreshold?.value1 || 2
 
             if (diffDays < minimumOrderDayThreshold) {
                 response.status = 400;
                 response.message = 'Might be duplicate order';
                 response.data = true;
                 return new Response(JSON.stringify(response));
-            } else{
+            } else {
                 response.status = 200;
                 response.message = 'Not duplicate order';
                 response.data = false;

@@ -62,7 +62,12 @@ export async function GET(req: NextRequest, props: any) {
     })
 
     if (customer) {
-        const minimumOrderDayThreshold = 2
+        let minimumOrderDayThreshold: any = await prisma.settings.findUnique({
+            where: {
+                name: "Order duplication threshold"
+            }
+        })
+        minimumOrderDayThreshold = minimumOrderDayThreshold?.value1 || 2
 
         let customerCanOrder = true
         if (lastOrderFromThisCustomer) {
@@ -84,7 +89,7 @@ export async function GET(req: NextRequest, props: any) {
             response.data = customer
             return new Response(JSON.stringify(response))
         }
-        
+
         response.status = 200
         response.message = `Customer with phone ${phone} found`
         response.data = customer
