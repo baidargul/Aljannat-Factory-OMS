@@ -48,13 +48,16 @@ const GenericRow = (props: Props) => {
   }
 
   useEffect(() => {
-    axios.get(`/api/customer/find/phone/${row.customers.phone}`).then(async (res) => {
+
+    const data = {
+      orderId: row.id,
+      customerId: row.customers.id,
+    }
+
+    axios.post(`/api/customer/order/isDuplicate/`, data).then(async (res: any) => {
       const data = await res.data
-      if (data.status === 403) {
-        setIsDuplicateOrder(true)
-      } else {
-        setIsDuplicateOrder(false)
-      }
+      const isThisDuplicate = data.data
+      setIsDuplicateOrder(isThisDuplicate)
     })
 
   }, [])
