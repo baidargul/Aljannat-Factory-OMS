@@ -54,7 +54,11 @@ async function getOrders(profile: profile) {
     if (role === Role.ADMIN || role === Role.SUPERADMIN || role === Role.MANAGER) {
         orders = await prisma.orders.findMany({
             include: {
-                customers: true,
+                customers: {
+                    include:{
+                        logisticsCities: true,
+                    }
+                },
                 profile: true,
                 orderNotes: {
                     include: {
@@ -90,7 +94,11 @@ async function getOrders(profile: profile) {
 
         orders = await prisma.orders.findMany({
             include: {
-                customers: true,
+                customers: {
+                    include: {
+                        logisticsCities: true
+                    }
+                },
                 profile: true,
                 orderNotes: {
                     include: {

@@ -16,9 +16,22 @@ const ProductCollection = async (props: Props) => {
         }
     })
 
+    let availableCities = await prisma.logisticsCities.findMany({
+        orderBy: {
+            City: 'asc'
+        }
+    })
+
+    const moldedCites = availableCities.map((city) => {
+        return {
+            name: city.City,
+            label: city.City,
+        }
+    })
+
     return (
         <div className=''>
-            <POSHolder products={products} currentUser={props.currentUser}/>
+            <POSHolder products={products} currentUser={props.currentUser} availableCities={moldedCites} />
         </div>
     )
 }

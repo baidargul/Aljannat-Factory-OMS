@@ -34,7 +34,11 @@ export async function POST(req: NextRequest) {
 
         const lastOrderFromThisCustomer = await prisma.orders.findFirst({
             include: {
-                customers: true
+                customers: {
+                    include:{
+                        logisticsCities: true,
+                    }
+                },
             },
             where: {
                 customerId: customer.id,

@@ -1,11 +1,14 @@
-import React from 'react'
+'use client'
+import axios from 'axios'
+import React, { useEffect } from 'react'
 
 type Props = {}
 
 const page = (props: Props) => {
-  return (
-    <div>page</div>
-  )
+
+    return (
+        <div>page</div>
+    )
 }
 
 export default page

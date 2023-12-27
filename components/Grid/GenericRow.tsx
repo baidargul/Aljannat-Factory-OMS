@@ -48,7 +48,6 @@ const GenericRow = (props: Props) => {
   }
 
   useEffect(() => {
-
     const data = {
       orderId: row.id,
       customerId: row.customers.id,
@@ -59,7 +58,6 @@ const GenericRow = (props: Props) => {
       const isThisDuplicate = data.data
       setIsDuplicateOrder(isThisDuplicate)
     })
-
   }, [])
 
 
@@ -128,7 +126,7 @@ const GenericRow = (props: Props) => {
             {getTotalWeight(row)}
           </div>
           <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
-            {row.customers.city}
+            {row.customers.logisticsCities.City}
           </div>
 
           <div className=" overflow-hidden whitespace-nowrap text-ellipsis">
@@ -248,7 +246,7 @@ const GenericRow = (props: Props) => {
                     {row.customers.phone2 ? row.customers.phone2 !== "00000000001" ? <a className="text-blue-400" href={`tel:${row.customers.phone2}`}>{row.customers.phone2}</a> : "N/A" : "N/A"}
                   </p>
                   <p className="text-ellipsis overflow-hidden whitespace-nowrap">
-                    {formalizeText(row.customers.city)}
+                    {formalizeText(row.customers.logisticsCities.City)}
                   </p>
                   <div className="text-ellipsis overflow-hidden whitespace-break-spaces h-16">
                     {formalizeText(row.customers.address)}

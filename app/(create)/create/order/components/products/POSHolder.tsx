@@ -11,10 +11,13 @@ import { toast } from 'sonner';
 import POSItemsHolder from './POSHolder/POSItemsHolder';
 import POSOrderRowHolder from './POSHolder/POSOrderRowHolder';
 import Image from 'next/image';
+import { ComboBoxProvider } from '@/components/ComboBox/ComboBoxProvider';
+import { formalizeText } from '@/lib/my';
 
 type Props = {
     products: any;
     currentUser: any;
+    availableCities: any
 };
 
 const POSHolder = (props: Props) => {
@@ -24,6 +27,8 @@ const POSHolder = (props: Props) => {
     const [currentUser, setCurrentUser] = useState<any>(props.currentUser);
     const [dateOfBooking, setDateOfBooking] = useState<Date>(new Date());
     const [dateOfDelivery, setDateOfDelivery] = useState<Date>(new Date());
+    const [availableCities, setAvailableCities] = useState<any>(props.availableCities);
+    const [selectedCity, setSelectedCity] = useState<any>(null);
     const POS: any = usePOS();
     const { signOut } = useClerk();
     const router = useRouter();
@@ -35,6 +40,12 @@ const POSHolder = (props: Props) => {
     useEffect(() => {
         POS.customer = customer;
     }, [customer, POS]);
+
+    useEffect(() => {
+        if (selectedCity) {
+            setCustomer({ ...customer, city: selectedCity })
+        }
+    }, [selectedCity])
 
     const handleNewOrder = () => {
         setIsLoading(true);
@@ -199,9 +210,15 @@ const POSHolder = (props: Props) => {
                                 <p className='font-semibold text-sm tracking-wider'>Phone 02:</p>
                                 <Input autoComplete='off' disabled={isLoading} name='customerphone02' placeholder='Phone02' type='number' className='text-black' value={customer ? customer?.phone2 : ""} onChange={(e: any) => { handlePhoneChange(e, "2") }} maxLength={11} onKeyDown={async (e: any) => e.key === "Enter" ? await handleSearch(customer?.phone2) : null} />
                             </div>
-                            <div className='flex flex-col'>
+                            {/* <div className='flex flex-col'>
                                 <p className='font-semibold text-sm tracking-wider'>City:</p>
                                 <Input autoComplete='off' disabled={isLoading} name='customercity' placeholder='City' className='text-black' value={customer ? customer?.city : ""} onChange={(e: any) => { setCustomer({ ...customer, city: e.target.value }) }} />
+                            </div> */}
+                            <div className='flex flex-col'>
+                                <p className='font-semibold text-sm tracking-wider'>City:</p>
+                                <ComboBoxProvider content={availableCities} setValue={setSelectedCity} >
+                                    <div className='bg-white rounded-md w-20 h-6 pl-1 truncate'>{formalizeText(selectedCity || "")}</div>
+                                </ComboBoxProvider>
                             </div>
                             <div className='flex flex-col'>
                                 <p className='font-semibold text-sm tracking-wider'>Address:</p>

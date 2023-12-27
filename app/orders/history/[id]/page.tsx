@@ -22,7 +22,11 @@ const page = async (props: Props) => {
 
     const order = await prisma.orders.findUnique({
         include: {
-            customers: true,
+            customers: {
+                include:{
+                    logisticsCities: true,
+                }
+            },
             profile: true,
             orderNotes: {
                 include: {

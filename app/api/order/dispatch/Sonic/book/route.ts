@@ -81,7 +81,11 @@ export async function POST(req: NextRequest) {
 
                 freshOrder = await prisma.orders.findUnique({
                     include: {
-                        customers: true,
+                        customers: {
+                            include:{
+                                logisticsCities: true,
+                            }
+                        },
                         profile: true,
                         orderNotes: {
                             orderBy: {

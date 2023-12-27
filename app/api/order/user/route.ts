@@ -40,7 +40,11 @@ export async function POST(req: NextRequest) {
 
         const orders = await prisma.orders.findMany({
             include: {
-                customers: true,
+                customers: {
+                    include:{
+                        logisticsCities: true,
+                    }
+                },
                 profile: true,
                 orderNotes: {
                     include:{

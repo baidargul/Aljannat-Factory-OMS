@@ -7,12 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// datasource db {
-//   provider = "postgresql"
-//   url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-//   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
-// }
-
 model orders {
   id             String           @id @unique
   dateOfBooking  DateTime         @default(now()) @db.Timestamptz(6)
@@ -33,16 +27,18 @@ model orders {
 }
 
 model customers {
-  id        String   @id @unique @default(uuid())
-  name      String?
-  phone     String
-  phone2    String?
-  address   String?
-  city      String?
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @db.Timestamptz(6)
-  index     Int      @default(autoincrement())
-  orders    orders[]
+  id              String           @id @unique @default(uuid())
+  name            String?
+  phone           String
+  phone2          String?
+  address         String?
+  city            String?
+  createdAt       DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime         @default(now()) @db.Timestamptz(6)
+  index           Int              @default(autoincrement())
+  cityId          String?
+  logisticsCities logisticsCities? @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cityId")
+  orders          orders[]
 }
 
 model sheets {
@@ -139,8 +135,14 @@ model courier_dep {
   password  String?
   apikey    String?
   createdAt DateTime? @db.Timestamptz(6)
-  useApiKey Boolean? @default(true)
+  useApiKey Boolean?  @default(true)
   accountNo String?
+}
+
+model logisticsCities {
+  id        String      @id @default(uuid())
+  City      String?     @unique
+  customers customers[]
 }
 
 enum Role {

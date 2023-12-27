@@ -45,7 +45,11 @@ export async function POST(req: NextRequest) {
         if (role === Role.ADMIN || role === Role.SUPERADMIN || role === Role.MANAGER) {
             orders = await prisma.orders.findMany({
                 include: {
-                    customers: true,
+                    customers: {
+                        include:{
+                            logisticsCities: true,
+                        }
+                    },
                     profile: true,
                     orderNotes: {
                         include: {
@@ -81,7 +85,11 @@ export async function POST(req: NextRequest) {
 
             orders = await prisma.orders.findMany({
                 include: {
-                    customers: true,
+                    customers: {
+                        include:{
+                            logisticsCities: true,
+                        }
+                    },
                     profile: true,
                     orderNotes: {
                         include: {

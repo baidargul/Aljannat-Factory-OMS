@@ -64,7 +64,11 @@ export async function POST(req: NextRequest): Promise<void | Response> {
                 console.log(`Error in Dispatch`)
                 freshOrder = await prisma.orders.findUnique({
                     include: {
-                        customers: true,
+                        customers: {
+                            include:{
+                                logisticsCities: true,
+                            }
+                        },
                         profile: true,
                         orderNotes: {
                             include: {
@@ -119,7 +123,11 @@ export async function POST(req: NextRequest): Promise<void | Response> {
 
                 freshOrder = await prisma.orders.findUnique({
                     include: {
-                        customers: true,
+                        customers: {
+                            include:{
+                                logisticsCities: true,
+                            }
+                        },
                         profile: true,
                         orderNotes: {
                             include: {

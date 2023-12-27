@@ -133,6 +133,19 @@ export async function POST(req: NextRequest) {
             }
         }
 
+        const customerCity = await prisma.logisticsCities.findUnique({
+            where: {
+                City: String(customer.city).toLocaleUpperCase()
+            }
+        })
+
+        if (!customerCity) {
+            response.status = 400
+            response.message = `City ${customer.city} not found in database.`
+            response.data = null
+            return new Response(JSON.stringify(response))
+        }
+
         let dbCustomer;
         if (!isExists) {
             dbCustomer = await prisma.customers.create({
@@ -142,6 +155,7 @@ export async function POST(req: NextRequest) {
                     phone: customer.phone,
                     phone2: customer.phone2,
                     city: customer.city,
+                    cityId: customerCity.id,
                     address: customer.address
                 }
             })

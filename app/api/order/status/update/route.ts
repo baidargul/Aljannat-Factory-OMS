@@ -83,7 +83,11 @@ export async function PATCH(req: NextRequest) {
 
         const freshOrder = await prisma.orders.findUnique({
             include: {
-                customers: true,
+                customers: {
+                    include:{
+                        logisticsCities: true,
+                    }
+                },
                 profile: true,
                 orderNotes: {
                     include:{
