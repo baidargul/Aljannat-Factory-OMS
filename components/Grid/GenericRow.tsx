@@ -892,6 +892,7 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
     }
 
     setIsWorking(true)
+    let isExecutedFine = true
     const status = Status.READYTODISPATCH
     await axios.patch("/api/order/notes/", { userId, note, orderId }).then((res) => {
       const data = res.data.data
@@ -901,26 +902,36 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
       const response = await res.data
       if (response.status === 200) {
         const data = response.data
-        toast.success(response.message, { duration: 1000 })
         updateRow(data)
       } else {
         toast.warning(response.message, { duration: 1000 })
+        setIsWorking(false)
+        isExecutedFine = false
+        return
       }
     });
 
     await axios.post("/api/order/dispatch/MnP/book", { userId, row }).then(async (res) => {
       const response = await res.data
+      console.log(response)
       if (response.status === 200) {
         const data = response.data
-        toast.success(response.message, { duration: 1000 })
         updateRow(data)
       } else {
-        toast.warning(response.message, { duration: 1000 })
+        toast.warning(response.message)
+        isExecutedFine = false
+        return
       }
+    }).catch((err) => {
+      toast.error("Error while dispatching order to M&P")
+      setIsWorking(false)
+      return
     })
 
-    toast.success("Order ready to be dispatch towards M&P")
-    setIsWorking(false)
+    if (isExecutedFine) {
+      setIsWorking(false)
+      toast.success("Order ready to be dispatch towards M&P")
+    }
   }
   async function handleGopButton() {
     const userId = profile.userId;

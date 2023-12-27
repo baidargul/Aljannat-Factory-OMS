@@ -2,10 +2,11 @@ import React from 'react'
 import OrderStats from './sub/OrderStats'
 import OrderNotes from '@/app/user/(routes)/dashboard/components/sub/OrderNotes'
 import currentProfile from '@/lib/current-profile'
+import StatusChart from './StatusChart'
 
 type Props = {}
 
-const Stats = async(props: Props) => {
+const Stats = async (props: Props) => {
   const profile = await currentProfile()
   console.log(profile)
   if (!profile) return (noProfile())
@@ -13,7 +14,10 @@ const Stats = async(props: Props) => {
   return (
     <div>
       <div>
-        <OrderStats />
+        {/* <OrderStats /> */}
+      </div>
+      <div className='mt-5'>
+        <StatusChart />
       </div>
       <div className='mt-5'>
         <div className='text-slate-500 my-1'>Happening right now:</div>

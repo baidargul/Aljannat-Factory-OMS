@@ -15,14 +15,13 @@ export async function POST(req: NextRequest): Promise<void | Response> {
         data: {}
     }
 
-    let freshOrder = null;
-    let trackingNo = "";
-
     try {
+        let freshOrder = null;
+        let trackingNo = "";
 
         const requested = await req.json();
         const { row, userId } = requested;
-        console.log(row)
+        console.log(row);
 
         let productNames = ""
         row.ordersRegister.map((item: any) => {
@@ -60,10 +59,47 @@ export async function POST(req: NextRequest): Promise<void | Response> {
 
         await axios.post("http://mnpcourier.com/mycodapi/api/Booking/InsertBookingData", { ...MnPData }).then(async (res) => {
             const returnedResponse = res.data;
-            if (returnedResponse[0].isSuccess !== "true") {
-                response.status = 500;
+            console.log(`M&P Response:`, returnedResponse[0].isSuccess)
+            if (returnedResponse[0].isSuccess === "false") {
+                console.log(`Error in Dispatch`)
+                freshOrder = await prisma.orders.findUnique({
+                    include: {
+                        customers: true,
+                        profile: true,
+                        orderNotes: {
+                            include: {
+                                profile: true,
+                            },
+                            orderBy: {
+                                createdAt: "desc",
+                            }
+                        },
+                        ordersRegister: {
+                            include: {
+                                productVariations: {
+                                    select: {
+                                        name: true,
+                                        defaultUnit: true,
+                                    }
+                                },
+                                product: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                    }
+                                },
+                            }
+                        },
+                    },
+                    where: {
+                        id: row.id
+                    }
+                });
+
+                response.status = 400;
                 response.message = returnedResponse[0].message;
-                response.data = null;
+                response.data = freshOrder;
+                return new Response(JSON.stringify(response))
             } else {
                 const trackingId = returnedResponse[0].orderReferenceId;
                 console.log(`Tracking number allotted:`, trackingId)
@@ -86,8 +122,8 @@ export async function POST(req: NextRequest): Promise<void | Response> {
                         customers: true,
                         profile: true,
                         orderNotes: {
-                            include:{
-                                profile: true,  
+                            include: {
+                                profile: true,
                             },
                             orderBy: {
                                 createdAt: "desc",
@@ -118,26 +154,23 @@ export async function POST(req: NextRequest): Promise<void | Response> {
                 response.status = 200;
                 response.message = "Order is ready for dispatch from M&P";
                 response.data = freshOrder;
+                return new Response(JSON.stringify(response))
             }
+
+            return new Response(JSON.stringify(response))
         }).catch((err) => {
             console.log(`DISPATCH_MNP_BOOK_ROUTE_ERROR from CourierAPI: ${err}`)
             response.status = 500;
             response.message = "Internal Server Error";
             response.data = null;
-        }).finally(() => {
-            return new Response(JSON.stringify(response))
         })
-
     } catch (error) {
-        console.log(`DISPATCH_MNP_BOOK_ROUTE_ERROR: ${error}`)
+        console.log(`DISPATCH_MNP_BOOK_ROUTE_ERROR from CourierAPI: ${error}`);
         response.status = 500;
         response.message = "Internal Server Error";
         response.data = null;
         return new Response(JSON.stringify(response));
     }
-
-    response.status = 200;
-    response.message = "Success Dispatch MNP Book";
-    response.data = freshOrder;
+    
     return new Response(JSON.stringify(response))
 }
