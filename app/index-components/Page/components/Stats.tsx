@@ -40,7 +40,7 @@ const Stats: React.FC<StatsProps> = () => {
 function noProfile() {
   return (
     <div>
-      <h1>You must be a registered user to see this page.</h1>
+      <h1>Statics will be shown here</h1>
     </div>
   );
 }
