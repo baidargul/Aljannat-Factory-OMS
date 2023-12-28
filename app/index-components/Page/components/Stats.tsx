@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import OrderStats from './sub/OrderStats';
 import OrderNotes from '@/app/user/(routes)/dashboard/components/sub/OrderNotes';
