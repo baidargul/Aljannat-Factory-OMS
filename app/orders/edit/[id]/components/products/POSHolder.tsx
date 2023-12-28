@@ -116,6 +116,7 @@ const POSHolder = (props: Props) => {
 
     const handleSaveOrder = async () => {
         const data = {
+            id: props.order.id,
             customer: { ...customer },
             products: [...POS.products],
             userId: currentUser.userId,
@@ -136,11 +137,11 @@ const POSHolder = (props: Props) => {
         setIsLoading(true);
 
         try {
-            const { data: res } = await axios.post('/api/order/create', data);
-
+            const { data: res } = await axios.post('/api/order/update', data);
+            console.log(res)
             if (res.status === 200) {
                 toast.success(res.message);
-                handleNewOrder();
+                // handleNewOrder();
             } else {
                 toast.error(res.message);
             }
