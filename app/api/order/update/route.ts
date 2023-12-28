@@ -175,6 +175,7 @@ export async function POST(req: NextRequest) {
                 dateOfBooking: dateOfBooking,
                 dateOfDelivery: dateOfDelivery,
                 customerId: dbCustomer.id,
+                userId: userId,
                 updatedAt: new Date(),
             },
             where: {

@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { FileWarning, Layers3, Ungroup } from "lucide-react";
 import { HoverCard } from "../ui/hover-card";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Props = {
   row: any;
@@ -37,6 +39,7 @@ const GenericRow = (props: Props) => {
   const [rowTotalAmount, setRowTotalAmount] = useState<any>(0);
   const [timeLapsed, setTimeLapsed] = useState<any>();
   const { addToSelection, isInSelection, mode } = props.selectionProps;
+  const router = useRouter()
   const handleRowClick = () => {
     setSelectedOrder(row);
     if (!props.disabled && mode === "selection") {
@@ -179,13 +182,14 @@ const GenericRow = (props: Props) => {
   }, [row]);
 
   function orderIdClicked(orderId: string) {
-    navigator.clipboard.writeText(orderId)
-      .then(() => {
-        toast.success("Order reference number copied to clipboard")
-      })
-      .catch((err) => {
-        toast.error("Unable to copy order reference to clipboard")
-      });
+    // router.push(`/orders/edit/${orderId}`)
+    // navigator.clipboard.writeText(orderId)
+    //   .then(() => {
+    //     toast.success("Order reference number copied to clipboard")
+    //   })
+    //   .catch((err) => {
+    //     toast.error("Unable to copy order reference to clipboard")
+    //   });
   }
 
   const forNotThisUser = props.profile.userId !== row.userId;
@@ -206,9 +210,9 @@ const GenericRow = (props: Props) => {
           OtherUserOrder()
         ) : (
           <div className="select-none -mt-2 flex flex-col p-2  gap-2 ">
-
-            <div onClick={() => orderIdClicked(row.id)} className="text-xs uppercase text-center bg-slate-300 text-white py-1 border-y border-slate-400 hover:bg-slate-700 transition-all duration-1000 cursor-pointer">{row.id}</div>
-
+            <Link href={`/orders/edit/${row.id}`} target="_blank">
+              <div onClick={() => orderIdClicked(row.id)} className="text-xs uppercase text-center bg-slate-300 text-white py-1 border-y border-slate-400 hover:bg-slate-700 transition-all duration-1000 cursor-pointer">{row.id}</div>
+            </Link>
             <div className="flex justify-between text-xs items-center">
               <div className="p-1 border-b-2 border-slate-900/30 tracking-wide ">
                 {orderDate}
@@ -1398,7 +1402,7 @@ export function getTimeLapsed(targetDateTime: any) {
 function getDeliveryDateDifference(targetDateTime: any) {
   const target = new Date(targetDateTime);
   const now = new Date();
-  const diff = now.getTime() - target.getTime();
+  const diff = target.getTime() - now.getTime();
 
   const diffInSeconds = Math.floor(diff / 1000);
   const diffInMinutes = Math.floor(diffInSeconds / 60);
@@ -1408,18 +1412,19 @@ function getDeliveryDateDifference(targetDateTime: any) {
   if (diffInDays === 0) {
     return "Today";
   } else if (diffInDays === 1) {
-    return "Yesterday";
-  } else if (diffInDays < 7) {
-    return `${diffInDays} days ago`;
-  } else if (diffInDays < 30) {
+    return "Tomorrow";
+  } else if (diffInDays > 1 && diffInDays < 7) {
+    return `${diffInDays} days from now`;
+  } else if (diffInDays >= 7 && diffInDays < 30) {
     const weeks = Math.floor(diffInDays / 7);
-    return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
-  } else if (diffInDays < 365) {
+    return weeks === 1 ? "1 week from now" : `${weeks} weeks from now`;
+  } else if (diffInDays >= 30 && diffInDays < 365) {
     const months = Math.floor(diffInDays / 30);
-    return months === 1 ? "1 month ago" : `${months} months ago`;
+    return months === 1 ? "1 month from now" : `${months} months from now`;
   } else {
     const years = Math.floor(diffInDays / 365);
-    return years === 1 ? "1 year ago" : `${years} years ago`;
+    return years === 1 ? "1 year from now" : `${years} years from now`;
   }
 }
+
 
