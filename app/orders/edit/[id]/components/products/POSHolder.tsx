@@ -34,10 +34,10 @@ const POSHolder = (props: Props) => {
     const [customer, setCustomer] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [currentUser, setCurrentUser] = useState<any>(props.currentUser);
-    const [dateOfBooking, setDateOfBooking] = useState<Date>(new Date());
-    const [dateOfDelivery, setDateOfDelivery] = useState<Date>(new Date());
+    const [dateOfBooking, setDateOfBooking] = useState<Date>(new Date(props.order.dateOfBooking));
+    const [dateOfDelivery, setDateOfDelivery] = useState<Date>(new Date(props.order.dateOfDelivery));
     const [availableCities, setAvailableCities] = useState<any>(props.availableCities);
-    const [selectedCity, setSelectedCity] = useState<any>(null);
+    const [selectedCity, setSelectedCity] = useState<any>(props.order.customers.logisticsCities.City);
     const POS = useEditPOS();
     const { signOut } = useClerk();
     const router = useRouter();
@@ -61,6 +61,7 @@ const POSHolder = (props: Props) => {
         props.order.ordersRegister.map((p: Product) => {
             POS.addProduct(p.id, p.productName, p.variantName, p.weight, p.amount, p.unit)
         })
+        setCustomer(props.order.customers);
     }, [])
 
     // useEffect(() => {
