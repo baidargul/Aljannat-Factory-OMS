@@ -1,13 +1,32 @@
-'use client'
-import axios from 'axios'
-import React, { useEffect } from 'react'
+import React from 'react'
+import ProductCollection from './components/products/ProductCollection'
+import currentProfile from '@/lib/current-profile'
+import { redirectToSignIn } from '@clerk/nextjs'
+import { Role } from '@prisma/client'
+import { redirect } from 'next/navigation'
+type Props = {
+    params: any
+}
 
-type Props = {}
-
-const page = (props: Props) => {
+const page = async (props: Props) => {
+    const profile = await currentProfile()
+    if (!profile) {
+        redirectToSignIn()
+    } else {
+        if (profile.role === Role.UNVERIFIED) redirect(`/home/unverified/${profile.userId}`)
+    }
 
     return (
-        <div>page</div>
+        <div className=''>
+            <div className='bg-slate-300 border drop-shadow-md p-2 select-none'>
+                <div>
+                    <section>
+                        <ProductCollection currentUser={profile} orderId={props.params.id} />
+                    </section>
+                </div>
+            </div>
+
+        </div>
     )
 }
 
