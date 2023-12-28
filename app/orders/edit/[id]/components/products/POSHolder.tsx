@@ -57,7 +57,6 @@ const POSHolder = (props: Props) => {
     }, [selectedCity])
 
     useEffect(() => {
-        console.log(props.order)
         props.order.ordersRegister.map((p: Product) => {
             POS.addProduct(p.id, p.productName, p.variantName, p.weight, p.amount, p.unit)
         })
