@@ -1079,10 +1079,10 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
   }
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex gap-1 items-center">
+      {/* <div className="flex gap-1 items-center">
         <Input placeholder="Rider instructions" className="text-xs" value={otherNote} onChange={(e: any) => { setOtherNote(e.target.value) }} />
         <button disabled={row.status === Status.READYTODISPATCH ? true : false} onClick={() => handleUpdateNote()} className={`bg-green-100 hover:bg-green-50 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 px-4 text-xs ${row.status === Status.READYTODISPATCH ? "cursor-not-allowed line-through" : ""}`}>{isWorking ? "..." : "Add"}</button>
-      </div>
+      </div> */}
       <div className="border border-green-300 rounded p-2">
         <div className="widest font-semibold text-slate-700 text-sm mt-1">Forward to:</div>
         <div className="grid grid-cols-2 gap-1 mt-1">
