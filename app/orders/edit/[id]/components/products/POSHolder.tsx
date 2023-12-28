@@ -30,6 +30,8 @@ type Product = {
 };
 
 const POSHolder = (props: Props) => {
+    const [firstTimeLoading, setFirstTimeLoading] = useState<boolean>(true);
+    const [isAltered, setIsAltered] = useState<boolean>(false);
     const [selectedProduct, setSelectedProduct] = useState<any>(null);
     const [customer, setCustomer] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -41,10 +43,6 @@ const POSHolder = (props: Props) => {
     const POS = useEditPOS();
     const { signOut } = useClerk();
     const router = useRouter();
-
-    useEffect(() => {
-        // console.log(currentUser);
-    }, [currentUser]);
 
     useEffect(() => {
         POS.customer = customer;
@@ -61,11 +59,8 @@ const POSHolder = (props: Props) => {
             POS.addProduct(p.id, p.productName, p.variantName, p.weight, p.amount, p.unit)
         })
         setCustomer(props.order.customers);
+        
     }, [])
-
-    // useEffect(() => {
-    //     console.log(`POS==>`, POS.products)
-    // }, [POS.products])
 
     const handleNewOrder = () => {
         setIsLoading(true);
@@ -247,12 +242,12 @@ const POSHolder = (props: Props) => {
                         </div>
                     </div>
                     <div className='flex flex-col items-center'>
-                        <div className='grid grid-cols-2 gap-2 rounded-md p-1 w-56 h-24 place-items-center justify-items-center'>
-                            <button onClick={() => handleNewOrder()} className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>
+                        <div className='grid grid-cols-1 gap-2 rounded-md p-1 w-56 h-24 place-items-center justify-items-center'>
+                            {/* <button onClick={() => handleNewOrder()} className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>
                                 New order
-                            </button>
-                            <button onClick={handleSaveOrder} className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit'>
-                                Save order
+                            </button> */}
+                            <button disabled={isAltered} onClick={handleSaveOrder} className='border border-slate-300 hover:bg-yellow-100 transition-all drop-shadow-sm hover:tracking-tight p-2 rounded-md h-fit disabled:line-through disabled:opacity-30 disabled:cursor-not-allowed'>
+                                Update order
                             </button>
                         </div>
                         <div className='-mt-5 text-xs font-semibold tracking-wider flex gap-2 items-center bg-zinc-100 rounded-t-md border-b border-slate-300 w-full justify-center px-2'>
@@ -274,7 +269,7 @@ const POSHolder = (props: Props) => {
                         <POSItemsHolder POS={POS} products={props.products} selectedProduct={selectedProduct} setSelectedProduct={setSelectedProduct} />
                     </div>
                     <div className='w-[60%] text-ellipsis overflow-hidden whitespace-nowrap px-2 bg-slate-200'>
-                        <POSOrderRowHolder POS={POS}/>
+                        <POSOrderRowHolder POS={POS} />
                     </div>
                 </div>
             </div>
