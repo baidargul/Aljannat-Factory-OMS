@@ -1,7 +1,8 @@
 'use client'
+import currentProfile from '@/lib/current-profile'
 import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
-import { useClerk } from '@clerk/nextjs'
-import { profile } from '@prisma/client'
+import { redirectToSignIn, useClerk } from '@clerk/nextjs'
+import { Role, profile } from '@prisma/client'
 import { Barcode, Home, LayoutDashboard, LogOut, PackageSearch } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -11,6 +12,8 @@ type Props = {
 }
 
 const ProfileHoverCard = (props: Props) => {
+    const profile = props.profile
+
     const { signOut } = useClerk()
 
 
@@ -18,24 +21,30 @@ const ProfileHoverCard = (props: Props) => {
         {
             name: "Dashboard",
             link: "/user/dashboard",
-            icon: LayoutDashboard
+            icon: LayoutDashboard,
+            adminsOnly: true
         },
         {
-            name:"Home",
+            name: "Home",
             link: "/",
-            icon: Home
+            icon: Home,
+            adminsOnly: false
         },
         {
             name: "Products",
             link: "/create/products",
-            icon: PackageSearch
+            icon: PackageSearch,
+            adminsOnly: true
         },
         {
             name: "Orders",
             link: "/orders/verify",
-            icon: Barcode
+            icon: Barcode,
+            adminsOnly: false
         }
     ]
+
+    const isAdmin = profile?.role === Role.ADMIN || profile?.role === Role.SUPERADMIN
 
     return (
         <div>
@@ -45,6 +54,9 @@ const ProfileHoverCard = (props: Props) => {
             <div className='flex flex-col gap-2'>
                 {
                     menuItems.map((menu) => {
+                        if (menu.adminsOnly && !isAdmin) {
+                            return null
+                        }
                         return (
                             <section key={menu.name} className='hover:bg-slate-100 rounded-md p-1'>
                                 <Link href={menu.link}>
