@@ -11,8 +11,13 @@ const StatusPoint = (props: Props) => {
                 <div className='text-xs font-semibold'>
                     {props.item.name}
                 </div>
-                <div className='text-2xl bg-gradient-to-b from-slate-100 to-slate-200 border-b border-slate-200 p-1 rounded-md w-10'>
-                    {props.item.order}
+                <div className='flex gap-1 items-center bg-gradient-to-b from-slate-100 to-slate-200 border-b border-slate-200 p-1 rounded-md w-fit'>
+                    <div className='text-2xl'>
+                        {props.item.inWork}
+                    </div>
+                    <div>
+                        {`/${props.item.order}`}
+                    </div>
                 </div>
             </div>
         </div>
