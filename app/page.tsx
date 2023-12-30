@@ -13,7 +13,7 @@ export default async function Home() {
   return (
     <div className={`flex select-none gap-2 justify-center items-center p-4 cursor-default`}>
       <div className="">
-        <Stats />
+        <Stats profile={profile}/>
       </div>
     </div>
   );

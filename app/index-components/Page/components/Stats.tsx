@@ -5,19 +5,12 @@ import OrderNotes from '@/app/user/(routes)/dashboard/components/sub/OrderNotes'
 import currentProfile from '@/lib/current-profile';
 import StatusChart from './StatusChart';
 
-type StatsProps = {};
+type Props = {
+  profile: any;
+};
 
-const Stats: React.FC<StatsProps> = () => {
-  const [profile, setProfile] = useState<any | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const userProfile = await currentProfile();
-      setProfile(userProfile);
-    };
-
-    fetchData();
-  }, []);
+const Stats = (props: Props) => {
+  const [profile, setProfile] = useState<any | null>(props.profile);
 
   if (!profile) return noProfile();
 
