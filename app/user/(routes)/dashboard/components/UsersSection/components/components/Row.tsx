@@ -2,7 +2,7 @@ import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
 import { Role } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
-import RoleSelector from '../../../sub/RoleSelector'
+import RoleSelector from './RoleSelector'
 
 type Props = {
     user: any
