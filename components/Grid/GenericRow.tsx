@@ -1420,18 +1420,19 @@ export function getTimeLapsed(targetDateTime: any) {
 
 function getDeliveryDateDifference(targetDateTime: any) {
   const target = new Date(targetDateTime);
+
+  // Check if target is a valid date
+  if (isNaN(target.getTime())) {
+    return "Invalid date";
+  }
+
+  // Set time components of both dates to 0 to compare only the dates
+  target.setHours(0, 0, 0, 0);
   const now = new Date();
-  const timeOffset = now.getTimezoneOffset(); // Get the time zone offset in minutes
+  now.setHours(0, 0, 0, 0);
 
-  // Adjust target date for the time zone offset
-  target.setMinutes(target.getMinutes() - timeOffset);
-
-  const diff = target.getTime() - now.getTime();
-
-  const diffInSeconds = Math.floor(diff / 1000);
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  const diffInDays = Math.floor(diffInHours / 24);
+  const diffInMilliseconds = target.getTime() - now.getTime();
+  const diffInDays = Math.floor(diffInMilliseconds / (24 * 60 * 60 * 1000));
 
   if (diffInDays === 0) {
     return "Today";
@@ -1450,6 +1451,7 @@ function getDeliveryDateDifference(targetDateTime: any) {
     return years === 1 ? "1 year from now" : `${years} years from now`;
   }
 }
+
 
 
 
