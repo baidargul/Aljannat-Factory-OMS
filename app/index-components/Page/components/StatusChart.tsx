@@ -1,25 +1,32 @@
 'use client'
-import prisma from '@/lib/prisma'
-import { Status } from '@prisma/client'
 import React, { useEffect } from 'react'
 import StatusPoint from './sub/StatusChart/StatusPoint'
 import axios from 'axios'
+import { toast } from 'sonner'
 
 type Props = {}
 
 const StatusChart = (props: Props) => {
     const [data, setData] = React.useState<any>([])
 
+    const getData = async () => {
+        await axios.get('/api/order/all/summary/').then(async (res) => {
+            const response = await res.data;
+            if (response.status === 200) {
+                setData(response.data);
+            }
+        });
+    }
+
     useEffect(() => {
         const interval = setInterval(() => {
-            axios.get('/api/order/all/summary/').then(async (res) => {
-                const response = await res.data;
-                if (response.status === 200) {
-                    setData(response.data);
-                }
-            });
+            try {
+                getData();
+            } catch (error: any) {
+                toast.error(error.message)
+            }
         }, 5000);
-    
+
         return () => {
             clearInterval(interval);
         };
