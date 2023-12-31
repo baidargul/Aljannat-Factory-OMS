@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 
 type Props = {
     roleMenu: any
-    user: profile
+    user: any
 }
 
 const RoleSelector = (props: Props) => {

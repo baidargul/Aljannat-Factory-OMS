@@ -1,10 +1,52 @@
 import { formalizeText, getCurrentUserCasualStatus } from '@/lib/my'
+import { Role } from '@prisma/client'
 import Image from 'next/image'
 import React from 'react'
+import RoleSelector from '../../../sub/RoleSelector'
 
 type Props = {
     user: any
 }
+
+const roleMenu = [
+    {
+        name: Role.ADMIN,
+        label: "Admin"
+    },
+    {
+        name: Role.DISPATCHER,
+        label: "Dispatcher"
+    },
+    {
+        name: Role.INVENTORYMANAGER,
+        label: "Inventory Manager"
+    },
+    {
+        name: Role.MANAGER,
+        label: "Manager"
+    },
+    {
+        name: Role.ORDERBOOKER,
+        label: "Order Booker"
+    },
+    {
+        name: Role.ORDERVERIFIER,
+        label: "Order Verifier"
+    },
+    {
+        name: Role.PAYMENTVERIFIER,
+        label: "Payment Verifier"
+    },
+    {
+        name: Role.SUPERADMIN,
+        label: "Super Admin"
+    },
+    {
+        name: Role.UNVERIFIED,
+        label: "Unverified"
+    }
+]
+
 
 const Row = (props: Props) => {
     const user = props.user
@@ -25,16 +67,12 @@ const Row = (props: Props) => {
                         {new Date(user.createdAt).toDateString()}
                     </div>
                 </div>
-                <div>
-                    <div>Current role:</div>
-                    <div>{getCurrentUserCasualStatus(user.role)}</div>
-                </div>
-                <div>
+                <div className=''>
                     <div>Interactions:</div>
                     <div className='bg-gradient-to-r from-amber-200 to-amber-300 p-1 rounded-md w-fit text-center scale-90 flex gap-1'>on <p className='font-semibold '>{user.orderNotes.length}</p> orders</div>
                 </div>
-                <div>
-
+                <div className='flex justify-center items-center'>
+                    <RoleSelector user={user} roleMenu={roleMenu} />
                 </div>
             </div>
         </div>
