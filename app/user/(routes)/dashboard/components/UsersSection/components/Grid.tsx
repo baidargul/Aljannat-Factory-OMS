@@ -32,7 +32,9 @@ const Grid = (props: Props) => {
                 users.map((user: any) => {
 
                     return (
-                        <Row />
+                        <div className='' key={user.id}>
+                            <Row user={user} />
+                        </div>
                     )
                 })
             }
