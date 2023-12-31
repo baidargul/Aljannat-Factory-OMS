@@ -6,7 +6,7 @@ import { Input } from "../ui/input";
 import axios from "axios";
 import ToolTipProvider from "../ToolTipProvider/ToolTipProvider";
 import PopoverProvider from "../Popover/PopoverProvider";
-import { Status } from "@prisma/client";
+import { Role, Status } from "@prisma/client";
 import { v4 } from "uuid";
 import { toast } from "sonner";
 import Image from "next/image";
@@ -435,6 +435,11 @@ function _orderVerificationStageControls(profile: any, row: any, updateRow: any)
   const [otherNote, setOtherNote] = useState<string>("");
   const [isWorking, setIsWorking] = useState<boolean>(false);
 
+  if (profile.role !== Role.ORDERVERIFIER)
+  {
+    return null
+  }
+
 
   function handleNote(text: string) {
     setOtherNote(text);
@@ -681,6 +686,11 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
   const [otherNote, setOtherNote] = useState<string>("");
   const [isWorking, setIsWorking] = useState<boolean>(false);
 
+  if (profile.role !== Role.PAYMENTVERIFIER)
+  {
+    return null
+  }
+
 
   function handleNote(text: string) {
     setOtherNote(text);
@@ -851,6 +861,11 @@ function _paymentVerificationStageControls(profile: any, row: any, updateRow: an
 function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
   const [otherNote, setOtherNote] = useState<string>("");
   const [isWorking, setIsWorking] = useState<boolean>(false);
+
+  if (profile.role !== Role.DISPATCHER)
+  {
+    return null
+  }
 
 
   function handleNote(text: string) {
@@ -1098,6 +1113,11 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
 function _inventoryStageControls(profile: any, row: any, updateRow: any) {
   const [otherNote, setOtherNote] = useState<string>("");
   const [isWorking, setIsWorking] = useState<boolean>(false);
+
+  if (profile.role !== Role.INVENTORYMANAGER)
+  {
+    return null
+  }
 
 
   function handleNote(text: string) {
