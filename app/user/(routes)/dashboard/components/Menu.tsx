@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { redirect, useRouter } from 'next/navigation'
 import Setting from './GlobalMenu/SettingList/SettingList'
 import SettingList from './GlobalMenu/SettingList/SettingList'
+import UsersSection from './UsersSection/UsersSection'
 
 type Props = {
     profile: any
@@ -248,37 +249,42 @@ const PendingUsers = (profile: any) => {
 
 
     return (
-        <div className=' bg-slate-100 p-2 border w-full'>
-            <div className='font-semibold text-md text-slate-700 tracking-tight'>
-                Pending users:
-            </div>
-            <div className='w-full p-1'>
-                {
-                    pendingUsers && pendingUsers.length > 0 ? pendingUsers.map((user: any, index: number) => {
-                        return (
-                            <div className='grid grid-cols-4 justify-items-start w-full text-slate-700 items-center bg-slate-50 border border-slate-100 p-1'>
-                                <div className=''>
-                                    <div className='flex gap-3 justify-center items-center font-semibold w-32 truncate'>
-                                        <Image src={user.imageURL ? user.imageURL : "/Placeholders/default.png"} width={50} height={50} alt='loggedInUser' className='rounded-full w-8 h-8' />
-                                        <div>{user.name}</div>
+        <div>
+
+            <div className=' bg-slate-100 p-2 border w-full'>
+                <div className='font-semibold text-md text-slate-700 tracking-tight'>
+                    Pending users:
+                </div>
+                <div className='w-full p-1'>
+                    {
+                        pendingUsers && pendingUsers.length > 0 ? pendingUsers.map((user: any, index: number) => {
+                            return (
+                                <div className='grid grid-cols-4 justify-items-start w-full text-slate-700 items-center bg-slate-50 border border-slate-100 p-1'>
+                                    <div className=''>
+                                        <div className='flex gap-3 justify-center items-center font-semibold w-32 truncate'>
+                                            <Image src={user.imageURL ? user.imageURL : "/Placeholders/default.png"} width={50} height={50} alt='loggedInUser' className='rounded-full w-8 h-8' />
+                                            <div>{user.name}</div>
+                                        </div>
+                                    </div>
+                                    <div className='font-semibold truncate text-sm'>
+                                        {user.email}
+                                    </div>
+                                    <div className='font-sans truncate text-sm scale-90 uppercase'>
+                                        {user.userId}
+                                    </div>
+                                    <div className='ml-auto'>
+                                        <RoleSelector user={user} roleMenu={roleMenu} />
                                     </div>
                                 </div>
-                                <div className='font-semibold truncate text-sm'>
-                                    {user.email}
-                                </div>
-                                <div className='font-sans truncate text-sm scale-90 uppercase'>
-                                    {user.userId}
-                                </div>
-                                <div className='ml-auto'>
-                                    <RoleSelector user={user} roleMenu={roleMenu} />
-                                </div>
-                            </div>
-                        )
-                    }) : <div className='text-sm font-sans text-slate-500'>No Pending Users</div>
-                }
+                            )
+                        }) : <div className='text-sm font-sans text-slate-500'>No Pending Users</div>
+                    }
+                </div>
+            </div>
+            <div>
+                <UsersSection/>
             </div>
         </div>
-
     )
 }
 
