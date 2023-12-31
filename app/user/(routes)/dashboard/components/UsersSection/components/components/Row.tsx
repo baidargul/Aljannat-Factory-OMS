@@ -10,7 +10,7 @@ const Row = (props: Props) => {
     const user = props.user
 
     return (
-        <div className='bg-white p-1 border border-slate-100 drop-shadow-sm text-sm'>
+        <div className='bg-gradient-to-r from-orange-50 to-orange-50 p-1 border border-slate-100 drop-shadow-sm text-sm'>
             <div className='grid grid-cols-4'>
                 <div className='flex gap-1 items-center'>
                     <Image src={user.imageURL} alt='user image' width={40} height={40} className='rounded-md' />
@@ -31,10 +31,10 @@ const Row = (props: Props) => {
                 </div>
                 <div>
                     <div>Interactions:</div>
-                    <div className='bg-slate-100 p-1 rounded-md w-fit text-center scale-90 flex gap-1'>on <p className='font-semibold'>{user.orderNotes.length}</p> orders</div>
+                    <div className='bg-gradient-to-r from-amber-200 to-amber-300 p-1 rounded-md w-fit text-center scale-90 flex gap-1'>on <p className='font-semibold '>{user.orderNotes.length}</p> orders</div>
                 </div>
                 <div>
-                    
+
                 </div>
             </div>
         </div>
