@@ -431,7 +431,6 @@ function getStageControls(stage: string, profile: any, row: any, updateRow: any)
       return null;
   }
 }
-
 function _orderVerificationStageControls(profile: any, row: any, updateRow: any) {
   const [otherNote, setOtherNote] = useState<string>("");
   const [isWorking, setIsWorking] = useState<boolean>(false);
@@ -1086,11 +1085,11 @@ function _dispatcherStageControls(profile: any, row: any, updateRow: any) {
       <div className="border border-green-300 rounded p-2">
         <div className="widest font-semibold text-slate-700 text-sm mt-1">Forward to:</div>
         <div className="grid grid-cols-2 gap-1 mt-1">
-          <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Reset Status</button>
+          {/* <button disabled={isWorking} onClick={() => handleResetButton(row)} className={`bg-indigo-100 hover:bg-indigo-50 active:scale-90 border border-indigo-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status !== Status.PAYMENTVERIFIED ? "" : "hidden"}`}>Reset Status</button> */}
           <button disabled={isWorking} onClick={() => handleMnPButton(row)} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>M&P</button>
-          <button disabled={isWorking} onClick={() => handleTcsButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>TCS</button>
+          {/* <button disabled={isWorking} onClick={() => handleTcsButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>TCS</button>
           <button disabled={isWorking} onClick={() => handleGopButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>GPO</button>
-          <button disabled={isWorking} onClick={() => handleSpeedAfButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>SpeedAf</button>
+          <button disabled={isWorking} onClick={() => handleSpeedAfButton()} className={`bg-green-100 hover:bg-green-50 active:scale-90 border border-green-200 drop-shadow-sm text-slate-800 rounded-md p-1 text-xs ${row.status === Status.PAYMENTVERIFIED ? "" : "hidden"}`}>SpeedAf</button> */}
         </div>
       </div>
     </div>
@@ -1402,6 +1401,11 @@ export function getTimeLapsed(targetDateTime: any) {
 function getDeliveryDateDifference(targetDateTime: any) {
   const target = new Date(targetDateTime);
   const now = new Date();
+  const timeOffset = now.getTimezoneOffset(); // Get the time zone offset in minutes
+
+  // Adjust target date for the time zone offset
+  target.setMinutes(target.getMinutes() - timeOffset);
+
   const diff = target.getTime() - now.getTime();
 
   const diffInSeconds = Math.floor(diff / 1000);
@@ -1426,5 +1430,6 @@ function getDeliveryDateDifference(targetDateTime: any) {
     return years === 1 ? "1 year from now" : `${years} years from now`;
   }
 }
+
 
 

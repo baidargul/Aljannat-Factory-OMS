@@ -7,6 +7,7 @@ import Header from './index-components/Header';
 import { cn } from '@/lib/utils';
 import currentProfile from '@/lib/current-profile';
 import { Role } from '@prisma/client';
+import { setInitialDatabaseData } from '@/lib/initialDatabase-Data';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -21,6 +22,8 @@ export default async function RootLayout({
 }) {
 
   const profile = await currentProfile()
+
+  await setInitialDatabaseData()
 
   return (
     <ClerkProvider>
