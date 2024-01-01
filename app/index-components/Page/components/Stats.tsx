@@ -15,7 +15,7 @@ const Stats = (props: Props) => {
   if (!profile) return noProfile();
 
   return (
-    <div>
+    <div className='flex flex-col items-center'>
       <div>
         {/* <OrderStats /> */}
       </div>
