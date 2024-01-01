@@ -8,6 +8,7 @@ type Props = {
     user: any
     getUsers: any
     profile: any
+    getPendingUsers: any
 }
 
 const roleMenu = [
@@ -54,6 +55,7 @@ const Row = (props: Props) => {
     const user = props.user
     const profile = props.profile.profile
 
+
     return (
         <div className='bg-gradient-to-r from-orange-50 to-orange-50 p-1 border border-slate-100 drop-shadow-sm text-sm'>
             <div className='grid grid-cols-4 items-center'>
@@ -84,7 +86,7 @@ const Row = (props: Props) => {
                     <div className='bg-gradient-to-r from-amber-200 to-amber-300 p-1 rounded-md w-fit text-center scale-90 flex gap-1'>on <p className='font-semibold '>{user.orderNotes.length}</p> orders</div>
                 </div>
                 <div className='flex justify-center items-center'>
-                    <RoleSelector user={user} roleMenu={roleMenu} getUsers={props.getUsers} />
+                    <RoleSelector user={user} roleMenu={roleMenu} getUsers={props.getUsers} getPendingUsers={props.getPendingUsers} />
                 </div>
             </div>
         </div>

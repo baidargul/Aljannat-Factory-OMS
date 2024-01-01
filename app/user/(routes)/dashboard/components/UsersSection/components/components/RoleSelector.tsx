@@ -12,6 +12,7 @@ type Props = {
     roleMenu: any
     user: any
     getUsers: any
+    getPendingUsers: any
 }
 
 const RoleSelector = (props: Props) => {
@@ -55,6 +56,7 @@ const RoleSelector = (props: Props) => {
                     props.getUsers()
                     setIsConfirmed(true)
                     setConfirmationText('Updated')
+                    props.getPendingUsers()
                 } else {
                     toast.error(data.message)
                     setIsConfirmed(false)
@@ -78,6 +80,7 @@ const RoleSelector = (props: Props) => {
                     toast.success('User removed.')
                     setIsConfirmed(true)
                     setConfirmationText('Removed')
+                    props.getPendingUsers()
                 } else {
                     toast.error(data.message)
                     setIsConfirmed(false)

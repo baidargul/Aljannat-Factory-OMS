@@ -273,7 +273,7 @@ const PendingUsers = (profile: any) => {
                                         {user.userId}
                                     </div>
                                     <div className='ml-auto'>
-                                        <RoleSelector user={user} roleMenu={roleMenu} />
+                                        <RoleSelector user={user} roleMenu={roleMenu} getPendingUsers={getPendingUsers} />
                                     </div>
                                 </div>
                             )
@@ -282,7 +282,7 @@ const PendingUsers = (profile: any) => {
                 </div>
             </div>
             <div>
-                <UsersSection profile={profile}/>
+                <UsersSection profile={profile} getPendingUsers={getPendingUsers}/>
             </div>
         </div>
     )

@@ -3,6 +3,7 @@ import Grid from './components/Grid'
 
 type Props = {
     profile: any
+    getPendingUsers: any
 }
 
 const UsersSection = (props: Props) => {
@@ -12,7 +13,7 @@ const UsersSection = (props: Props) => {
                 Current users:
             </div>
             <div>
-                <Grid profile={props.profile}/>
+                <Grid profile={props.profile} getPendingUsers={props.getPendingUsers}/>
             </div>
         </div>
     )

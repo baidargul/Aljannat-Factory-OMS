@@ -11,6 +11,7 @@ import { toast } from 'sonner'
 type Props = {
     roleMenu: any
     user: any
+    getPendingUsers: any
 }
 
 const RoleSelector = (props: Props) => {
@@ -53,6 +54,7 @@ const RoleSelector = (props: Props) => {
                     toast.success('User accepted.')
                     setIsConfirmed(true)
                     setConfirmationText('Accepted')
+                    props.getPendingUsers()
                 } else {
                     toast.error(data.message)
                     setIsConfirmed(false)
@@ -76,6 +78,7 @@ const RoleSelector = (props: Props) => {
                     toast.success('User rejected and removed.')
                     setIsConfirmed(true)
                     setConfirmationText('Rejected')
+                    props.getPendingUsers()
                 } else {
                     toast.error(data.message)
                     setIsConfirmed(false)

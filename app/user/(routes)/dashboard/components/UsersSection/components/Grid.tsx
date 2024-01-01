@@ -7,6 +7,7 @@ import { Role } from '@prisma/client'
 
 type Props = {
     profile: any
+    getPendingUsers: any
 }
 
 const Grid = (props: Props) => {
@@ -38,7 +39,7 @@ const Grid = (props: Props) => {
 
                     return (
                         <div className='' key={user.id}>
-                            <Row user={user} getUsers={getUsers} profile={props.profile} />
+                            <Row user={user} getUsers={getUsers} profile={props.profile} getPendingUsers={props.getPendingUsers} />
                         </div>
                     )
                 })
