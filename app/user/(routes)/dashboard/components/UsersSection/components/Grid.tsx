@@ -3,6 +3,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Row from './components/Row'
+import { Role } from '@prisma/client'
 
 type Props = {
     profile: any
@@ -33,9 +34,11 @@ const Grid = (props: Props) => {
             {
                 users.map((user: any) => {
 
+                    if (user.role === Role.UNVERIFIED) return null
+
                     return (
                         <div className='' key={user.id}>
-                            <Row user={user} getUsers={getUsers} profile={props.profile}/>
+                            <Row user={user} getUsers={getUsers} profile={props.profile} />
                         </div>
                     )
                 })
