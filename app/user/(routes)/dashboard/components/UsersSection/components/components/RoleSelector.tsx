@@ -7,6 +7,7 @@ import axios from 'axios'
 import { Ban, Check, LoaderIcon, Star, Trash, User2 } from 'lucide-react'
 import React, { useEffect } from 'react'
 import { toast } from 'sonner'
+import { getProfiledUsers } from '../Grid'
 
 type Props = {
     roleMenu: any
@@ -50,7 +51,6 @@ const RoleSelector = (props: Props) => {
             }
             await axios.patch(`/api/user/role/update/`, data).then(async (res: any) => {
                 const data: any = res.data
-                console.log(data)
                 if (data.status === 200) {
                     toast.success('User role updated')
                     props.getUsers()
@@ -70,17 +70,19 @@ const RoleSelector = (props: Props) => {
     }
 
     async function reject() {
+        console.log(`here---<`)
         try {
             const data = {
                 user: user
             }
             await axios.post(`/api/user/role/delete/`, data).then(async (res) => {
-                const { data } = await res.data
+                const data = await res.data
                 if (data.status === 200) {
                     toast.success('User removed.')
                     setIsConfirmed(true)
                     setConfirmationText('Removed')
                     props.getPendingUsers()
+                    getProfiledUsers()
                 } else {
                     toast.error(data.message)
                     setIsConfirmed(false)
