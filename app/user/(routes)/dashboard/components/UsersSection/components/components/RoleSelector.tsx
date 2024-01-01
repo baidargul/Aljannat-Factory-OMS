@@ -70,7 +70,6 @@ const RoleSelector = (props: Props) => {
     }
 
     async function reject() {
-        console.log(`here---<`)
         try {
             const data = {
                 user: user
