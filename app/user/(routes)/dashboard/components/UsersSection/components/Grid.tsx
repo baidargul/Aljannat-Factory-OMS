@@ -10,8 +10,11 @@ type Props = {
     getPendingUsers: any
 }
 
+export let getProfiledUsers: any = null
+
 const Grid = (props: Props) => {
     const [users, setUsers] = useState([])
+
     const getUsers = async () => {
         await axios.get(`/api/user/all/`).then(async (res: any) => {
             const data = await res.data
@@ -23,8 +26,8 @@ const Grid = (props: Props) => {
             }
         })
     }
-
     useEffect(() => {
+        getProfiledUsers = getUsers
         getUsers()
     }, [])
 

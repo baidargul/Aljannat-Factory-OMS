@@ -7,6 +7,7 @@ import axios from 'axios'
 import { Ban, Check, LoaderIcon, Star, User2 } from 'lucide-react'
 import React, { useEffect } from 'react'
 import { toast } from 'sonner'
+import { getProfiledUsers } from '../UsersSection/components/Grid'
 
 type Props = {
     roleMenu: any
@@ -55,6 +56,7 @@ const RoleSelector = (props: Props) => {
                     setIsConfirmed(true)
                     setConfirmationText('Accepted')
                     props.getPendingUsers()
+                    await getProfiledUsers()
                 } else {
                     toast.error(data.message)
                     setIsConfirmed(false)
@@ -79,6 +81,7 @@ const RoleSelector = (props: Props) => {
                     setIsConfirmed(true)
                     setConfirmationText('Rejected')
                     props.getPendingUsers()
+                    await getProfiledUsers()
                 } else {
                     toast.error(data.message)
                     setIsConfirmed(false)
