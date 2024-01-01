@@ -20,6 +20,7 @@ const RoleSelector = (props: Props) => {
     const [user, setUser] = React.useState<profile>(props.user)
     const [selectedRole, setSelectedRole] = React.useState<string | null>("Unverified")
     const [isWorking, setIsWorking] = React.useState(false)
+    const [isRemoving, setIsRemoving] = React.useState(false)
     const [isConfirmed, setIsConfirmed] = React.useState(false)
     const [confirmationText, setConfirmationText] = React.useState('' as string | null)
 
@@ -49,6 +50,7 @@ const RoleSelector = (props: Props) => {
                 user: user,
                 role: getCurrentUserFormalStatus(selectedRole as Role)
             }
+            setIsRemoving(false)
             await axios.patch(`/api/user/role/update/`, data).then(async (res: any) => {
                 const data: any = res.data
                 if (data.status === 200) {
@@ -74,6 +76,7 @@ const RoleSelector = (props: Props) => {
             const data = {
                 user: user
             }
+            setIsRemoving(true)
             await axios.post(`/api/user/role/delete/`, data).then(async (res) => {
                 const data = await res.data
                 if (data.status === 200) {
@@ -91,6 +94,7 @@ const RoleSelector = (props: Props) => {
         } catch (e: any) {
             toast.error(e.message)
         }
+        setIsRemoving(false)
     }
 
     return (
@@ -119,7 +123,7 @@ const RoleSelector = (props: Props) => {
                             <button className=' text-slate-700 rounded-md p-1'>Save</button>
                         </div>
                         <div onClick={async () => await reject()} className='flex items-center border drop-shadow-sm bg-white rounded w-32 justify-center hover:bg-slate-50 active:bg-red-50'>
-                            <Trash className='w-5 h-5 text-red-500 cursor-pointer' />
+                            <Trash className={`w-5 h-5 text-red-500 cursor-pointer ${isRemoving && "animate-pulse"}`} />
                             <button className=' text-slate-700 rounded-md p-1'>Remove</button>
                         </div>
                     </div>
