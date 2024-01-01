@@ -4,7 +4,9 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Row from './components/Row'
 
-type Props = {}
+type Props = {
+    profile: any
+}
 
 const Grid = (props: Props) => {
     const [users, setUsers] = useState([])
@@ -33,7 +35,7 @@ const Grid = (props: Props) => {
 
                     return (
                         <div className='' key={user.id}>
-                            <Row user={user} />
+                            <Row user={user} getUsers={getUsers} profile={props.profile}/>
                         </div>
                     )
                 })

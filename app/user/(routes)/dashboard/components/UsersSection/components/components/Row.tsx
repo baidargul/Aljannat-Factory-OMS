@@ -6,6 +6,8 @@ import RoleSelector from './RoleSelector'
 
 type Props = {
     user: any
+    getUsers: any
+    profile: any
 }
 
 const roleMenu = [
@@ -50,14 +52,24 @@ const roleMenu = [
 
 const Row = (props: Props) => {
     const user = props.user
+    const profile = props.profile.profile
 
     return (
         <div className='bg-gradient-to-r from-orange-50 to-orange-50 p-1 border border-slate-100 drop-shadow-sm text-sm'>
-            <div className='grid grid-cols-4'>
+            <div className='grid grid-cols-4 items-center'>
                 <div className='flex gap-1 items-center'>
                     <Image src={user.imageURL} alt='user image' width={40} height={40} className='rounded-md' />
                     <div className=''>
-                        <h1>{user.name}</h1>
+                        <div className='relative'>
+                            <div className='w-32 truncate'>
+                                {user.name}
+                            </div>
+
+                            {
+                                user.userId === profile.userId &&
+                                (<div className={`bg-gradient-to-r from-violet-200 to-pink-200 rounded-md w-fit p-1 scale-75 absolute -top-1 right-0`}>You</div>)
+                            }
+                        </div>
                         <div className='text-xs'>{user.email}</div>
                     </div>
                 </div>
@@ -72,7 +84,7 @@ const Row = (props: Props) => {
                     <div className='bg-gradient-to-r from-amber-200 to-amber-300 p-1 rounded-md w-fit text-center scale-90 flex gap-1'>on <p className='font-semibold '>{user.orderNotes.length}</p> orders</div>
                 </div>
                 <div className='flex justify-center items-center'>
-                    <RoleSelector user={user} roleMenu={roleMenu} />
+                    <RoleSelector user={user} roleMenu={roleMenu} getUsers={props.getUsers} />
                 </div>
             </div>
         </div>

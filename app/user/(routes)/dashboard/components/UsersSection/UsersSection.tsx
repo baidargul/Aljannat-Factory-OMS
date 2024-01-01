@@ -1,7 +1,9 @@
 import React from 'react'
 import Grid from './components/Grid'
 
-type Props = {}
+type Props = {
+    profile: any
+}
 
 const UsersSection = (props: Props) => {
     return (
@@ -10,7 +12,7 @@ const UsersSection = (props: Props) => {
                 Current users:
             </div>
             <div>
-                <Grid />
+                <Grid profile={props.profile}/>
             </div>
         </div>
     )

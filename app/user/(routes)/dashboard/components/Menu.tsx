@@ -282,7 +282,7 @@ const PendingUsers = (profile: any) => {
                 </div>
             </div>
             <div>
-                <UsersSection/>
+                <UsersSection profile={profile}/>
             </div>
         </div>
     )
