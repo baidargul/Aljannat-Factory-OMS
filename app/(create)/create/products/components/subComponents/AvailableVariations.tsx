@@ -8,6 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { PlusCircleIcon } from 'lucide-react'
 import DialogProvider from '@/components/DialogProvider/DialogProvider'
 import CreateVariationForm from '../CreateVariationForm'
+import { formalizeText } from '@/lib/my'
 
 type Props = {}
 
@@ -36,20 +37,20 @@ const AvailableVariations = (props: Props) => {
                                 <VariationSelector selectedProduct={selectedProduct} variant={variation} setSelectedProduct={setSelectedProduct}>
                                     <div key={variation.id} className='flex justify-center gap-2 items-center border border-slate-300 p-2 rounded w-60'>
 
-                                        <div className='border border-white drop-shadow-sm transition-all'>
+                                        {/* <div className='border border-white drop-shadow-sm transition-all'>
                                             <Image src={variation.imageUrl ? variation.imageUrl : `/Placeholders/question.png`} width={100} height={100} className='w-16 h-16 bg-background drop-shadow-none border-none' alt='image' />
-                                        </div>
+                                        </div> */}
                                         <div>
                                             <div className='font-semibold tracking-wide flex gap-1 items-center transition-all'>
-                                                <div className='transition-all duration-1000 w-24 text-ellipsis overflow-hidden whitespace-nowrap'>
+                                                <div className='transition-all duration-1000 w-24 truncate'>
                                                     {
-                                                        variation.name
+                                                        formalizeText(variation.name)
                                                     }
                                                 </div>
                                             </div>
-                                            <div className='flex gap-1 items-center text-xs transition-all'>
-                                                <table className='bg-gradient-to-t from-slate-100 to-gray-400'>
-                                                    <thead className='border border-slate-400'>
+                                            <div className='flex gap-1 items-center text-xs transition-all w-full'>
+                                                <table className='bg-gradient-to-t from-slate-100 to-gray-400 w-full'>
+                                                    <thead className='border border-slate-400 w-full'>
                                                         <tr className=''>
                                                             <th className='border p-1 bg-gradient-to-b from-slate-100 to-gray-400'>Price</th>
                                                             <th className='border p-1 bg-gradient-to-b from-slate-100 to-gray-400'>Weight</th>
@@ -57,7 +58,7 @@ const AvailableVariations = (props: Props) => {
                                                         </tr>
                                                     </thead>
                                                     <tbody className={`border border-slate-400 transition-all duration-1000`}>
-                                                        <tr className='w-44'>
+                                                        <tr className='w-full'>
                                                             <td className='border text-center justify-center'>{variation.defaultAmount}</td>
                                                             <td className='border text-center justify-center'>{Number(variation.defaultWeight)}</td>
                                                             <td className='border text-center justify-center'>{String(variation.defaultUnit).toLocaleUpperCase()}</td>
@@ -75,7 +76,7 @@ const AvailableVariations = (props: Props) => {
                     })
                 }
                 <div>
-                    {selectedProduct && 
+                    {selectedProduct &&
                         <div className=''>
                             <DialogProvider title='Add new variation' description={`to ` + selectedProduct.product.name} content={<CreateVariationForm selectedProduct={selectedProduct.product.id} setSelectedProduct={setSelectedProduct} />}>
                                 {handleLastAddButton()}
