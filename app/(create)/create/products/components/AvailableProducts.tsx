@@ -62,7 +62,7 @@ const AvailableProducts = async (props: Props) => {
                     <div>
                         {
                             <div className='mt-[1px]'>
-                                <DialogProvider title='Create product' description='Specify product name and image.' content={<CreateProductForm />}>
+                                <DialogProvider title='Create product' description='Specify product name.' content={<CreateProductForm />}>
                                     {handleLastAddButton()}
                                 </DialogProvider>
                             </div>
