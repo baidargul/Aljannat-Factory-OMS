@@ -30,11 +30,11 @@ const CreateVariationForm = (props: Props) => {
                 setIsDoing(false)
                 return
             }
-            if (imageUrl === '/none' || !imageUrl) {
-                toast.error('Please select an image', { duration: 3000 })
-                setIsDoing(false)
-                return
-            }
+            // if (imageUrl === '/none' || !imageUrl) {
+            //     toast.error('Please select an image', { duration: 3000 })
+            //     setIsDoing(false)
+            //     return
+            // }
             if (weight < 0 || !weight) {
                 toast.error('Please specify a valid weight', { duration: 3000 })
                 setIsDoing(false)

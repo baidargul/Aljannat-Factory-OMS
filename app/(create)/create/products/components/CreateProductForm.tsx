@@ -24,11 +24,11 @@ const CreateProductForm = (props: Props) => {
                 setIsDoing(false)
                 return
             }
-            if (imageUrl === '/none' || !imageUrl) {
-                toast.error('Please select an image', { duration: 3000 })
-                setIsDoing(false)
-                return
-            }
+            // if (imageUrl === '/none' || !imageUrl) {
+            //     toast.error('Please select an image', { duration: 3000 })
+            //     setIsDoing(false)
+            //     return
+            // }
 
             const data = {
                 name: productName,

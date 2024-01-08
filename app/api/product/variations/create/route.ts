@@ -54,11 +54,11 @@ export async function POST(req: NextRequest) {
             unit = "kg"
         }
 
-        if (!image) {
-            response.status = 400,
-                response.message = "Variant image is required"
-            response.data = null
-        }
+        // if (!image) {
+        //     response.status = 400,
+        //         response.message = "Variant image is required"
+        //     response.data = null
+        // }
 
         if (!fileName) {
             response.status = 400,
@@ -95,35 +95,35 @@ export async function POST(req: NextRequest) {
         }
 
         // Decode base64 image data
-        const decodedImageData = Buffer.from(image.split(",")[1], "base64");
+        // const decodedImageData = Buffer.from(image.split(",")[1], "base64");
 
         // AWS configuration
-        const s3 = new AWS.S3({
-            accessKeyId: "AKIATIQPEIGEHWZIEOP3",
-            secretAccessKey: "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",
-            region: "ap-south-1",
-        });
+        // const s3 = new AWS.S3({
+        //     accessKeyId: "AKIATIQPEIGEHWZIEOP3",
+        //     secretAccessKey: "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",
+        //     region: "ap-south-1",
+        // });
 
         // S3 parameters
-        const fileContent = decodedImageData;
-        const fileType = String(name).toLocaleLowerCase() + `.` + fileExtension(fileName);
-        const params = {
-            Bucket: "aljannat/orderPortal/products/variants",
-            Key: fileType,
-            Body: fileContent,
-        };
+        // const fileContent = decodedImageData;
+        // const fileType = String(name).toLocaleLowerCase() + `.` + fileExtension(fileName);
+        // const params = {
+        //     Bucket: "aljannat/orderPortal/products/variants",
+        //     Key: fileType,
+        //     Body: fileContent,
+        // };
 
         // Upload to S3
-        const result = await s3.upload(params).promise();
+        // const result = await s3.upload(params).promise();
         // Save to database
-        let fileUrl
-        fileUrl = result.Location;
-        const base64FileContent = fileContent.toString("base64");
+        // let fileUrl
+        // fileUrl = result.Location;
+        // const base64FileContent = fileContent.toString("base64");
 
         const newVariant = await prisma.productVariations.create({
             data: {
                 name: String(name).toLocaleLowerCase(),
-                imageUrl: fileUrl,
+                imageUrl: null,//fileUrl,
                 defaultWeight: Number(weight),
                 defaultAmount: Number(price),
                 defaultUnit: unit,
