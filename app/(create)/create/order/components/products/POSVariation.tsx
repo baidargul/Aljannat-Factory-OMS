@@ -21,7 +21,7 @@ const POSVariation = (props: Props) => {
     return (
         <div onClick={handleItemClick} className='p-2 bg-slate-200 border-slate-300 hover:bg-slate-100 hover:border-slate-300 active:bg-slate-300 border'>
             <div className='flex gap-2'>
-                <Image src={props.variation.imageUrl ? props.variation.imageUrl : '/Placeholders/question.png'} className='w-16 h-16 rounded' width={100} height={100} alt={props.variation.name} />
+                {/* <Image src={props.variation.imageUrl ? props.variation.imageUrl : '/Placeholders/question.png'} className='w-16 h-16 rounded' width={100} height={100} alt={props.variation.name} /> */}
                 <div className='text-ellipsis overflow-hidden whitespace-nowrap font-semibold tracking-wide'>
                     <div>
                         {formalizeText(props.variation.name)}
