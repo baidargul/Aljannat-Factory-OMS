@@ -238,4 +238,18 @@ export async function setInitialDatabaseData() {
         }
     }
 
+    const isGridRefreshRateExists = await prisma.settings.findUnique({
+        where:{
+            name: "Order rows refresh rate"
+        }
+    })
+
+    if(!isGridRefreshRateExists){
+        await prisma.settings.create({
+            data:{
+                name:"Order rows refresh rate",
+                value1: "30"
+            }
+        })
+    }
 }
