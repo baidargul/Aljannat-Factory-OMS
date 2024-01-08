@@ -66,7 +66,7 @@ export async function DELETE(req: NextRequest) {
             },
         })
 
-        if (orders) {
+        if (orders.length>0) {
             response.status = 400,
             response.message = "Variant is being used in" + orders.length + "orders. Please remove the variant from the orders first."
             response.data = null
